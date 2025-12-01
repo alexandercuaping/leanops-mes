@@ -1258,14 +1258,34 @@
     renderStations();
   }
 
-  function simulateBlocked(stationId) {
+async function simulateBlocked(stationId) {
+  try {
+    // 1) Update in Supabase
+    const { error } = await supabase
+      .from("stations")
+      .update({ status: "blocked" })
+      .eq("id", stationId);
+
+    if (error) {
+      console.error("Error updating station status:", error);
+      alert("Could not mark station as blocked (cloud error).");
+      return;
+    }
+
+    // 2) Update local state so UI responds immediately
     const st = stations.find((s) => s.id === stationId);
-    if (!st) return;
-    st.status = "blocked";
+    if (st) {
+      st.status = "blocked";
+    }
+
     recalcRunning();
     renderMetrics();
     renderStations();
+  } catch (err) {
+    console.error("Unexpected error in simulateBlocked:", err);
+    alert("Unexpected error marking station blocked.");
   }
+}
 
   function simulateIdle(stationId) {
     const st = stations.find((s) => s.id === stationId);
