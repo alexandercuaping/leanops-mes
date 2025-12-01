@@ -935,576 +935,511 @@
     </section>
   </div>
 
-  <script>
-    /* ---------- Demo data (generic, non-employer) ---------- */
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-    const stations = [
-      {
-        id: "ST-01",
-        name: "Station 1",
-        line: "Line A",
-        status: "running",
-        currentJob: {
-          id: "JOB-1001",
-          part: "Panel Assembly",
-          qtyTotal: 40,
-          qtyDone: 16,
-          due: "2025-11-30",
-          priority: "normal",
-        },
-        nextJob: {
-          id: "JOB-1004",
-          part: "Bracket Kit",
-          qtyTotal: 24,
-          due: "2025-12-01",
-        },
-      },
-      {
-        id: "ST-02",
-        name: "Station 2",
-        line: "Line A",
-        status: "idle",
-        currentJob: null,
-        nextJob: {
-          id: "JOB-1005",
-          part: "Frame Assembly",
-          qtyTotal: 18,
-          due: "2025-11-29",
-        },
-      },
-      {
-        id: "ST-03",
-        name: "Station 3",
-        line: "Line B",
-        status: "blocked",
-        currentJob: {
-          id: "JOB-1002",
-          part: "Subframe Build",
-          qtyTotal: 30,
-          qtyDone: 12,
-          due: "2025-11-28",
-          priority: "high",
-        },
-        nextJob: null,
-      },
-      {
-        id: "ST-04",
-        name: "Station 4",
-        line: "Line B",
-        status: "running",
-        currentJob: {
-          id: "JOB-1003",
-          part: "Hardware Pack",
-          qtyTotal: 60,
-          qtyDone: 45,
-          due: "2025-11-28",
-          priority: "normal",
-        },
-        nextJob: null,
-      },
-    ];
+  // ==========================
+  // Supabase client
+  // ==========================
+  const SUPABASE_URL = "https://xdjyjzdvpfnkbsnbcysx.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
 
-    const globalQueue = [
-      {
-        id: "JOB-1006",
-        part: "Custom Build",
-        qtyTotal: 10,
-        due: "2025-12-02",
-        priority: "high",
-      },
-      {
-        id: "JOB-1007",
-        part: "Standard Kit",
-        qtyTotal: 32,
-        due: "2025-12-03",
-        priority: "normal",
-      },
-    ];
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    const metrics = {
-      completedToday: 12,
-      completedOnTimeRate: 92,
-      stationsRunning: 2,
-      stationCount: stations.length,
-    };
+  // ==========================
+  // In-memory state (fed from Supabase)
+  // ==========================
+  let stations = [];
+  let globalQueue = [];
 
-    /* ---------- Helpers ---------- */
+  const metrics = {
+    completedToday: 0,
+    completedOnTimeRate: 0,
+    stationsRunning: 0,
+    stationCount: 0,
+  };
 
-    function formatDateLabelToday() {
-      const d = new Date();
-      return d.toLocaleDateString(undefined, {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      });
+  /* ---------- Helpers ---------- */
+
+  function formatDateLabelToday() {
+    const d = new Date();
+    return d.toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  }
+
+  function statusBadgeClass(status) {
+    if (status === "running") return "badge badge-ok";
+    if (status === "blocked") return "badge badge-danger";
+    if (status === "idle") return "badge badge-warn";
+    return "badge";
+  }
+
+  function priorityBadgeClass(priority) {
+    if (priority === "high") return "badge badge-priority badge-priority--high";
+    return "badge badge-priority";
+  }
+
+  function compareByName(a, b) {
+    return a.name.localeCompare(b.name);
+  }
+
+  function compareByStatus(a, b) {
+    const weight = { running: 1, idle: 2, blocked: 3 };
+    return (weight[a.status] || 99) - (weight[b.status] || 99);
+  }
+
+  function compareByDue(a, b) {
+    const da = a.currentJob?.due || a.nextJob?.due || "9999-12-31";
+    const db = b.currentJob?.due || b.nextJob?.due || "9999-12-31";
+    return da.localeCompare(db);
+  }
+
+  /* ---------- Rendering ---------- */
+
+  function renderMetrics() {
+    document.getElementById("metrics-date-label").textContent =
+      formatDateLabelToday();
+
+    document.getElementById("metric-completed").textContent =
+      metrics.completedToday;
+    document.getElementById(
+      "metric-completed-sub"
+    ).textContent = "Jobs / batches logged today";
+
+    document.getElementById("metric-ontime").textContent =
+      metrics.completedOnTimeRate + "%";
+    document.getElementById(
+      "metric-ontime-sub"
+    ).textContent = "On-time completion rate (demo)";
+
+    document.getElementById("metric-running").textContent =
+      metrics.stationsRunning + " / " + metrics.stationCount;
+    document.getElementById(
+      "metric-running-sub"
+    ).textContent = "Stations currently marked as running";
+  }
+
+  function renderStations() {
+    const lineFilter = document.getElementById("filter-line").value;
+    const statusFilter = document.getElementById("filter-status").value;
+    const sortValue = document.getElementById("filter-sort").value;
+
+    let list = [...stations];
+
+    if (lineFilter !== "all") {
+      list = list.filter((s) => s.line === lineFilter);
+    }
+    if (statusFilter !== "all") {
+      list = list.filter((s) => s.status === statusFilter);
     }
 
-    function statusBadgeClass(status) {
-      if (status === "running") return "badge badge-ok";
-      if (status === "blocked") return "badge badge-danger";
-      if (status === "idle") return "badge badge-warn";
-      return "badge";
-    }
+    if (sortValue === "name") list.sort(compareByName);
+    else if (sortValue === "status") list.sort(compareByStatus);
+    else if (sortValue === "due") list.sort(compareByDue);
 
-    function priorityBadgeClass(priority) {
-      if (priority === "high") return "badge badge-priority badge-priority--high";
-      return "badge badge-priority";
-    }
+    const container = document.getElementById("station-grid");
+    container.innerHTML = "";
 
-    function compareByName(a, b) {
-      return a.name.localeCompare(b.name);
-    }
+    list.forEach((st) => {
+      const card = document.createElement("article");
+      card.className = "station-card";
 
-    function compareByStatus(a, b) {
-      const weight = { running: 1, idle: 2, blocked: 3 };
-      return (weight[a.status] || 99) - (weight[b.status] || 99);
-    }
+      const topRow = document.createElement("div");
+      topRow.className = "station-id-row";
 
-    function compareByDue(a, b) {
-      const da = a.currentJob?.due || a.nextJob?.due || "9999-12-31";
-      const db = b.currentJob?.due || b.nextJob?.due || "9999-12-31";
-      return da.localeCompare(db);
-    }
+      const title = document.createElement("div");
+      title.className = "station-name";
+      title.textContent = st.name + " · " + st.id;
 
-    /* ---------- Rendering ---------- */
+      const badge = document.createElement("div");
+      badge.className = statusBadgeClass(st.status);
+      badge.textContent =
+        st.status === "running"
+          ? "Running"
+          : st.status === "idle"
+          ? "Idle"
+          : st.status === "blocked"
+          ? "Blocked"
+          : st.status;
 
-    function renderMetrics() {
-      document.getElementById("metrics-date-label").textContent =
-        formatDateLabelToday();
+      topRow.appendChild(title);
+      topRow.appendChild(badge);
 
-      document.getElementById("metric-completed").textContent =
-        metrics.completedToday;
-      document.getElementById(
-        "metric-completed-sub"
-      ).textContent = "Jobs closed so far today";
+      card.appendChild(topRow);
 
-      document.getElementById("metric-ontime").textContent =
-        metrics.completedOnTimeRate + "%";
-      document.getElementById(
-        "metric-ontime-sub"
-      ).textContent = "On-time completion rate";
+      // Current job
+      if (st.currentJob) {
+        const jb = document.createElement("div");
+        jb.className = "job-block";
 
-      document.getElementById("metric-running").textContent =
-        metrics.stationsRunning + " / " + metrics.stationCount;
-      document.getElementById(
-        "metric-running-sub"
-      ).textContent = "Stations currently marked as running";
-    }
-
-    function renderStations() {
-      const lineFilter = document.getElementById("filter-line").value;
-      const statusFilter = document.getElementById("filter-status").value;
-      const sortValue = document.getElementById("filter-sort").value;
-
-      let list = [...stations];
-
-      if (lineFilter !== "all") {
-        list = list.filter((s) => s.line === lineFilter);
-      }
-      if (statusFilter !== "all") {
-        list = list.filter((s) => s.status === statusFilter);
-      }
-
-      if (sortValue === "name") list.sort(compareByName);
-      else if (sortValue === "status") list.sort(compareByStatus);
-      else if (sortValue === "due") list.sort(compareByDue);
-
-      const container = document.getElementById("station-grid");
-      container.innerHTML = "";
-
-      list.forEach((st) => {
-        const card = document.createElement("article");
-        card.className = "station-card";
-
-        const topRow = document.createElement("div");
-        topRow.className = "station-id-row";
-
-        const title = document.createElement("div");
-        title.className = "station-name";
-        title.textContent = st.name + " · " + st.id;
-
-        const badge = document.createElement("div");
-        badge.className = statusBadgeClass(st.status);
-        badge.textContent =
-          st.status === "running"
-            ? "Running"
-            : st.status === "idle"
-            ? "Idle"
-            : st.status === "blocked"
-            ? "Blocked"
-            : st.status;
-
-        topRow.appendChild(title);
-        topRow.appendChild(badge);
-
-        card.appendChild(topRow);
-
-        // Current job
-        if (st.currentJob) {
-          const jb = document.createElement("div");
-          jb.className = "job-block job-details";
-
-          const jbTitle = document.createElement("div");
-          jbTitle.className = "job-block-title";
-          jbTitle.innerHTML =
-            '<span class="job-label">Current job</span>' +
-            `<span class="job-main">${st.currentJob.id}</span>`;
-          jb.appendChild(jbTitle);
-
-          const meta = document.createElement("div");
-          meta.className = "job-meta-row";
-          const done = st.currentJob.qtyDone ?? 0;
-          const total = st.currentJob.qtyTotal ?? 0;
-          meta.innerHTML = `
-            <span>${st.currentJob.part}</span>
-            <span>${done}/${total} pcs</span>
-            <span>Due ${st.currentJob.due}</span>
-          `;
-          jb.appendChild(meta);
-
-          if (st.currentJob.priority) {
-            const pr = document.createElement("div");
-            pr.className = "job-meta-row";
-            pr.innerHTML = `<span class="${priorityBadgeClass(
-              st.currentJob.priority
-            )}">Priority: ${st.currentJob.priority}</span>`;
-            jb.appendChild(pr);
-          }
-
-          card.appendChild(jb);
-        } else {
-          const label = document.createElement("div");
-          label.className = "no-job-label";
-          label.textContent = "No current job loaded.";
-          card.appendChild(label);
-        }
-
-        // Next job
-        if (st.nextJob) {
-          const jb = document.createElement("div");
-          jb.className = "job-block job-details";
-          const jbTitle = document.createElement("div");
-          jbTitle.className = "job-block-title";
-          jbTitle.innerHTML =
-            '<span class="job-label">Next up</span>' +
-            `<span class="job-main">${st.nextJob.id}</span>`;
-          jb.appendChild(jbTitle);
-
-          const meta = document.createElement("div");
-          meta.className = "job-meta-row";
-          meta.innerHTML = `
-            <span>${st.nextJob.part}</span>
-            <span>${st.nextJob.qtyTotal} pcs</span>
-            <span>Due ${st.nextJob.due}</span>
-          `;
-          jb.appendChild(meta);
-
-          card.appendChild(jb);
-        }
-
-        // Actions
-        const actionRow = document.createElement("div");
-        actionRow.className = "station-actions";
-
-        const btnComplete = document.createElement("button");
-        btnComplete.className = "mini-btn mini-btn-primary";
-        btnComplete.textContent = "Mark complete";
-        btnComplete.onclick = () => simulateCompleteJob(st.id);
-
-        const btnMaterial = document.createElement("button");
-        btnMaterial.className = "mini-btn";
-        btnMaterial.textContent = "Need material";
-        btnMaterial.onclick = () => alert("Material request triggered for " + st.name);
-
-        const btnBlocked = document.createElement("button");
-        btnBlocked.className = "mini-btn";
-        btnBlocked.textContent = "Mark blocked";
-        btnBlocked.onclick = () => simulateBlocked(st.id);
-
-        const btnIdle = document.createElement("button");
-        btnIdle.className = "mini-btn";
-        btnIdle.textContent = "Set idle";
-        btnIdle.onclick = () => simulateIdle(st.id);
-
-        actionRow.appendChild(btnComplete);
-        actionRow.appendChild(btnMaterial);
-        actionRow.appendChild(btnBlocked);
-        actionRow.appendChild(btnIdle);
-
-        card.appendChild(actionRow);
-
-        container.appendChild(card);
-      });
-
-      document.getElementById("station-count-label").textContent =
-        list.length + " stations in view";
-    }
-
-    function renderQueue() {
-      const container = document.getElementById("queue-list");
-      container.innerHTML = "";
-
-      if (!globalQueue.length) {
-        document.getElementById("queue-empty-label").style.display = "block";
-        document.getElementById("queue-count-label").textContent = "0 jobs waiting";
-        return;
-      } else {
-        document.getElementById("queue-empty-label").style.display = "none";
-      }
-
-      globalQueue.forEach((job) => {
-        const item = document.createElement("article");
-        item.className = "queue-item";
-
-        const top = document.createElement("div");
-        top.className = "queue-top";
-        top.innerHTML = `
-          <div>
-            <div class="job-label">Job</div>
-            <div class="job-main">${job.id}</div>
-          </div>
-          <div class="${priorityBadgeClass(job.priority)}">
-            Priority: ${job.priority}
-          </div>
-        `;
-        item.appendChild(top);
+        const jbTitle = document.createElement("div");
+        jbTitle.className = "job-block-title";
+        jbTitle.innerHTML =
+          '<span class="job-label">Current job</span>' +
+          `<span class="job-main">${st.currentJob.id}</span>`;
+        jb.appendChild(jbTitle);
 
         const meta = document.createElement("div");
-        meta.className = "queue-meta";
+        meta.className = "job-meta-row";
+        const done = st.currentJob.qtyDone ?? 0;
+        const total = st.currentJob.qtyTotal ?? 0;
         meta.innerHTML = `
-          <span>${job.part}</span>
-          <span>${job.qtyTotal} pcs</span>
-          <span>Due ${job.due}</span>
+          <span>${st.currentJob.part}</span>
+          <span>${done}/${total} pcs</span>
+          <span>Due ${st.currentJob.due || "-"}</span>
         `;
-        item.appendChild(meta);
+        jb.appendChild(meta);
 
-        const actions = document.createElement("div");
-        actions.className = "queue-actions";
+        if (st.currentJob.priority) {
+          const pr = document.createElement("div");
+          pr.className = "job-meta-row";
+          pr.innerHTML = `<span class="${priorityBadgeClass(
+            st.currentJob.priority
+          )}">Priority: ${st.currentJob.priority}</span>`;
+          jb.appendChild(pr);
+        }
 
-        const assignBtn = document.createElement("button");
-        assignBtn.className = "mini-btn mini-btn-primary";
-        assignBtn.textContent = "Assign to station";
-        assignBtn.onclick = () => simulateAssignFromQueue(job.id);
+        card.appendChild(jb);
+      } else {
+        const label = document.createElement("div");
+        label.className = "no-job-label";
+        label.textContent = "No current job loaded.";
+        card.appendChild(label);
+      }
 
-        const dropBtn = document.createElement("button");
-        dropBtn.className = "mini-btn";
-        dropBtn.textContent = "Remove";
-        dropBtn.onclick = () => simulateDropFromQueue(job.id);
+      // Next job (placeholder for future logic)
+      if (st.nextJob) {
+        const jb = document.createElement("div");
+        jb.className = "job-block";
+        const jbTitle = document.createElement("div");
+        jbTitle.className = "job-block-title";
+        jbTitle.innerHTML =
+          '<span class="job-label">Next up</span>' +
+          `<span class="job-main">${st.nextJob.id}</span>`;
+        jb.appendChild(jbTitle);
 
-        actions.appendChild(assignBtn);
-        actions.appendChild(dropBtn);
+        const meta = document.createElement("div");
+        meta.className = "job-meta-row";
+        meta.innerHTML = `
+          <span>${st.nextJob.part}</span>
+          <span>${st.nextJob.qtyTotal} pcs</span>
+          <span>Due ${st.nextJob.due || "-"}</span>
+        `;
+        jb.appendChild(meta);
 
-        item.appendChild(actions);
-        container.appendChild(item);
-      });
+        card.appendChild(jb);
+      }
 
+      // Actions (still local-only demo logic for now)
+      const actionRow = document.createElement("div");
+      actionRow.className = "station-actions";
+
+      const btnComplete = document.createElement("button");
+      btnComplete.className = "mini-btn mini-btn-primary";
+      btnComplete.textContent = "Mark complete";
+      btnComplete.onclick = () => simulateCompleteJob(st.id);
+
+      const btnMaterial = document.createElement("button");
+      btnMaterial.className = "mini-btn";
+      btnMaterial.textContent = "Need material";
+      btnMaterial.onclick = () =>
+        alert("Material request triggered for " + st.name);
+
+      const btnBlocked = document.createElement("button");
+      btnBlocked.className = "mini-btn";
+      btnBlocked.textContent = "Mark blocked";
+      btnBlocked.onclick = () => simulateBlocked(st.id);
+
+      const btnIdle = document.createElement("button");
+      btnIdle.className = "mini-btn";
+      btnIdle.textContent = "Set idle";
+      btnIdle.onclick = () => simulateIdle(st.id);
+
+      actionRow.appendChild(btnComplete);
+      actionRow.appendChild(btnMaterial);
+      actionRow.appendChild(btnBlocked);
+      actionRow.appendChild(btnIdle);
+
+      card.appendChild(actionRow);
+
+      container.appendChild(card);
+    });
+
+    document.getElementById("station-count-label").textContent =
+      list.length + " stations in view";
+  }
+
+  function renderQueue() {
+    const container = document.getElementById("queue-list");
+    container.innerHTML = "";
+
+    if (!globalQueue.length) {
+      document.getElementById("queue-empty-label").style.display = "block";
       document.getElementById("queue-count-label").textContent =
-        globalQueue.length + " jobs in queue";
+        "0 jobs waiting";
+      return;
+    } else {
+      document.getElementById("queue-empty-label").style.display = "none";
     }
 
-    /* ---------- Simulation actions (demo only) ---------- */
+    globalQueue.forEach((job) => {
+      const item = document.createElement("article");
+      item.className = "queue-item";
 
-    function simulateCompleteJob(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st || !st.currentJob) {
-        alert("No active job on " + stationId + " to complete.");
-        return;
-      }
-      metrics.completedToday += 1;
+      const top = document.createElement("div");
+      top.className = "queue-top";
+      top.innerHTML = `
+        <div>
+          <div class="job-label">Job</div>
+          <div class="job-main">${job.id}</div>
+        </div>
+        <div class="${priorityBadgeClass(job.priority)}">
+          Priority: ${job.priority}
+        </div>
+      `;
+      item.appendChild(top);
 
-      // Simple assumption: completed job was on time
-      metrics.completedOnTimeRate = Math.min(100, metrics.completedOnTimeRate + 1);
+      const meta = document.createElement("div");
+      meta.className = "queue-meta";
+      meta.innerHTML = `
+        <span>${job.part}</span>
+        <span>${job.qtyTotal} pcs</span>
+        <span>Due ${job.due || "-"}</span>
+      `;
+      item.appendChild(meta);
 
-      // Move next job into current slot if exists
-      st.currentJob = st.nextJob || null;
-      st.nextJob = null;
-      st.status = st.currentJob ? "running" : "idle";
+      const actions = document.createElement("div");
+      actions.className = "queue-actions";
 
-      recalcRunning();
-      renderMetrics();
-      renderStations();
+      const assignBtn = document.createElement("button");
+      assignBtn.className = "mini-btn mini-btn-primary";
+      assignBtn.textContent = "Assign to station";
+      assignBtn.onclick = () => simulateAssignFromQueue(job.id);
+
+      const dropBtn = document.createElement("button");
+      dropBtn.className = "mini-btn";
+      dropBtn.textContent = "Remove";
+      dropBtn.onclick = () => simulateDropFromQueue(job.id);
+
+      actions.appendChild(assignBtn);
+      actions.appendChild(dropBtn);
+
+      item.appendChild(actions);
+      container.appendChild(item);
+    });
+
+    document.getElementById("queue-count-label").textContent =
+      globalQueue.length + " jobs in queue";
+  }
+
+  /* ---------- Simulation actions (still local only) ---------- */
+
+  function simulateCompleteJob(stationId) {
+    const st = stations.find((s) => s.id === stationId);
+    if (!st || !st.currentJob) {
+      alert("No active job on " + stationId + " to complete.");
+      return;
+    }
+    metrics.completedToday += 1;
+    metrics.completedOnTimeRate = Math.min(
+      100,
+      metrics.completedOnTimeRate + 1
+    );
+
+    st.currentJob = st.nextJob || null;
+    st.nextJob = null;
+    st.status = st.currentJob ? "running" : "idle";
+
+    recalcRunning();
+    renderMetrics();
+    renderStations();
+  }
+
+  function simulateBlocked(stationId) {
+    const st = stations.find((s) => s.id === stationId);
+    if (!st) return;
+    st.status = "blocked";
+    recalcRunning();
+    renderMetrics();
+    renderStations();
+  }
+
+  function simulateIdle(stationId) {
+    const st = stations.find((s) => s.id === stationId);
+    if (!st) return;
+    st.status = "idle";
+    recalcRunning();
+    renderMetrics();
+    renderStations();
+  }
+
+  function simulateAssignFromQueue(jobId) {
+    const idx = globalQueue.findIndex((j) => j.id === jobId);
+    if (idx === -1) return;
+    const job = globalQueue[idx];
+
+    const idleStation = stations.find(
+      (s) => s.status === "idle" && !s.currentJob
+    );
+    if (!idleStation) {
+      alert("No idle station available to assign this job.");
+      return;
     }
 
-    function simulateBlocked(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st) return;
-      st.status = "blocked";
-      recalcRunning();
-      renderMetrics();
-      renderStations();
+    idleStation.currentJob = {
+      id: job.id,
+      part: job.part,
+      qtyTotal: job.qtyTotal,
+      qtyDone: 0,
+      due: job.due,
+      priority: job.priority,
+    };
+    idleStation.status = "running";
+
+    globalQueue.splice(idx, 1);
+    recalcRunning();
+    renderMetrics();
+    renderStations();
+    renderQueue();
+  }
+
+  function simulateDropFromQueue(jobId) {
+    const idx = globalQueue.findIndex((j) => j.id === jobId);
+    if (idx === -1) return;
+    globalQueue.splice(idx, 1);
+    renderQueue();
+  }
+
+  function recalcRunning() {
+    metrics.stationsRunning = stations.filter(
+      (s) => s.status === "running"
+    ).length;
+    metrics.stationCount = stations.length;
+  }
+
+  function simulateNextHour() {
+    const running = stations.filter((s) => s.status === "running");
+    if (!running.length) {
+      alert(
+        "No running stations to simulate — try assigning or starting a job."
+      );
+      return;
     }
+    const choice = running[Math.floor(Math.random() * running.length)];
+    simulateCompleteJob(choice.id);
+  }
 
-    function simulateIdle(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st) return;
-      st.status = "idle";
-      recalcRunning();
-      renderMetrics();
-      renderStations();
-    }
+  /* ---------- Load initial data from Supabase ---------- */
 
-    function simulateAssignFromQueue(jobId) {
-      const idx = globalQueue.findIndex((j) => j.id === jobId);
-      if (idx === -1) return;
-      const job = globalQueue[idx];
+  async function loadInitialData() {
+    try {
+      const [{ data: stationRows, error: stationErr }, 
+             { data: jobRows, error: jobErr }, 
+             { data: assignRows, error: assignErr }, 
+             { data: perfRows, error: perfErr }] = await Promise.all([
+        supabase.from("stations").select("*").order("id"),
+        supabase.from("jobs").select("*"),
+        supabase.from("station_assignments").select("*"),
+        supabase.from("performance_logs").select("*"),
+      ]);
 
-      const idleStation = stations.find((s) => s.status === "idle" && !s.currentJob);
-      if (!idleStation) {
-        alert("No idle station available to assign this job.");
-        return;
-      }
+      if (stationErr) throw stationErr;
+      if (jobErr) throw jobErr;
+      if (assignErr) throw assignErr;
+      if (perfErr) throw perfErr;
 
-      idleStation.currentJob = {
-        id: job.id,
-        part: job.part,
-        qtyTotal: job.qtyTotal,
-        qtyDone: 0,
-        due: job.due,
-        priority: job.priority,
-      };
-      idleStation.status = "running";
+      const jobsById = new Map(jobRows.map((j) => [j.id, j]));
+      const assignsByStation = new Map();
+      assignRows.forEach((a) => assignsByStation.set(a.station_id, a));
 
-      globalQueue.splice(idx, 1);
-      recalcRunning();
-      renderMetrics();
-      renderStations();
-      renderQueue();
-    }
+      stations = stationRows.map((stRow) => {
+        const assignment = assignsByStation.get(stRow.id);
+        let currentJob = null;
 
-    function simulateDropFromQueue(jobId) {
-      const idx = globalQueue.findIndex((j) => j.id === jobId);
-      if (idx === -1) return;
-      globalQueue.splice(idx, 1);
-      renderQueue();
-    }
-
-    function recalcRunning() {
-      metrics.stationsRunning = stations.filter((s) => s.status === "running")
-        .length;
-      metrics.stationCount = stations.length;
-    }
-
-    function simulateNextHour() {
-      // Simple stub: mark a random running station as completed.
-      const running = stations.filter((s) => s.status === "running");
-      if (!running.length) {
-        alert("No running stations to simulate — try assigning or starting a job.");
-        return;
-      }
-      const choice = running[Math.floor(Math.random() * running.length)];
-      simulateCompleteJob(choice.id);
-    }
-
-    /* ---------- Init ---------- */
-    /* ---------- View controls setup ---------- */
-
-    function setupViewControls() {
-      const body = document.body;
-      const controls = document.querySelector(".view-controls");
-      if (!controls) return;
-
-      const btns = controls.querySelectorAll(".vc-btn");
-
-      function setActive(button, isOn) {
-        if (isOn) {
-          button.classList.add("is-active");
-        } else {
-          button.classList.remove("is-active");
+        if (assignment) {
+          const job = jobsById.get(assignment.job_id);
+          if (job) {
+            currentJob = {
+              id: job.id,
+              part: job.part_name,
+              qtyTotal: job.qty_total,
+              qtyDone: assignment.qty_done,
+              due: job.due_date,
+              priority: job.priority,
+            };
+          }
         }
-      }
 
-      controls.addEventListener("click", (e) => {
-        const btn = e.target.closest(".vc-btn");
-        if (!btn) return;
-
-        const mode = btn.getAttribute("data-toggle");
-
-        switch (mode) {
-          case "compact": {
-            const compactOn = !body.classList.contains("compact-view");
-            body.classList.toggle("compact-view", compactOn);
-            if (compactOn) {
-              body.classList.remove("expanded-view");
-              controls
-                .querySelectorAll('[data-toggle="expanded"]')
-                .forEach((b) => setActive(b, false));
-            }
-            setActive(btn, compactOn);
-            break;
-          }
-
-          case "expanded": {
-            const expandedOn = !body.classList.contains("expanded-view");
-            body.classList.toggle("expanded-view", expandedOn);
-            if (expandedOn) {
-              body.classList.remove("compact-view");
-              controls
-                .querySelectorAll('[data-toggle="compact"]')
-                .forEach((b) => setActive(b, false));
-            }
-            setActive(btn, expandedOn);
-            break;
-          }
-
-          case "details": {
-            const hideDetails = !body.classList.contains("hide-details");
-            body.classList.toggle("hide-details", hideDetails);
-            setActive(btn, hideDetails);
-            break;
-          }
-
-          case "theme": {
-            const isLight = !body.classList.contains("light-mode");
-            body.classList.toggle("light-mode", isLight);
-            setActive(btn, isLight);
-            break;
-          }
-
-          case "empty": {
-            const hideEmpty = !body.classList.contains("hide-empty");
-            body.classList.toggle("hide-empty", hideEmpty);
-            setActive(btn, hideEmpty);
-            break;
-          }
-
-          default:
-            break;
-        }
+        return {
+          id: stRow.id,
+          name: stRow.name,
+          line: stRow.line,
+          status: stRow.status,
+          currentJob,
+          nextJob: null, // future: look up "next" from queue or schedule
+        };
       });
-    }
-    function init() {
+
+      globalQueue = jobRows
+        .filter((j) => j.status === "waiting")
+        .map((job) => ({
+          id: job.id,
+          part: job.part_name,
+          qtyTotal: job.qty_total,
+          due: job.due_date,
+          priority: job.priority,
+        }));
+
+      const totalCompletedEntries = perfRows?.length ?? 0;
+      metrics.completedToday = totalCompletedEntries;
+
+      // Placeholder rate (later: compute from due_date vs completion time)
+      metrics.completedOnTimeRate = 92;
+
       recalcRunning();
       renderMetrics();
       renderStations();
       renderQueue();
-
-      document
-        .getElementById("filter-line")
-        .addEventListener("change", renderStations);
-      document
-        .getElementById("filter-status")
-        .addEventListener("change", renderStations);
-      document
-        .getElementById("filter-sort")
-        .addEventListener("change", renderStations);
-
-      document
-        .getElementById("btn-refresh")
-        .addEventListener("click", () => {
-          renderMetrics();
-          renderStations();
-          renderQueue();
-        });
-
-      document
-        .getElementById("btn-simulate")
-        .addEventListener("click", simulateNextHour);
-
-      // NEW: wire up the view controls bar
-      setupViewControls();
+    } catch (err) {
+      console.error("Error loading initial data from Supabase:", err);
+      alert("Error loading data from cloud — using empty demo state.");
+      stations = [];
+      globalQueue = [];
+      recalcRunning();
+      renderMetrics();
+      renderStations();
+      renderQueue();
     }
+  }
 
-    document.addEventListener("DOMContentLoaded", init);
-  </script>
+  /* ---------- Init ---------- */
+
+  function init() {
+    document
+      .getElementById("filter-line")
+      .addEventListener("change", renderStations);
+    document
+      .getElementById("filter-status")
+      .addEventListener("change", renderStations);
+    document
+      .getElementById("filter-sort")
+      .addEventListener("change", renderStations);
+
+    document.getElementById("btn-refresh").addEventListener("click", () => {
+      loadInitialData();
+    });
+
+    document
+      .getElementById("btn-simulate")
+      .addEventListener("click", simulateNextHour);
+
+    loadInitialData();
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+</script>
 </body>
 </html>
