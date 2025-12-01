@@ -1,1485 +1,1535 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>LeanOps — Supervisor Dashboard v1</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    /* LeanOps — Supervisor Dashboard v1 (generic, non-employer) */
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>LeanOps — Supervisor Dashboard v1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      /* LeanOps — Supervisor Dashboard v1 (generic, non-employer) */
 
-    :root {
-      --hero-bg-top: #02081a;
-      --hero-bg-bottom: #07172b;
-      --accent: #f97316;
-      --accent-soft: rgba(249, 115, 22, 0.12);
-      --accent-strong: #ea580c;
+      :root {
+        --hero-bg-top: #02081a;
+        --hero-bg-bottom: #07172b;
+        --accent: #f97316;
+        --accent-soft: rgba(249, 115, 22, 0.12);
+        --accent-strong: #ea580c;
 
-      --page-bg: #0b1020;
-      --panel-bg: #020617;
-      --panel-soft: #020617;
-      --card-bg: #020617;
-      --card-alt-bg: #020617;
-      --border-soft: rgba(148, 163, 184, 0.4);
-      --border-strong: rgba(15, 23, 42, 0.8);
+        --page-bg: #0b1020;
+        --panel-bg: #020617;
+        --panel-soft: #020617;
+        --card-bg: #020617;
+        --card-alt-bg: #020617;
+        --border-soft: rgba(148, 163, 184, 0.4);
+        --border-strong: rgba(15, 23, 42, 0.8);
 
-      --text-main: #e5e7eb;
-      --text-muted: #9ca3af;
-      --text-soft: #6b7280;
+        --text-main: #e5e7eb;
+        --text-muted: #9ca3af;
+        --text-soft: #6b7280;
 
-      --ok: #22c55e;
-      --warn: #facc15;
-      --danger: #f97373;
+        --ok: #22c55e;
+        --warn: #facc15;
+        --danger: #f97373;
 
-      --radius-lg: 22px;
-      --radius-md: 14px;
+        --radius-lg: 22px;
+        --radius-md: 14px;
 
-      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --font-display: "Georgia", "Times New Roman", serif;
-    }
+        --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --font-display: "Georgia", "Times New Roman", serif;
+      }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
 
-    body {
-      min-height: 100vh;
-      font-family: var(--font-main);
-      background:
-        radial-gradient(circle at top left, #020617 0, #020617 50%, transparent 70%) fixed,
-        linear-gradient(to bottom, #020617 0, #020617 320px, #020617 420px, #020817 100%);
-      color: var(--text-main);
-    }
+      body {
+        min-height: 100vh;
+        font-family: var(--font-main);
+        background:
+          radial-gradient(circle at top left, #020617 0, #020617 50%, transparent 70%) fixed,
+          linear-gradient(to bottom, #020617 0, #020617 320px, #020617 420px, #020817 100%);
+        color: var(--text-main);
+      }
 
-    /* ---------- Page shell ---------- */
+      /* ---------- Page shell ---------- */
 
-    .sup-shell {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 24px 20px 40px;
-    }
+      .sup-shell {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 24px 20px 40px;
+      }
 
-    .sup-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 20px;
-    }
+      .sup-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
 
-    .sup-brand {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
-    }
+      .sup-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
 
-    .sup-logo {
-      font-size: 18px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-      font-weight: 800;
-      color: #f9fafb;
-    }
+      .sup-logo {
+        font-size: 18px;
+        letter-spacing: 0.32em;
+        text-transform: uppercase;
+        font-weight: 800;
+        color: #f9fafb;
+      }
 
-    .sup-title {
-      font-family: var(--font-display);
-      font-size: 18px;
-      color: #e5e7eb;
-    }
+      .sup-title {
+        font-family: var(--font-display);
+        font-size: 18px;
+        color: #e5e7eb;
+      }
 
-    .sup-subtitle {
-      font-size: 12px;
-      color: var(--text-soft);
-    }
+      .sup-subtitle {
+        font-size: 12px;
+        color: var(--text-soft);
+      }
 
-    .sup-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+      .sup-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
 
-    .lo-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.7);
-      color: #e5e7eb;
-      font-size: 12px;
-      text-decoration: none;
-      cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-    }
+      .lo-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        background: rgba(15, 23, 42, 0.7);
+        color: #e5e7eb;
+        font-size: 12px;
+        text-decoration: none;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+      }
 
-    .lo-btn:hover {
-      background: rgba(31, 41, 55, 0.9);
-      transform: translateY(-1px);
-    }
+      .lo-btn:hover {
+        background: rgba(31, 41, 55, 0.9);
+        transform: translateY(-1px);
+      }
 
-    .lo-btn-primary {
-      border-color: rgba(249, 115, 22, 0.85);
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #111827;
-      font-weight: 600;
-      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.5);
-    }
+      .lo-btn-primary {
+        border-color: rgba(249, 115, 22, 0.85);
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        color: #111827;
+        font-weight: 600;
+        box-shadow: 0 14px 32px rgba(249, 115, 22, 0.5);
+      }
 
-    .lo-btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(249, 115, 22, 0.7);
-    }
+      .lo-btn-primary:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 18px 40px rgba(249, 115, 22, 0.7);
+      }
 
-    /* ---------- Top metrics bar ---------- */
+      /* ---------- Top metrics bar ---------- */
 
-    .sup-top-row {
-      display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(0, 3.2fr);
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    @media (max-width: 900px) {
       .sup-top-row {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: minmax(0, 2.3fr) minmax(0, 3.2fr);
+        gap: 16px;
+        margin-bottom: 18px;
       }
-    }
 
-    .sup-metrics-panel,
-    .sup-filters-panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top left, #0b1120, #020617 55%);
-      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
-      padding: 14px 16px 14px;
-    }
+      @media (max-width: 900px) {
+        .sup-top-row {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
 
-    .sup-panel-title {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
+      .sup-metrics-panel,
+      .sup-filters-panel {
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: radial-gradient(circle at top left, #0b1120, #020617 55%);
+        box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
+        padding: 14px 16px 14px;
+      }
 
-    .sup-panel-title h2 {
-      font-family: var(--font-display);
-      font-size: 16px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
+      .sup-panel-title {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
 
-    .sup-panel-sub {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
+      .sup-panel-title h2 {
+        font-family: var(--font-display);
+        font-size: 16px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        color: #e5e7eb;
+      }
 
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
+      .sup-panel-sub {
+        font-size: 11px;
+        color: var(--text-soft);
+      }
 
-    @media (max-width: 720px) {
       .metrics-grid {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
       }
-    }
 
-    .metric-card {
-      border-radius: 12px;
-      border: 1px solid rgba(75, 85, 99, 0.9);
-      background: radial-gradient(circle at top left, #1f2933, #020617 70%);
-      padding: 10px 10px 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+      @media (max-width: 720px) {
+        .metrics-grid {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
 
-    .metric-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: rgba(156, 163, 175, 0.9);
-    }
+      .metric-card {
+        border-radius: 12px;
+        border: 1px solid rgba(75, 85, 99, 0.9);
+        background: radial-gradient(circle at top left, #1f2933, #020617 70%);
+        padding: 10px 10px 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
 
-    .metric-main {
-      font-size: 18px;
-      font-weight: 600;
-      color: #f9fafb;
-    }
+      .metric-label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: rgba(156, 163, 175, 0.9);
+      }
 
-    .metric-sub {
-      font-size: 11px;
-      color: rgba(209, 213, 219, 0.9);
-    }
+      .metric-main {
+        font-size: 18px;
+        font-weight: 600;
+        color: #f9fafb;
+      }
 
-    .filters-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 6px;
-      align-items: center;
-    }
+      .metric-sub {
+        font-size: 11px;
+        color: rgba(209, 213, 219, 0.9);
+      }
 
-    .filter-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-muted);
-      font-size: 11px;
-      padding: 6px 10px;
-    }
+      .filters-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 6px;
+        align-items: center;
+      }
 
-    .filter-pill span {
-      font-size: 11px;
-    }
+      .filter-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.7);
+        background: rgba(15, 23, 42, 0.9);
+        color: var(--text-muted);
+        font-size: 11px;
+        padding: 6px 10px;
+      }
 
-    .filter-select {
-      background: transparent;
-      border: none;
-      color: #e5e7eb;
-      font-size: 11px;
-      font-family: inherit;
-      outline: none;
-    }
+      .filter-pill span {
+        font-size: 11px;
+      }
 
-    /* ---------- Stations layout ---------- */
+      .filter-select {
+        background: transparent;
+        border: none;
+        color: #e5e7eb;
+        font-size: 11px;
+        font-family: inherit;
+        outline: none;
+      }
 
-    .sup-main-row {
-      display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(0, 2.1fr);
-      gap: 16px;
-    }
+      /* ---------- Stations layout ---------- */
 
-    @media (max-width: 1024px) {
       .sup-main-row {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: minmax(0, 2.3fr) minmax(0, 2.1fr);
+        gap: 16px;
       }
-    }
 
-    .station-panel,
-    .queue-panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top left, #020617, #020617 60%);
-      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
-      padding: 14px 16px 16px;
-    }
+      @media (max-width: 1024px) {
+        .sup-main-row {
+          grid-template-columns: minmax(0, 1fr);
+        }
+      }
 
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-      gap: 10px;
-    }
+      .station-panel,
+      .queue-panel {
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        background: radial-gradient(circle at top left, #020617, #020617 60%);
+        box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
+        padding: 14px 16px 16px;
+      }
 
-    .panel-header h3 {
-      font-family: var(--font-display);
-      font-size: 15px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        margin-bottom: 10px;
+        gap: 10px;
+      }
 
-    .panel-header small {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
+      .panel-header h3 {
+        font-family: var(--font-display);
+        font-size: 15px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
 
-    .station-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
+      .panel-header small {
+        font-size: 11px;
+        color: var(--text-soft);
+      }
 
-    @media (max-width: 900px) {
       .station-grid {
-        grid-template-columns: minmax(0, 1fr);
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
       }
-    }
 
-    .station-card {
-      position: relative;
-      border-radius: 14px;
-      border: 1px solid rgba(75, 85, 99, 0.85);
-      background: radial-gradient(circle at top left, #111827, #020617 70%);
-      padding: 10px 10px 11px;
-      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.75);
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-    }
-
-    .station-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
-      border-color: rgba(249, 115, 22, 0.7);
-    }
-
-    .station-id-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .station-name {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
-
-    .badge {
-      border-radius: 999px;
-      padding: 3px 9px;
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      border: 1px solid transparent;
-    }
-
-    .badge-ok {
-      border-color: rgba(34, 197, 94, 0.6);
-      color: #bbf7d0;
-      background: rgba(22, 163, 74, 0.18);
-    }
-
-    .badge-warn {
-      border-color: rgba(250, 204, 21, 0.7);
-      color: #fef9c3;
-      background: rgba(234, 179, 8, 0.16);
-    }
-
-    .badge-danger {
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fee2e2;
-      background: rgba(248, 113, 113, 0.18);
-    }
-
-    .job-block {
-      border-radius: 10px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      padding: 7px 8px;
-      font-size: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .job-block-title {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .job-label {
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(148, 163, 184, 0.9);
-      font-size: 10px;
-    }
-
-    .job-main {
-      font-weight: 600;
-      color: #f9fafb;
-    }
-
-    .job-meta-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      color: rgba(209, 213, 219, 0.9);
-      font-size: 10px;
-    }
-
-    .job-meta-row span {
-      white-space: nowrap;
-    }
-
-    .station-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 4px;
-    }
-
-    .mini-btn {
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 10px;
-      padding: 4px 9px;
-      cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
-    }
-
-    .mini-btn:hover {
-      background: rgba(31, 41, 55, 0.95);
-      transform: translateY(-1px);
-    }
-
-    .mini-btn-primary {
-      border-color: rgba(249, 115, 22, 0.85);
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #111827;
-      font-weight: 600;
-    }
-
-    .no-job-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      font-style: italic;
-    }
-
-    /* Right-side panel: global queue */
-
-    .queue-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 420px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .queue-item {
-      border-radius: 12px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.95);
-      padding: 8px 9px;
-      font-size: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .queue-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .queue-meta {
-      display: flex;
-      gap: 10px;
-      color: rgba(209, 213, 219, 0.9);
-      font-size: 10px;
-    }
-
-    .queue-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 3px;
-    }
-
-    .queue-item .job-label {
-      color: rgba(148, 163, 184, 0.95);
-    }
-
-    .badge-priority {
-      border-color: rgba(248, 250, 252, 0.55);
-      color: #e5e7eb;
-      background: rgba(15, 23, 42, 0.85);
-    }
-
-    .badge-priority--high {
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fee2e2;
-      background: rgba(127, 29, 29, 0.7);
-    }
-
-    .queue-empty-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      font-style: italic;
-      margin-top: 4px;
-    }
-
-    /* Scrollbars (subtle) */
-    .queue-list::-webkit-scrollbar {
-      width: 6px;
-    }
-    .queue-list::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.8);
-    }
-    .queue-list::-webkit-scrollbar-thumb {
-      background: rgba(55, 65, 81, 0.9);
-      border-radius: 999px;
-    }
-    /* ===== VIEW CONTROLS STRIP ===== */
-
-    .view-controls {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      padding:10px 16px;
-      margin:0 0 14px;
-      border-radius:999px;
-      background:rgba(15,23,42,0.6);
-      border:1px solid rgba(148,163,184,0.45);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-    }
-
-    .view-controls-left,
-    .view-controls-right {
-      display:flex;
-      align-items:center;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-
-    .view-controls-label {
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:0.12em;
-      opacity:0.7;
-    }
-
-    .vc-btn {
-      border:none;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:10px;
-      cursor:pointer;
-      background:rgba(15,23,42,0.9);
-      color:inherit;
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      transition:
-        background 0.15s ease,
-        transform 0.08s ease,
-        box-shadow 0.15s ease,
-        opacity 0.15s ease;
-      box-shadow:0 0 0 rgba(15,23,42,0);
-      border:1px solid rgba(148,163,184,0.7);
-    }
-
-    .vc-btn:hover {
-      background:rgba(31,41,55,0.95);
-      transform:translateY(-0.5px);
-      box-shadow:0 4px 10px rgba(15,23,42,0.6);
-    }
-
-    .vc-btn:active {
-      transform:translateY(0);
-      box-shadow:0 0 0 rgba(15,23,42,0);
-    }
-
-    .vc-btn.is-active {
-      background:var(--accent-soft);
-      border-color:rgba(249,115,22,0.9);
-      box-shadow:0 0 0 1px rgba(249,115,22,0.7);
-      color:#fed7aa;
-    }
-
-    /* ===== VIEW MODES (class-based) ===== */
-
-    /* Compact vs Expanded */
-    body.compact-view .station-card {
-      padding:8px 8px 9px;
-      gap:4px;
-    }
-
-    body.compact-view .station-name {
-      font-size:11px;
-    }
-
-    body.compact-view .job-block {
-      padding:5px 6px;
-      font-size:10px;
-    }
-
-    body.compact-view .job-meta-row {
-      font-size:9px;
-    }
-
-    body.expanded-view .station-card {
-      padding:14px 14px 16px;
-    }
-
-    /* Hide / Show job details */
-    body.hide-details .job-details {
-      display:none !important;
-    }
-
-    /* Hide empty stations */
-    body.hide-empty .station-card.is-empty {
-      display:none !important;
-    }
-
-    /* Dark / Light mode toggle (full light theme overrides) */
-    body.light-mode {
-      background:
-        radial-gradient(circle at top left,#e5e7eb 0,#e5e7eb 40%,#dbeafe 100%);
-      color:#020617;
-    }
-
-    body.light-mode .sup-shell {
-      color:#020617;
-    }
-
-    /* Panels & cards */
-    body.light-mode .sup-metrics-panel,
-    body.light-mode .sup-filters-panel,
-    body.light-mode .station-panel,
-    body.light-mode .queue-panel {
-      background:#f9fafb;
-      border-color:rgba(148,163,184,0.65);
-      box-shadow:0 14px 26px rgba(15,23,42,0.18);
-    }
-
-    body.light-mode .metric-card,
-    body.light-mode .station-card,
-    body.light-mode .queue-item {
-      background:#ffffff;
-      border-color:rgba(148,163,184,0.7);
-      box-shadow:0 10px 20px rgba(15,23,42,0.10);
-    }
-
-    /* Header + titles */
-    body.light-mode .sup-logo {
-      color:#020617;
-    }
-
-    body.light-mode .sup-title {
-      color:#020617;
-    }
-
-    body.light-mode .sup-subtitle {
-      color:#4b5563;
-    }
-
-    body.light-mode .sup-panel-title h2,
-    body.light-mode .panel-header h3 {
-      color:#020617;
-    }
-
-    body.light-mode .sup-panel-sub,
-    body.light-mode .panel-header small {
-      color:#6b7280;
-    }
-
-    /* Metric text */
-    body.light-mode .metric-label {
-      color:#6b7280;
-    }
-
-    body.light-mode .metric-main {
-      color:#111827;
-    }
-
-    body.light-mode .metric-sub {
-      color:#4b5563;
-    }
-
-    /* Station / queue text */
-    body.light-mode .station-name {
-      color:#020617;
-    }
-
-    body.light-mode .no-job-label,
-    body.light-mode .queue-empty-label {
-      color:#6b7280;
-    }
-
-    body.light-mode .queue-item .job-main {
-      color:#111827;
-    }
-
-    body.light-mode .queue-item .job-label {
-      color:#6b7280;
-    }
-
-    /* Job blocks – light, matches the card */
-    body.light-mode .job-block {
-      background:#f9fafb;
-      border-color:#e5e7eb;
-      color:#111827;
-    }
-
-    body.light-mode .job-block .job-label {
-      color:#6b7280;
-    }
-
-    body.light-mode .job-block .job-main {
-      color:#111827;
-    }
-
-    body.light-mode .job-block .job-meta-row span {
-      color:#374151;
-    }
-
-    /* Badges */
-    body.light-mode .badge-ok {
-      border-color:rgba(22,163,74,0.55);
-      color:#166534;
-      background:rgba(22,163,74,0.10);
-    }
-
-    body.light-mode .badge-warn {
-      border-color:rgba(234,179,8,0.7);
-      color:#92400e;
-      background:rgba(250,204,21,0.16);
-    }
-
-    body.light-mode .badge-danger {
-      border-color:rgba(248,113,113,0.85);
-      color:#b91c1c;
-      background:rgba(248,113,113,0.18);
-    }
-
-    body.light-mode .badge-priority {
-      border-color:rgba(15,23,42,0.25);
-      color:#111827;
-      background:#e5e7eb;
-    }
-
-    body.light-mode .badge-priority--high {
-      border-color:#b91c1c;
-      color:#b91c1c;
-      background:#fee2e2;
-    }
-
-    /* Buttons (top-right + mini buttons) */
-    body.light-mode .lo-btn {
-      background:#e5e7eb;
-      color:#020617;
-      border-color:rgba(148,163,184,0.8);
-    }
-
-    body.light-mode .lo-btn:hover {
-      background:#d1d5db;
-    }
-
-    body.light-mode .mini-btn {
-      background:#e5e7eb;
-      color:#111827;
-      border-color:rgba(148,163,184,0.9);
-    }
-
-    body.light-mode .mini-btn:hover {
-      background:#cbd5f5;
-    }
-
-    body.light-mode .mini-btn-primary {
-      background:linear-gradient(135deg,var(--accent),var(--accent-strong));
-      color:#111827;
-      border-color:rgba(249,115,22,0.85);
-    }
-
-    /* View controls strip + buttons */
-    body.light-mode .view-controls {
-      background:rgba(241,245,249,0.95);
-      border-color:rgba(148,163,184,0.7);
-    }
-
-    body.light-mode .vc-btn {
-      background:#e5e7eb;
-      color:#020617;
-      border-color:rgba(148,163,184,0.9);
-    }
-
-  </style>
-</head>
-<body>
-  <div class="sup-shell">
-    <!-- Top header -->
-    <header class="sup-header">
-      <div class="sup-brand">
-        <div class="sup-logo">LeanOps</div>
-        <div class="sup-title">Supervisor — Live Stations</div>
-        <div class="sup-subtitle">
-          Lightweight MES view for jobs, stations, and flow — generic demo instance.
-        </div>
-      </div>
-      <div class="sup-actions">
-        <button class="lo-btn" id="btn-refresh">Quick refresh</button>
-        <button class="lo-btn lo-btn-primary" id="btn-simulate">
-          Simulate next hour
-        </button>
-      </div>
-    </header>
-
-    <!-- View Controls Bar -->
-    <section class="view-controls">
-      <div class="view-controls-left">
-        <span class="view-controls-label">Display options</span>
-        <button type="button" class="vc-btn" data-toggle="compact">
-          Compact
-        </button>
-        <button type="button" class="vc-btn" data-toggle="expanded">
-          Expanded
-        </button>
-        <button type="button" class="vc-btn" data-toggle="details">
-          Toggle details
-        </button>
-      </div>
-
-      <div class="view-controls-right">
-        <button type="button" class="vc-btn" data-toggle="theme">
-          Light / Dark
-        </button>
-        <button type="button" class="vc-btn" data-toggle="empty">
-          Hide empty stations
-        </button>
-      </div>
-    </section>
-
-    <!-- Top metrics & filters -->
-    <section class="sup-top-row">
-      <div class="sup-metrics-panel">
-        <div class="sup-panel-title">
-          <h2>Today</h2>
-          <div class="sup-panel-sub" id="metrics-date-label"></div>
-        </div>
-        <div class="metrics-grid">
-          <div class="metric-card">
-            <div class="metric-label">Jobs completed</div>
-            <div class="metric-main" id="metric-completed">0</div>
-            <div class="metric-sub" id="metric-completed-sub">–</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">On-time completion</div>
-            <div class="metric-main" id="metric-ontime">0%</div>
-            <div class="metric-sub" id="metric-ontime-sub">–</div>
-          </div>
-          <div class="metric-card">
-            <div class="metric-label">Stations running</div>
-            <div class="metric-main" id="metric-running">0 / 0</div>
-            <div class="metric-sub" id="metric-running-sub">–</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="sup-filters-panel">
-        <div class="sup-panel-title">
-          <h2>View controls</h2>
-          <div class="sup-panel-sub">Use filters to focus on a line or status.</div>
-        </div>
-        <div class="filters-grid">
-          <div class="filter-pill">
-            <span>Line</span>
-            <select id="filter-line" class="filter-select">
-              <option value="all">All lines</option>
-              <option value="Line A">Line A</option>
-              <option value="Line B">Line B</option>
-            </select>
-          </div>
-          <div class="filter-pill">
-            <span>Status</span>
-            <select id="filter-status" class="filter-select">
-              <option value="all">All statuses</option>
-              <option value="running">Running</option>
-              <option value="idle">Idle</option>
-              <option value="blocked">Blocked</option>
-            </select>
-          </div>
-          <div class="filter-pill">
-            <span>Sort</span>
-            <select id="filter-sort" class="filter-select">
-              <option value="name">By station name</option>
-              <option value="status">By status</option>
-              <option value="due">By due date</option>
-            </select>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Main row: stations + queue -->
-    <section class="sup-main-row">
-      <section class="station-panel">
-        <div class="panel-header">
-          <div>
-            <h3>Stations</h3>
-            <small id="station-count-label"></small>
-          </div>
-          <small>Click actions to simulate how a real supervisor would drive the day.</small>
-        </div>
-        <div class="station-grid" id="station-grid">
-          <!-- Stations rendered by JS -->
-        </div>
-      </section>
-
-      <section class="queue-panel">
-        <div class="panel-header">
-          <div>
-            <h3>Global job queue</h3>
-            <small>Jobs waiting to be started or reassigned.</small>
-          </div>
-          <small id="queue-count-label"></small>
-        </div>
-        <div class="queue-list" id="queue-list">
-          <!-- Global jobs rendered by JS -->
-        </div>
-        <div class="queue-empty-label" id="queue-empty-label" style="display:none;">
-          No waiting jobs in the global queue.
-        </div>
-      </section>
-    </section>
-  </div>
-
-<script type="module">
-  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-  // ==========================
-  // Supabase client
-  // ==========================
-  const SUPABASE_URL = "https://xdjyjzdvpfnkbsnbcysx.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
-
-  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-  // ==========================
-  // In-memory state (fed from Supabase)
-  // ==========================
-  let stations = [];
-  let globalQueue = [];
-
-  const metrics = {
-    completedToday: 0,
-    completedOnTimeRate: 0,
-    stationsRunning: 0,
-    stationCount: 0,
-  };
-
-  /* ---------- Helpers ---------- */
-
-  function formatDateLabelToday() {
-    const d = new Date();
-    return d.toLocaleDateString(undefined, {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-    });
-  }
-
-  function statusBadgeClass(status) {
-    if (status === "running") return "badge badge-ok";
-    if (status === "blocked") return "badge badge-danger";
-    if (status === "idle") return "badge badge-warn";
-    return "badge";
-  }
-
-  function priorityBadgeClass(priority) {
-    if (priority === "high") return "badge badge-priority badge-priority--high";
-    return "badge badge-priority";
-  }
-
-  function compareByName(a, b) {
-    return a.name.localeCompare(b.name);
-  }
-
-  function compareByStatus(a, b) {
-    const weight = { running: 1, idle: 2, blocked: 3 };
-    return (weight[a.status] || 99) - (weight[b.status] || 99);
-  }
-
-  function compareByDue(a, b) {
-    const da = a.currentJob?.due || a.nextJob?.due || "9999-12-31";
-    const db = b.currentJob?.due || b.nextJob?.due || "9999-12-31";
-    return da.localeCompare(db);
-  }
-
-  /* ---------- Rendering ---------- */
-
-  function renderMetrics() {
-    document.getElementById("metrics-date-label").textContent =
-      formatDateLabelToday();
-
-    document.getElementById("metric-completed").textContent =
-      metrics.completedToday;
-    document.getElementById(
-      "metric-completed-sub"
-    ).textContent = "Jobs / batches logged today";
-
-    document.getElementById("metric-ontime").textContent =
-      metrics.completedOnTimeRate + "%";
-    document.getElementById(
-      "metric-ontime-sub"
-    ).textContent = "On-time completion rate (demo)";
-
-    document.getElementById("metric-running").textContent =
-      metrics.stationsRunning + " / " + metrics.stationCount;
-    document.getElementById(
-      "metric-running-sub"
-    ).textContent = "Stations currently marked as running";
-  }
-
-  function renderStations() {
-    const lineFilter = document.getElementById("filter-line").value;
-    const statusFilter = document.getElementById("filter-status").value;
-    const sortValue = document.getElementById("filter-sort").value;
-
-    let list = [...stations];
-
-    if (lineFilter !== "all") {
-      list = list.filter((s) => s.line === lineFilter);
-    }
-    if (statusFilter !== "all") {
-      list = list.filter((s) => s.status === statusFilter);
-    }
-
-    if (sortValue === "name") list.sort(compareByName);
-    else if (sortValue === "status") list.sort(compareByStatus);
-    else if (sortValue === "due") list.sort(compareByDue);
-
-    const container = document.getElementById("station-grid");
-    container.innerHTML = "";
-
-    list.forEach((st) => {
-      const card = document.createElement("article");
-      card.className = "station-card";
-
-      const topRow = document.createElement("div");
-      topRow.className = "station-id-row";
-
-      const title = document.createElement("div");
-      title.className = "station-name";
-      title.textContent = st.name + " · " + st.id;
-
-      const badge = document.createElement("div");
-      badge.className = statusBadgeClass(st.status);
-      badge.textContent =
-        st.status === "running"
-          ? "Running"
-          : st.status === "idle"
-          ? "Idle"
-          : st.status === "blocked"
-          ? "Blocked"
-          : st.status;
-
-      topRow.appendChild(title);
-      topRow.appendChild(badge);
-
-      card.appendChild(topRow);
-
-      // Current job
-      if (st.currentJob) {
-        const jb = document.createElement("div");
-        jb.className = "job-block";
-
-        const jbTitle = document.createElement("div");
-        jbTitle.className = "job-block-title";
-        jbTitle.innerHTML =
-          '<span class="job-label">Current job</span>' +
-          `<span class="job-main">${st.currentJob.id}</span>`;
-        jb.appendChild(jbTitle);
-
-        const meta = document.createElement("div");
-        meta.className = "job-meta-row";
-        const done = st.currentJob.qtyDone ?? 0;
-        const total = st.currentJob.qtyTotal ?? 0;
-        meta.innerHTML = `
-          <span>${st.currentJob.part}</span>
-          <span>${done}/${total} pcs</span>
-          <span>Due ${st.currentJob.due || "-"}</span>
-        `;
-        jb.appendChild(meta);
-
-        if (st.currentJob.priority) {
-          const pr = document.createElement("div");
-          pr.className = "job-meta-row";
-          pr.innerHTML = `<span class="${priorityBadgeClass(
-            st.currentJob.priority
-          )}">Priority: ${st.currentJob.priority}</span>`;
-          jb.appendChild(pr);
+      @media (max-width: 900px) {
+        .station-grid {
+          grid-template-columns: minmax(0, 1fr);
         }
-
-        card.appendChild(jb);
-      } else {
-        const label = document.createElement("div");
-        label.className = "no-job-label";
-        label.textContent = "No current job loaded.";
-        card.appendChild(label);
       }
 
-      // Next job (placeholder for future logic)
-      if (st.nextJob) {
-        const jb = document.createElement("div");
-        jb.className = "job-block";
-        const jbTitle = document.createElement("div");
-        jbTitle.className = "job-block-title";
-        jbTitle.innerHTML =
-          '<span class="job-label">Next up</span>' +
-          `<span class="job-main">${st.nextJob.id}</span>`;
-        jb.appendChild(jbTitle);
-
-        const meta = document.createElement("div");
-        meta.className = "job-meta-row";
-        meta.innerHTML = `
-          <span>${st.nextJob.part}</span>
-          <span>${st.nextJob.qtyTotal} pcs</span>
-          <span>Due ${st.nextJob.due || "-"}</span>
-        `;
-        jb.appendChild(meta);
-
-        card.appendChild(jb);
+      .station-card {
+        position: relative;
+        border-radius: 14px;
+        border: 1px solid rgba(75, 85, 99, 0.85);
+        background: radial-gradient(circle at top left, #111827, #020617 70%);
+        padding: 10px 10px 11px;
+        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.75);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       }
 
-      // Actions (still local-only demo logic for now)
-      const actionRow = document.createElement("div");
-      actionRow.className = "station-actions";
+      .station-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
+        border-color: rgba(249, 115, 22, 0.7);
+      }
 
-      const btnComplete = document.createElement("button");
-      btnComplete.className = "mini-btn mini-btn-primary";
-      btnComplete.textContent = "Mark complete";
-      btnComplete.onclick = () => simulateCompleteJob(st.id);
+      .station-id-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 6px;
+      }
 
-      const btnMaterial = document.createElement("button");
-      btnMaterial.className = "mini-btn";
-      btnMaterial.textContent = "Need material";
-      btnMaterial.onclick = () =>
-        alert("Material request triggered for " + st.name);
+      .station-name {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #e5e7eb;
+      }
 
-      const btnBlocked = document.createElement("button");
-      btnBlocked.className = "mini-btn";
-      btnBlocked.textContent = "Mark blocked";
-      btnBlocked.onclick = () => simulateBlocked(st.id);
+      .badge {
+        border-radius: 999px;
+        padding: 3px 9px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        border: 1px solid transparent;
+      }
 
-      const btnIdle = document.createElement("button");
-      btnIdle.className = "mini-btn";
-      btnIdle.textContent = "Set idle";
-      btnIdle.onclick = () => simulateIdle(st.id);
+      .badge-ok {
+        border-color: rgba(34, 197, 94, 0.6);
+        color: #bbf7d0;
+        background: rgba(22, 163, 74, 0.18);
+      }
 
-      actionRow.appendChild(btnComplete);
-      actionRow.appendChild(btnMaterial);
-      actionRow.appendChild(btnBlocked);
-      actionRow.appendChild(btnIdle);
+      .badge-warn {
+        border-color: rgba(250, 204, 21, 0.7);
+        color: #fef9c3;
+        background: rgba(234, 179, 8, 0.16);
+      }
 
-      card.appendChild(actionRow);
+      .badge-danger {
+        border-color: rgba(248, 113, 113, 0.85);
+        color: #fee2e2;
+        background: rgba(248, 113, 113, 0.18);
+      }
 
-      container.appendChild(card);
-    });
+      .job-block {
+        border-radius: 10px;
+        border: 1px solid rgba(55, 65, 81, 0.9);
+        background: rgba(15, 23, 42, 0.9);
+        padding: 7px 8px;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
 
-    document.getElementById("station-count-label").textContent =
-      list.length + " stations in view";
-  }
+      .job-block-title {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+      }
 
-  function renderQueue() {
-    const container = document.getElementById("queue-list");
-    container.innerHTML = "";
+      .job-label {
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: rgba(148, 163, 184, 0.9);
+        font-size: 10px;
+      }
 
-    if (!globalQueue.length) {
-      document.getElementById("queue-empty-label").style.display = "block";
-      document.getElementById("queue-count-label").textContent =
-        "0 jobs waiting";
-      return;
-    } else {
-      document.getElementById("queue-empty-label").style.display = "none";
-    }
+      .job-main {
+        font-weight: 600;
+        color: #f9fafb;
+      }
 
-    globalQueue.forEach((job) => {
-      const item = document.createElement("article");
-      item.className = "queue-item";
+      .job-meta-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+        color: rgba(209, 213, 219, 0.9);
+        font-size: 10px;
+      }
 
-      const top = document.createElement("div");
-      top.className = "queue-top";
-      top.innerHTML = `
-        <div>
-          <div class="job-label">Job</div>
-          <div class="job-main">${job.id}</div>
+      .job-meta-row span {
+        white-space: nowrap;
+      }
+
+      .station-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
+      }
+
+      .mini-btn {
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        background: rgba(15, 23, 42, 0.9);
+        color: #e5e7eb;
+        font-size: 10px;
+        padding: 4px 9px;
+        cursor: pointer;
+        transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+      }
+
+      .mini-btn:hover {
+        background: rgba(31, 41, 55, 0.95);
+        transform: translateY(-1px);
+      }
+
+      .mini-btn-primary {
+        border-color: rgba(249, 115, 22, 0.85);
+        background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+        color: #111827;
+        font-weight: 600;
+      }
+
+      .no-job-label {
+        font-size: 11px;
+        color: var(--text-soft);
+        font-style: italic;
+      }
+
+      /* Right-side panel: global queue */
+
+      .queue-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        max-height: 420px;
+        overflow-y: auto;
+        padding-right: 4px;
+      }
+
+      .queue-item {
+        border-radius: 12px;
+        border: 1px solid rgba(55, 65, 81, 0.9);
+        background: rgba(15, 23, 42, 0.95);
+        padding: 8px 9px;
+        font-size: 11px;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .queue-top {
+        display: flex;
+        justify-content: space-between;
+        gap: 6px;
+      }
+
+      .queue-meta {
+        display: flex;
+        gap: 10px;
+        color: rgba(209, 213, 219, 0.9);
+        font-size: 10px;
+      }
+
+      .queue-actions {
+        display: flex;
+        gap: 6px;
+        margin-top: 3px;
+      }
+
+      .queue-item .job-label {
+        color: rgba(148, 163, 184, 0.95);
+      }
+
+      .badge-priority {
+        border-color: rgba(248, 250, 252, 0.55);
+        color: #e5e7eb;
+        background: rgba(15, 23, 42, 0.85);
+      }
+
+      .badge-priority--high {
+        border-color: rgba(248, 113, 113, 0.85);
+        color: #fee2e2;
+        background: rgba(127, 29, 29, 0.7);
+      }
+
+      .queue-empty-label {
+        font-size: 11px;
+        color: var(--text-soft);
+        font-style: italic;
+        margin-top: 4px;
+      }
+
+      /* Scrollbars (subtle) */
+      .queue-list::-webkit-scrollbar {
+        width: 6px;
+      }
+      .queue-list::-webkit-scrollbar-track {
+        background: rgba(15, 23, 42, 0.8);
+      }
+      .queue-list::-webkit-scrollbar-thumb {
+        background: rgba(55, 65, 81, 0.9);
+        border-radius: 999px;
+      }
+      /* ===== VIEW CONTROLS STRIP ===== */
+
+      .view-controls {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        gap:12px;
+        padding:10px 16px;
+        margin:0 0 14px;
+        border-radius:999px;
+        background:rgba(15,23,42,0.6);
+        border:1px solid rgba(148,163,184,0.45);
+        backdrop-filter:blur(12px);
+        -webkit-backdrop-filter:blur(12px);
+      }
+
+      .view-controls-left,
+      .view-controls-right {
+        display:flex;
+        align-items:center;
+        gap:8px;
+        flex-wrap:wrap;
+      }
+
+      .view-controls-label {
+        font-size:10px;
+        text-transform:uppercase;
+        letter-spacing:0.12em;
+        opacity:0.7;
+      }
+
+      .vc-btn {
+        border:none;
+        padding:6px 10px;
+        border-radius:999px;
+        font-size:10px;
+        cursor:pointer;
+        background:rgba(15,23,42,0.9);
+        color:inherit;
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        transition:
+          background 0.15s ease,
+          transform 0.08s ease,
+          box-shadow 0.15s ease,
+          opacity 0.15s ease;
+        box-shadow:0 0 0 rgba(15,23,42,0);
+        border:1px solid rgba(148,163,184,0.7);
+      }
+
+      .vc-btn:hover {
+        background:rgba(31,41,55,0.95);
+        transform:translateY(-0.5px);
+        box-shadow:0 4px 10px rgba(15,23,42,0.6);
+      }
+
+      .vc-btn:active {
+        transform:translateY(0);
+        box-shadow:0 0 0 rgba(15,23,42,0);
+      }
+
+      .vc-btn.is-active {
+        background:var(--accent-soft);
+        border-color:rgba(249,115,22,0.9);
+        box-shadow:0 0 0 1px rgba(249,115,22,0.7);
+        color:#fed7aa;
+      }
+
+      /* ===== VIEW MODES (class-based) ===== */
+
+      /* Compact vs Expanded */
+      body.compact-view .station-card {
+        padding:8px 8px 9px;
+        gap:4px;
+      }
+
+      body.compact-view .station-name {
+        font-size:11px;
+      }
+
+      body.compact-view .job-block {
+        padding:5px 6px;
+        font-size:10px;
+      }
+
+      body.compact-view .job-meta-row {
+        font-size:9px;
+      }
+
+      body.expanded-view .station-card {
+        padding:14px 14px 16px;
+      }
+
+      /* Hide / Show job details */
+      body.hide-details .job-details {
+        display:none !important;
+      }
+
+      /* Hide empty stations */
+      body.hide-empty .station-card.is-empty {
+        display:none !important;
+      }
+
+      /* Dark / Light mode toggle (full light theme overrides) */
+      body.light-mode {
+        background:
+          radial-gradient(circle at top left,#e5e7eb 0,#e5e7eb 40%,#dbeafe 100%);
+        color:#020617;
+      }
+
+      body.light-mode .sup-shell {
+        color:#020617;
+      }
+
+      /* Panels & cards */
+      body.light-mode .sup-metrics-panel,
+      body.light-mode .sup-filters-panel,
+      body.light-mode .station-panel,
+      body.light-mode .queue-panel {
+        background:#f9fafb;
+        border-color:rgba(148,163,184,0.65);
+        box-shadow:0 14px 26px rgba(15,23,42,0.18);
+      }
+
+      body.light-mode .metric-card,
+      body.light-mode .station-card,
+      body.light-mode .queue-item {
+        background:#ffffff;
+        border-color:rgba(148,163,184,0.7);
+        box-shadow:0 10px 20px rgba(15,23,42,0.10);
+      }
+
+      /* Header + titles */
+      body.light-mode .sup-logo {
+        color:#020617;
+      }
+
+      body.light-mode .sup-title {
+        color:#020617;
+      }
+
+      body.light-mode .sup-subtitle {
+        color:#4b5563;
+      }
+
+      body.light-mode .sup-panel-title h2,
+      body.light-mode .panel-header h3 {
+        color:#020617;
+      }
+
+      body.light-mode .sup-panel-sub,
+      body.light-mode .panel-header small {
+        color:#6b7280;
+      }
+
+      /* Metric text */
+      body.light-mode .metric-label {
+        color:#6b7280;
+      }
+
+      body.light-mode .metric-main {
+        color:#111827;
+      }
+
+      body.light-mode .metric-sub {
+        color:#4b5563;
+      }
+
+      /* Station / queue text */
+      body.light-mode .station-name {
+        color:#020617;
+      }
+
+      body.light-mode .no-job-label,
+      body.light-mode .queue-empty-label {
+        color:#6b7280;
+      }
+
+      body.light-mode .queue-item .job-main {
+        color:#111827;
+      }
+
+      body.light-mode .queue-item .job-label {
+        color:#6b7280;
+      }
+
+      /* Job blocks – light, matches the card */
+      body.light-mode .job-block {
+        background:#f9fafb;
+        border-color:#e5e7eb;
+        color:#111827;
+      }
+
+      body.light-mode .job-block .job-label {
+        color:#6b7280;
+      }
+
+      body.light-mode .job-block .job-main {
+        color:#111827;
+      }
+
+      body.light-mode .job-block .job-meta-row span {
+        color:#374151;
+      }
+
+      /* Badges */
+      body.light-mode .badge-ok {
+        border-color:rgba(22,163,74,0.55);
+        color:#166534;
+        background:rgba(22,163,74,0.10);
+      }
+
+      body.light-mode .badge-warn {
+        border-color:rgba(234,179,8,0.7);
+        color:#92400e;
+        background:rgba(250,204,21,0.16);
+      }
+
+      body.light-mode .badge-danger {
+        border-color:rgba(248,113,113,0.85);
+        color:#b91c1c;
+        background:rgba(248,113,113,0.18);
+      }
+
+      body.light-mode .badge-priority {
+        border-color:rgba(15,23,42,0.25);
+        color:#111827;
+        background:#e5e7eb;
+      }
+
+      body.light-mode .badge-priority--high {
+        border-color:#b91c1c;
+        color:#b91c1c;
+        background:#fee2e2;
+      }
+
+      /* Buttons (top-right + mini buttons) */
+      body.light-mode .lo-btn {
+        background:#e5e7eb;
+        color:#020617;
+        border-color:rgba(148,163,184,0.8);
+      }
+
+      body.light-mode .lo-btn:hover {
+        background:#d1d5db;
+      }
+
+      body.light-mode .mini-btn {
+        background:#e5e7eb;
+        color:#111827;
+        border-color:rgba(148,163,184,0.9);
+      }
+
+      body.light-mode .mini-btn:hover {
+        background:#cbd5f5;
+      }
+
+      body.light-mode .mini-btn-primary {
+        background:linear-gradient(135deg,var(--accent),var(--accent-strong));
+        color:#111827;
+        border-color:rgba(249,115,22,0.85);
+      }
+
+      /* View controls strip + buttons */
+      body.light-mode .view-controls {
+        background:rgba(241,245,249,0.95);
+        border-color:rgba(148,163,184,0.7);
+      }
+
+      body.light-mode .vc-btn {
+        background:#e5e7eb;
+        color:#020617;
+        border-color:rgba(148,163,184,0.9);
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="sup-shell">
+      <!-- Top header -->
+      <header class="sup-header">
+        <div class="sup-brand">
+          <div class="sup-logo">LeanOps</div>
+          <div class="sup-title">Supervisor — Live Stations</div>
+          <div class="sup-subtitle">
+            Lightweight MES view for jobs, stations, and flow — generic demo instance.
+          </div>
         </div>
-        <div class="${priorityBadgeClass(job.priority)}">
-          Priority: ${job.priority}
+        <div class="sup-actions">
+          <button class="lo-btn" id="btn-refresh">Quick refresh</button>
+          <button class="lo-btn lo-btn-primary" id="btn-simulate">
+            Simulate next hour
+          </button>
         </div>
-      `;
-      item.appendChild(top);
+      </header>
 
-      const meta = document.createElement("div");
-      meta.className = "queue-meta";
-      meta.innerHTML = `
-        <span>${job.part}</span>
-        <span>${job.qtyTotal} pcs</span>
-        <span>Due ${job.due || "-"}</span>
-      `;
-      item.appendChild(meta);
+      <!-- View Controls Bar -->
+      <section class="view-controls">
+        <div class="view-controls-left">
+          <span class="view-controls-label">Display options</span>
+          <button type="button" class="vc-btn" data-toggle="compact">
+            Compact
+          </button>
+          <button type="button" class="vc-btn" data-toggle="expanded">
+            Expanded
+          </button>
+          <button type="button" class="vc-btn" data-toggle="details">
+            Toggle details
+          </button>
+        </div>
 
-      const actions = document.createElement("div");
-      actions.className = "queue-actions";
+        <div class="view-controls-right">
+          <button type="button" class="vc-btn" data-toggle="theme">
+            Light / Dark
+          </button>
+          <button type="button" class="vc-btn" data-toggle="empty">
+            Hide empty stations
+          </button>
+        </div>
+      </section>
 
-      const assignBtn = document.createElement("button");
-      assignBtn.className = "mini-btn mini-btn-primary";
-      assignBtn.textContent = "Assign to station";
-      assignBtn.onclick = () => simulateAssignFromQueue(job.id);
+      <!-- Top metrics & filters -->
+      <section class="sup-top-row">
+        <div class="sup-metrics-panel">
+          <div class="sup-panel-title">
+            <h2>Today</h2>
+            <div class="sup-panel-sub" id="metrics-date-label"></div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Jobs completed</div>
+              <div class="metric-main" id="metric-completed">0</div>
+              <div class="metric-sub" id="metric-completed-sub">–</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">On-time completion</div>
+              <div class="metric-main" id="metric-ontime">0%</div>
+              <div class="metric-sub" id="metric-ontime-sub">–</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Stations running</div>
+              <div class="metric-main" id="metric-running">0 / 0</div>
+              <div class="metric-sub" id="metric-running-sub">–</div>
+            </div>
+          </div>
+        </div>
 
-      const dropBtn = document.createElement("button");
-      dropBtn.className = "mini-btn";
-      dropBtn.textContent = "Remove";
-      dropBtn.onclick = () => simulateDropFromQueue(job.id);
+        <div class="sup-filters-panel">
+          <div class="sup-panel-title">
+            <h2>View controls</h2>
+            <div class="sup-panel-sub">Use filters to focus on a line or status.</div>
+          </div>
+          <div class="filters-grid">
+            <div class="filter-pill">
+              <span>Line</span>
+              <select id="filter-line" class="filter-select">
+                <option value="all">All lines</option>
+                <option value="Line A">Line A</option>
+                <option value="Line B">Line B</option>
+              </select>
+            </div>
+            <div class="filter-pill">
+              <span>Status</span>
+              <select id="filter-status" class="filter-select">
+                <option value="all">All statuses</option>
+                <option value="running">Running</option>
+                <option value="idle">Idle</option>
+                <option value="blocked">Blocked</option>
+              </select>
+            </div>
+            <div class="filter-pill">
+              <span>Sort</span>
+              <select id="filter-sort" class="filter-select">
+                <option value="name">By station name</option>
+                <option value="status">By status</option>
+                <option value="due">By due date</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </section>
 
-      actions.appendChild(assignBtn);
-      actions.appendChild(dropBtn);
+      <!-- Main row: stations + queue -->
+      <section class="sup-main-row">
+        <section class="station-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Stations</h3>
+              <small id="station-count-label"></small>
+            </div>
+            <small>Click actions to simulate how a real supervisor would drive the day.</small>
+          </div>
+          <div class="station-grid" id="station-grid">
+            <!-- Stations rendered by JS -->
+          </div>
+        </section>
 
-      item.appendChild(actions);
-      container.appendChild(item);
-    });
+        <section class="queue-panel">
+          <div class="panel-header">
+            <div>
+              <h3>Global job queue</h3>
+              <small>Jobs waiting to be started or reassigned.</small>
+            </div>
+            <small id="queue-count-label"></small>
+          </div>
+          <div class="queue-list" id="queue-list">
+            <!-- Global jobs rendered by JS -->
+          </div>
+          <div class="queue-empty-label" id="queue-empty-label" style="display:none;">
+            No waiting jobs in the global queue.
+          </div>
+        </section>
+      </section>
+    </div>
 
-    document.getElementById("queue-count-label").textContent =
-      globalQueue.length + " jobs in queue";
-  }
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  /* ---------- Simulation actions (still local only) ---------- */
+    // ==========================
+    // Supabase client
+    // ==========================
+    const SUPABASE_URL = "https://xdjyjzdvpfnkbsnbcysx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
 
-  function simulateCompleteJob(stationId) {
-    const st = stations.find((s) => s.id === stationId);
-    if (!st || !st.currentJob) {
-      alert("No active job on " + stationId + " to complete.");
-      return;
-    }
-    metrics.completedToday += 1;
-    metrics.completedOnTimeRate = Math.min(
-      100,
-      metrics.completedOnTimeRate + 1
-    );
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    st.currentJob = st.nextJob || null;
-    st.nextJob = null;
-    st.status = st.currentJob ? "running" : "idle";
+    // ==========================
+    // In-memory state (fed from Supabase)
+    // ==========================
+    let stations = [];
+    let globalQueue = [];
 
-    recalcRunning();
-    renderMetrics();
-    renderStations();
-  }
-
-async function simulateBlocked(stationId) {
-  try {
-    // 1) Update in Supabase
-    const { error } = await supabase
-      .from("stations")
-      .update({ status: "blocked" })
-      .eq("id", stationId);
-
-    if (error) {
-      console.error("Error updating station status:", error);
-      alert("Could not mark station as blocked (cloud error).");
-      return;
-    }
-
-    // 2) Update local state so UI responds immediately
-    const st = stations.find((s) => s.id === stationId);
-    if (st) {
-      st.status = "blocked";
-    }
-
-    recalcRunning();
-    renderMetrics();
-    renderStations();
-  } catch (err) {
-    console.error("Unexpected error in simulateBlocked:", err);
-    alert("Unexpected error marking station blocked.");
-  }
-}
-
-  async function simulateIdle(stationId) {
-  try {
-    // 1) Update in Supabase
-    const { error } = await supabase
-      .from("stations")
-      .update({ status: "idle" })
-      .eq("id", stationId);
-
-    if (error) {
-      console.error("Error updating station to idle:", error);
-      alert("Could not set station to idle (cloud error).");
-      return;
-    }
-
-    // 2) Update local state so UI responds immediately
-    const st = stations.find((s) => s.id === stationId);
-    if (st) {
-      st.status = "idle";
-    }
-
-    recalcRunning();
-    renderMetrics();
-    renderStations();
-  } catch (err) {
-    console.error("Unexpected error in simulateIdle:", err);
-    alert("Unexpected error setting station idle.");
-  }
-}
-
-  function simulateAssignFromQueue(jobId) {
-    const idx = globalQueue.findIndex((j) => j.id === jobId);
-    if (idx === -1) return;
-    const job = globalQueue[idx];
-
-    const idleStation = stations.find(
-      (s) => s.status === "idle" && !s.currentJob
-    );
-    if (!idleStation) {
-      alert("No idle station available to assign this job.");
-      return;
-    }
-
-    idleStation.currentJob = {
-      id: job.id,
-      part: job.part,
-      qtyTotal: job.qtyTotal,
-      qtyDone: 0,
-      due: job.due,
-      priority: job.priority,
+    const metrics = {
+      completedToday: 0,
+      completedOnTimeRate: 0,
+      stationsRunning: 0,
+      stationCount: 0,
     };
-    idleStation.status = "running";
 
-    globalQueue.splice(idx, 1);
-    recalcRunning();
-    renderMetrics();
-    renderStations();
-    renderQueue();
-  }
+    /* ---------- Helpers ---------- */
 
-  function simulateDropFromQueue(jobId) {
-    const idx = globalQueue.findIndex((j) => j.id === jobId);
-    if (idx === -1) return;
-    globalQueue.splice(idx, 1);
-    renderQueue();
-  }
-
-  function recalcRunning() {
-    metrics.stationsRunning = stations.filter(
-      (s) => s.status === "running"
-    ).length;
-    metrics.stationCount = stations.length;
-  }
-
-  function simulateNextHour() {
-    const running = stations.filter((s) => s.status === "running");
-    if (!running.length) {
-      alert(
-        "No running stations to simulate — try assigning or starting a job."
-      );
-      return;
+    function formatDateLabelToday() {
+      const d = new Date();
+      return d.toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
     }
-    const choice = running[Math.floor(Math.random() * running.length)];
-    simulateCompleteJob(choice.id);
-  }
 
-  /* ---------- Load initial data from Supabase ---------- */
+    function statusBadgeClass(status) {
+      if (status === "running") return "badge badge-ok";
+      if (status === "blocked") return "badge badge-danger";
+      if (status === "idle") return "badge badge-warn";
+      return "badge";
+    }
 
-  async function loadInitialData() {
-    try {
-      const [{ data: stationRows, error: stationErr }, 
-             { data: jobRows, error: jobErr }, 
-             { data: assignRows, error: assignErr }, 
-             { data: perfRows, error: perfErr }] = await Promise.all([
-        supabase.from("stations").select("*").order("id"),
-        supabase.from("jobs").select("*"),
-        supabase.from("station_assignments").select("*"),
-        supabase.from("performance_logs").select("*"),
-      ]);
+    function priorityBadgeClass(priority) {
+      if (priority === "high") return "badge badge-priority badge-priority--high";
+      return "badge badge-priority";
+    }
 
-      if (stationErr) throw stationErr;
-      if (jobErr) throw jobErr;
-      if (assignErr) throw assignErr;
-      if (perfErr) throw perfErr;
+    function compareByName(a, b) {
+      return a.name.localeCompare(b.name);
+    }
 
-      const jobsById = new Map(jobRows.map((j) => [j.id, j]));
-      const assignsByStation = new Map();
-      assignRows.forEach((a) => assignsByStation.set(a.station_id, a));
+    function compareByStatus(a, b) {
+      const weight = { running: 1, idle: 2, blocked: 3 };
+      return (weight[a.status] || 99) - (weight[b.status] || 99);
+    }
 
-      stations = stationRows.map((stRow) => {
-        const assignment = assignsByStation.get(stRow.id);
-        let currentJob = null;
+    function compareByDue(a, b) {
+      const da = a.currentJob?.due || a.nextJob?.due || "9999-12-31";
+      const db = b.currentJob?.due || b.nextJob?.due || "9999-12-31";
+      return da.localeCompare(db);
+    }
 
-        if (assignment) {
-          const job = jobsById.get(assignment.job_id);
-          if (job) {
-            currentJob = {
-              id: job.id,
-              part: job.part_name,
-              qtyTotal: job.qty_total,
-              qtyDone: assignment.qty_done,
-              due: job.due_date,
-              priority: job.priority,
-            };
+    /* ---------- Rendering ---------- */
+
+    function renderMetrics() {
+      document.getElementById("metrics-date-label").textContent =
+        formatDateLabelToday();
+
+      document.getElementById("metric-completed").textContent =
+        metrics.completedToday;
+      document.getElementById(
+        "metric-completed-sub"
+      ).textContent = "Jobs / batches logged today";
+
+      document.getElementById("metric-ontime").textContent =
+        metrics.completedOnTimeRate + "%";
+      document.getElementById(
+        "metric-ontime-sub"
+      ).textContent = "On-time completion rate (demo)";
+
+      document.getElementById("metric-running").textContent =
+        metrics.stationsRunning + " / " + metrics.stationCount;
+      document.getElementById(
+        "metric-running-sub"
+      ).textContent = "Stations currently marked as running";
+    }
+
+    function renderStations() {
+      const lineFilter = document.getElementById("filter-line").value;
+      const statusFilter = document.getElementById("filter-status").value;
+      const sortValue = document.getElementById("filter-sort").value;
+
+      let list = [...stations];
+
+      if (lineFilter !== "all") {
+        list = list.filter((s) => s.line === lineFilter);
+      }
+      if (statusFilter !== "all") {
+        list = list.filter((s) => s.status === statusFilter);
+      }
+
+      if (sortValue === "name") list.sort(compareByName);
+      else if (sortValue === "status") list.sort(compareByStatus);
+      else if (sortValue === "due") list.sort(compareByDue);
+
+      const container = document.getElementById("station-grid");
+      container.innerHTML = "";
+
+      list.forEach((st) => {
+        const card = document.createElement("article");
+        card.className = "station-card";
+
+        const topRow = document.createElement("div");
+        topRow.className = "station-id-row";
+
+        const title = document.createElement("div");
+        title.className = "station-name";
+        title.textContent = st.name + " · " + st.id;
+
+        const badge = document.createElement("div");
+        badge.className = statusBadgeClass(st.status);
+        badge.textContent =
+          st.status === "running"
+            ? "Running"
+            : st.status === "idle"
+            ? "Idle"
+            : st.status === "blocked"
+            ? "Blocked"
+            : st.status;
+
+        topRow.appendChild(title);
+        topRow.appendChild(badge);
+
+        card.appendChild(topRow);
+
+        // Current job
+        if (st.currentJob) {
+          const jb = document.createElement("div");
+          jb.className = "job-block";
+
+          const jbTitle = document.createElement("div");
+          jbTitle.className = "job-block-title";
+          jbTitle.innerHTML =
+            '<span class="job-label">Current job</span>' +
+            `<span class="job-main">${st.currentJob.id}</span>`;
+          jb.appendChild(jbTitle);
+
+          const meta = document.createElement("div");
+          meta.className = "job-meta-row";
+          const done = st.currentJob.qtyDone ?? 0;
+          const total = st.currentJob.qtyTotal ?? 0;
+          meta.innerHTML = `
+            <span>${st.currentJob.part}</span>
+            <span>${done}/${total} pcs</span>
+            <span>Due ${st.currentJob.due || "-"}</span>
+          `;
+          jb.appendChild(meta);
+
+          if (st.currentJob.priority) {
+            const pr = document.createElement("div");
+            pr.className = "job-meta-row";
+            pr.innerHTML = `<span class="${priorityBadgeClass(
+              st.currentJob.priority
+            )}">Priority: ${st.currentJob.priority}</span>`;
+            jb.appendChild(pr);
           }
+
+          card.appendChild(jb);
+        } else {
+          const label = document.createElement("div");
+          label.className = "no-job-label";
+          label.textContent = "No current job loaded.";
+          card.appendChild(label);
         }
 
-        return {
-          id: stRow.id,
-          name: stRow.name,
-          line: stRow.line,
-          status: stRow.status,
-          currentJob,
-          nextJob: null, // future: look up "next" from queue or schedule
-        };
+        // Next job (placeholder for future logic)
+        if (st.nextJob) {
+          const jb = document.createElement("div");
+          jb.className = "job-block";
+          const jbTitle = document.createElement("div");
+          jbTitle.className = "job-block-title";
+          jbTitle.innerHTML =
+            '<span class="job-label">Next up</span>' +
+            `<span class="job-main">${st.nextJob.id}</span>`;
+          jb.appendChild(jbTitle);
+
+          const meta = document.createElement("div");
+          meta.className = "job-meta-row";
+          meta.innerHTML = `
+            <span>${st.nextJob.part}</span>
+            <span>${st.nextJob.qtyTotal} pcs</span>
+            <span>Due ${st.nextJob.due || "-"}</span>
+          `;
+          jb.appendChild(meta);
+
+          card.appendChild(jb);
+        }
+
+        // Actions (still local-only demo logic for now)
+        const actionRow = document.createElement("div");
+        actionRow.className = "station-actions";
+
+        const btnComplete = document.createElement("button");
+        btnComplete.className = "mini-btn mini-btn-primary";
+        btnComplete.textContent = "Mark complete";
+        btnComplete.onclick = () => simulateCompleteJob(st.id);
+
+        const btnMaterial = document.createElement("button");
+        btnMaterial.className = "mini-btn";
+        btnMaterial.textContent = "Need material";
+        btnMaterial.onclick = () =>
+          alert("Material request triggered for " + st.name);
+
+        const btnBlocked = document.createElement("button");
+        btnBlocked.className = "mini-btn";
+        btnBlocked.textContent = "Mark blocked";
+        btnBlocked.onclick = () => simulateBlocked(st.id);
+
+        const btnIdle = document.createElement("button");
+        btnIdle.className = "mini-btn";
+        btnIdle.textContent = "Set idle";
+        btnIdle.onclick = () => simulateIdle(st.id);
+
+        actionRow.appendChild(btnComplete);
+        actionRow.appendChild(btnMaterial);
+        actionRow.appendChild(btnBlocked);
+        actionRow.appendChild(btnIdle);
+
+        card.appendChild(actionRow);
+
+        container.appendChild(card);
       });
 
-      globalQueue = jobRows
-        .filter((j) => j.status === "waiting")
-        .map((job) => ({
-          id: job.id,
-          part: job.part_name,
-          qtyTotal: job.qty_total,
-          due: job.due_date,
-          priority: job.priority,
-        }));
+      document.getElementById("station-count-label").textContent =
+        list.length + " stations in view";
+    }
 
-      const totalCompletedEntries = perfRows?.length ?? 0;
-      metrics.completedToday = totalCompletedEntries;
+    function renderQueue() {
+      const container = document.getElementById("queue-list");
+      container.innerHTML = "";
 
-      // Placeholder rate (later: compute from due_date vs completion time)
-      metrics.completedOnTimeRate = 92;
+      if (!globalQueue.length) {
+        document.getElementById("queue-empty-label").style.display = "block";
+        document.getElementById("queue-count-label").textContent =
+          "0 jobs waiting";
+        return;
+      } else {
+        document.getElementById("queue-empty-label").style.display = "none";
+      }
+
+      globalQueue.forEach((job) => {
+        const item = document.createElement("article");
+        item.className = "queue-item";
+
+        const top = document.createElement("div");
+        top.className = "queue-top";
+        top.innerHTML = `
+          <div>
+            <div class="job-label">Job</div>
+            <div class="job-main">${job.id}</div>
+          </div>
+          <div class="${priorityBadgeClass(job.priority)}">
+            Priority: ${job.priority}
+          </div>
+        `;
+        item.appendChild(top);
+
+        const meta = document.createElement("div");
+        meta.className = "queue-meta";
+        meta.innerHTML = `
+          <span>${job.part}</span>
+          <span>${job.qtyTotal} pcs</span>
+          <span>Due ${job.due || "-"}</span>
+        `;
+        item.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "queue-actions";
+
+        const assignBtn = document.createElement("button");
+        assignBtn.className = "mini-btn mini-btn-primary";
+        assignBtn.textContent = "Assign to station";
+        assignBtn.onclick = () => simulateAssignFromQueue(job.id);
+
+        const dropBtn = document.createElement("button");
+        dropBtn.className = "mini-btn";
+        dropBtn.textContent = "Remove";
+        dropBtn.onclick = () => simulateDropFromQueue(job.id);
+
+        actions.appendChild(assignBtn);
+        actions.appendChild(dropBtn);
+
+        item.appendChild(actions);
+        container.appendChild(item);
+      });
+
+      document.getElementById("queue-count-label").textContent =
+        globalQueue.length + " jobs in queue";
+    }
+
+    /* ---------- Simulation actions (still local only) ---------- */
+
+    async function simulateCompleteJob(stationId) {
+  const st = stations.find((s) => s.id === stationId);
+
+  if (!st || !st.currentJob) {
+    alert("No active job on " + stationId + " to complete.");
+    return;
+  }
+
+  const jobId = st.currentJob.id;
+  const qtyTotal = st.currentJob.qtyTotal ?? 0;
+
+  console.log("Completing job", { stationId, jobId, qtyTotal });  // <--- add this
+
+    try {
+      // 1) Mark the job as completed in jobs
+      const { error: jobErr } = await supabase
+        .from("jobs")
+        .update({ status: "completed" })
+        .eq("id", jobId);
+
+      if (jobErr) {
+        console.error("Error updating job status:", jobErr);
+        alert("Could not mark job as completed (cloud error).");
+        return;
+      }
+
+      // 2) Update station_assignments for this station/job (qty_done)
+      const { error: assignErr } = await supabase
+        .from("station_assignments")
+        .update({ qty_done: qtyTotal })
+        .eq("station_id", stationId)
+        .eq("job_id", jobId);
+
+      if (assignErr) {
+        console.error("Error updating station assignment:", assignErr);
+        alert("Job completed in UI, but assignment update failed in cloud.");
+        // we still continue so UI doesn’t feel broken
+      }
+
+      // 3) Set the station to idle in stations
+      const { error: stationErr } = await supabase
+        .from("stations")
+        .update({ status: "idle" })
+        .eq("id", stationId);
+
+      if (stationErr) {
+        console.error("Error updating station status to idle:", stationErr);
+        alert("Could not update station status in cloud.");
+        // again, we still update local UI
+      }
+
+      // 4) Update local metrics + state so UI responds immediately
+      metrics.completedToday += 1;
+      // We'll keep the on-time % as a simple placeholder for now
+      metrics.completedOnTimeRate = Math.min(
+        100,
+        metrics.completedOnTimeRate + 1
+      );
+
+      st.currentJob = null;
+      st.status = "idle";
 
       recalcRunning();
       renderMetrics();
       renderStations();
-      renderQueue();
     } catch (err) {
-      console.error("Error loading initial data from Supabase:", err);
-      alert("Error loading data from cloud — using empty demo state.");
-      stations = [];
-      globalQueue = [];
+      console.error("Unexpected error completing job:", err);
+      alert("Unexpected error while completing job.");
+    }
+  }
+
+  async function simulateBlocked(stationId) {
+    try {
+      // 1) Update in Supabase
+      const { error } = await supabase
+        .from("stations")
+        .update({ status: "blocked" })
+        .eq("id", stationId);
+
+      if (error) {
+        console.error("Error updating station status:", error);
+        alert("Could not mark station as blocked (cloud error).");
+        return;
+      }
+
+      // 2) Update local state so UI responds immediately
+      const st = stations.find((s) => s.id === stationId);
+      if (st) {
+        st.status = "blocked";
+      }
+
+      recalcRunning();
+      renderMetrics();
+      renderStations();
+    } catch (err) {
+      console.error("Unexpected error in simulateBlocked:", err);
+      alert("Unexpected error marking station blocked.");
+    }
+  }
+
+    async function simulateIdle(stationId) {
+    try {
+      // 1) Update in Supabase
+      const { error } = await supabase
+        .from("stations")
+        .update({ status: "idle" })
+        .eq("id", stationId);
+
+      if (error) {
+        console.error("Error updating station to idle:", error);
+        alert("Could not set station to idle (cloud error).");
+        return;
+      }
+
+      // 2) Update local state so UI responds immediately
+      const st = stations.find((s) => s.id === stationId);
+      if (st) {
+        st.status = "idle";
+      }
+
+      recalcRunning();
+      renderMetrics();
+      renderStations();
+    } catch (err) {
+      console.error("Unexpected error in simulateIdle:", err);
+      alert("Unexpected error setting station idle.");
+    }
+  }
+
+    function simulateAssignFromQueue(jobId) {
+      const idx = globalQueue.findIndex((j) => j.id === jobId);
+      if (idx === -1) return;
+      const job = globalQueue[idx];
+
+      const idleStation = stations.find(
+        (s) => s.status === "idle" && !s.currentJob
+      );
+      if (!idleStation) {
+        alert("No idle station available to assign this job.");
+        return;
+      }
+
+      idleStation.currentJob = {
+        id: job.id,
+        part: job.part,
+        qtyTotal: job.qtyTotal,
+        qtyDone: 0,
+        due: job.due,
+        priority: job.priority,
+      };
+      idleStation.status = "running";
+
+      globalQueue.splice(idx, 1);
       recalcRunning();
       renderMetrics();
       renderStations();
       renderQueue();
     }
-  }
 
-  /* ---------- Init ---------- */
+    function simulateDropFromQueue(jobId) {
+      const idx = globalQueue.findIndex((j) => j.id === jobId);
+      if (idx === -1) return;
+      globalQueue.splice(idx, 1);
+      renderQueue();
+    }
 
-  function init() {
-    document
-      .getElementById("filter-line")
-      .addEventListener("change", renderStations);
-    document
-      .getElementById("filter-status")
-      .addEventListener("change", renderStations);
-    document
-      .getElementById("filter-sort")
-      .addEventListener("change", renderStations);
+    function recalcRunning() {
+      metrics.stationsRunning = stations.filter(
+        (s) => s.status === "running"
+      ).length;
+      metrics.stationCount = stations.length;
+    }
 
-    document.getElementById("btn-refresh").addEventListener("click", () => {
+    function simulateNextHour() {
+      const running = stations.filter((s) => s.status === "running");
+      if (!running.length) {
+        alert(
+          "No running stations to simulate — try assigning or starting a job."
+        );
+        return;
+      }
+      const choice = running[Math.floor(Math.random() * running.length)];
+      simulateCompleteJob(choice.id);
+    }
+
+    /* ---------- Load initial data from Supabase ---------- */
+
+    async function loadInitialData() {
+      try {
+        const [{ data: stationRows, error: stationErr }, 
+              { data: jobRows, error: jobErr }, 
+              { data: assignRows, error: assignErr }, 
+              { data: perfRows, error: perfErr }] = await Promise.all([
+          supabase.from("stations").select("*").order("id"),
+          supabase.from("jobs").select("*"),
+          supabase.from("station_assignments").select("*"),
+          supabase.from("performance_logs").select("*"),
+        ]);
+
+        if (stationErr) throw stationErr;
+        if (jobErr) throw jobErr;
+        if (assignErr) throw assignErr;
+        if (perfErr) throw perfErr;
+
+        const jobsById = new Map(jobRows.map((j) => [j.id, j]));
+        const assignsByStation = new Map();
+        assignRows.forEach((a) => assignsByStation.set(a.station_id, a));
+
+        stations = stationRows.map((stRow) => {
+          const assignment = assignsByStation.get(stRow.id);
+          let currentJob = null;
+
+          if (assignment) {
+            const job = jobsById.get(assignment.job_id);
+            if (job) {
+              currentJob = {
+                id: job.id,
+                part: job.part_name,
+                qtyTotal: job.qty_total,
+                qtyDone: assignment.qty_done,
+                due: job.due_date,
+                priority: job.priority,
+              };
+            }
+          }
+
+          return {
+            id: stRow.id,
+            name: stRow.name,
+            line: stRow.line,
+            status: stRow.status,
+            currentJob,
+            nextJob: null, // future: look up "next" from queue or schedule
+          };
+        });
+
+        globalQueue = jobRows
+          .filter((j) => j.status === "waiting")
+          .map((job) => ({
+            id: job.id,
+            part: job.part_name,
+            qtyTotal: job.qty_total,
+            due: job.due_date,
+            priority: job.priority,
+          }));
+
+        const totalCompletedEntries = perfRows?.length ?? 0;
+        metrics.completedToday = totalCompletedEntries;
+
+        // Placeholder rate (later: compute from due_date vs completion time)
+        metrics.completedOnTimeRate = 92;
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+        renderQueue();
+      } catch (err) {
+        console.error("Error loading initial data from Supabase:", err);
+        alert("Error loading data from cloud — using empty demo state.");
+        stations = [];
+        globalQueue = [];
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+        renderQueue();
+      }
+    }
+
+    /* ---------- Init ---------- */
+
+    function init() {
+      document
+        .getElementById("filter-line")
+        .addEventListener("change", renderStations);
+      document
+        .getElementById("filter-status")
+        .addEventListener("change", renderStations);
+      document
+        .getElementById("filter-sort")
+        .addEventListener("change", renderStations);
+
+      document.getElementById("btn-refresh").addEventListener("click", () => {
+        loadInitialData();
+      });
+
+      document
+        .getElementById("btn-simulate")
+        .addEventListener("click", simulateNextHour);
+
       loadInitialData();
-    });
+    }
 
-    document
-      .getElementById("btn-simulate")
-      .addEventListener("click", simulateNextHour);
-
-    loadInitialData();
-  }
-
-  document.addEventListener("DOMContentLoaded", init);
-</script>
-</body>
-</html>
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+  </body>
+  </html>
