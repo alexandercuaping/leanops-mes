@@ -1287,14 +1287,34 @@ async function simulateBlocked(stationId) {
   }
 }
 
-  function simulateIdle(stationId) {
+  async function simulateIdle(stationId) {
+  try {
+    // 1) Update in Supabase
+    const { error } = await supabase
+      .from("stations")
+      .update({ status: "idle" })
+      .eq("id", stationId);
+
+    if (error) {
+      console.error("Error updating station to idle:", error);
+      alert("Could not set station to idle (cloud error).");
+      return;
+    }
+
+    // 2) Update local state so UI responds immediately
     const st = stations.find((s) => s.id === stationId);
-    if (!st) return;
-    st.status = "idle";
+    if (st) {
+      st.status = "idle";
+    }
+
     recalcRunning();
     renderMetrics();
     renderStations();
+  } catch (err) {
+    console.error("Unexpected error in simulateIdle:", err);
+    alert("Unexpected error setting station idle.");
   }
+}
 
   function simulateAssignFromQueue(jobId) {
     const idx = globalQueue.findIndex((j) => j.id === jobId);
