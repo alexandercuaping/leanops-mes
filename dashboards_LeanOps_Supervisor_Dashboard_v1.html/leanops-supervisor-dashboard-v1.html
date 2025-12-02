@@ -950,7 +950,7 @@
 // Realtime listeners
 // ==========================
 function setupRealtime() {
-  // 1) Stations — status changes, name, line updates, etc.
+  // 1) Stations
   supabase
     .channel("stations-changes")
     .on(
@@ -958,13 +958,12 @@ function setupRealtime() {
       { event: "*", schema: "public", table: "stations" },
       (payload) => {
         console.log("Realtime station change:", payload);
-        // Reloads stations + metrics from cloud
         loadInitialData();
       }
     )
     .subscribe();
 
-  // 2) Jobs — queue changes, status (waiting/completed), due dates, etc.
+  // 2) Jobs
   supabase
     .channel("jobs-changes")
     .on(
@@ -972,13 +971,12 @@ function setupRealtime() {
       { event: "*", schema: "public", table: "jobs" },
       (payload) => {
         console.log("Realtime job change:", payload);
-        // Reloads jobs + queue from cloud
         loadInitialData();
       }
     )
     .subscribe();
 
-  // 3) Station assignments — which job is loaded on which station / qty_done
+  // 3) Assignments
   supabase
     .channel("assignments-changes")
     .on(
@@ -986,8 +984,20 @@ function setupRealtime() {
       { event: "*", schema: "public", table: "station_assignments" },
       (payload) => {
         console.log("Realtime assignment change:", payload);
-        // Reloads currentJob mapping from cloud
         loadInitialData();
+      }
+    )
+    .subscribe();
+
+  // 4) Performance logs
+  supabase
+    .channel("performance-changes")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "performance_logs" },
+      (payload) => {
+        console.log("Realtime performance log change:", payload);
+        loadInitialData(); 
       }
     )
     .subscribe();
@@ -1321,13 +1331,23 @@ function setupRealtime() {
       // Continue so UI still progresses
     }
 
-    // 3) Insert a performance log entry (simple v1)
-    const { error: perfErr } = await supabase.from("performance_logs").insert({
-      station_id: stationId,
-      job_id: jobId,
-      qty_completed: qtyTotal,          // 🔁 adjust name if your column is different
-      logged_at: new Date().toISOString(), // optional if DB has default now()
-    });
+   // 3) Insert a performance log entry (simple v1)
+const logPayload = {
+  station_id: stationId,
+  job_id: jobId,
+  // 👇 change this key to match your actual column name in performance_logs
+  qty_completed: qtyTotal, // or qty_done / qty, etc.
+};
+
+const { error: perfErr } = await supabase
+  .from("performance_logs")
+  .insert(logPayload);
+
+if (perfErr) {
+  console.error("Error inserting performance log:", perfErr);
+  // Don't block the UI if just logging failed
+}
+
 
     if (perfErr) {
       console.error("Error inserting performance log:", perfErr);
@@ -1489,12 +1509,33 @@ function setupRealtime() {
 }
 
 
-    function simulateDropFromQueue(jobId) {
-      const idx = globalQueue.findIndex((j) => j.id === jobId);
-      if (idx === -1) return;
-      globalQueue.splice(idx, 1);
-      renderQueue();
+    async function simulateDropFromQueue(jobId) {
+  const idx = globalQueue.findIndex((j) => j.id === jobId);
+  if (idx === -1) return;
+
+  const job = globalQueue[idx];
+
+  try {
+    // 1) Update job status in Supabase (mark as dropped / canceled)
+    const { error: jobErr } = await supabase
+      .from("jobs")
+      .update({ status: "dropped" }) // or "canceled" if you prefer that word
+      .eq("id", jobId);
+
+    if (jobErr) {
+      console.error("Error updating job status to dropped:", jobErr);
+      alert("Could not drop job from queue (cloud error).");
+      return;
     }
+
+    // 2) Update local queue immediately so UI feels snappy
+    globalQueue.splice(idx, 1);
+    renderQueue();
+  } catch (err) {
+    console.error("Unexpected error in simulateDropFromQueue:", err);
+    alert("Unexpected error while dropping job from queue.");
+  }
+}
 
     function recalcRunning() {
       metrics.stationsRunning = stations.filter(
