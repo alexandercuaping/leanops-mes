@@ -61,12 +61,12 @@
       }
 
       .sup-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        margin-bottom: 20px;
-      }
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start; /* brand only on the left */
+  gap: 16px;
+  margin-bottom: 6px;          /* tighter, because bar is below */
+}
 
       .sup-brand {
         display: flex;
@@ -99,6 +99,52 @@
         gap: 10px;
         flex-wrap: wrap;
       }
+
+      /* Full-width filter bar under subtitle */
+.sup-filter-bar {
+  width: 100%;
+  margin: 22px 0 24px;
+  padding: 10px 18px; /* was 14px */
+  border-radius: var(--radius-lg);
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.45);
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  backdrop-filter: blur(12px);
+}
+
+/* Left side (Compact / Expanded / Toggle details) */
+.filter-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Right side (Line / Status / Sort / other toggles) */
+.filter-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-bar-label {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.75;
+}
+
+/* Right-side action group (Quick refresh / Simulate next hour) */
+.filter-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-left: auto; /* pushes them to the far right of the bar */
+}
+
 
       .lo-btn {
         display: inline-flex;
@@ -225,6 +271,29 @@
         align-items: center;
       }
 
+      .filters-display-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.filters-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.filters-display-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+
       .filter-pill {
         display: inline-flex;
         align-items: center;
@@ -241,14 +310,29 @@
         font-size: 11px;
       }
 
+      /* Fix dropdown text visibility */
       .filter-select {
-        background: transparent;
+        background-color: transparent;
         border: none;
-        color: #e5e7eb;
-        font-size: 11px;
-        font-family: inherit;
-        outline: none;
+        color: #e5e7eb;        /* text when closed in the pill */
       }
+
+      /* Make the open dropdown options readable in dark mode */
+      .filter-select option {
+        background-color: #020617;  /* dark dropdown background */
+        color: #e5e7eb;             /* light text */
+      }
+
+      /* Adjust for light mode so it still looks right */
+      body.light-mode .filter-select {
+        color: #020617;
+      }
+
+      body.light-mode .filter-select option {
+        background-color: #f9fafb;
+        color: #020617;
+      }
+
 
       /* ---------- Stations layout ---------- */
 
@@ -430,6 +514,15 @@
         background: rgba(31, 41, 55, 0.95);
         transform: translateY(-1px);
       }
+
+      /* Keep primary button orange on hover */
+.mini-btn-primary:hover {
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #111827;
+  border-color: rgba(249, 115, 22, 0.95);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(249, 115, 22, 0.55);
+}
 
       .mini-btn-primary {
         border-color: rgba(249, 115, 22, 0.85);
@@ -794,6 +887,24 @@
         color:#020617;
         border-color:rgba(148,163,184,0.9);
       }
+/* Fix disabled mini button visibility */
+.mini-btn:disabled,
+.mini-btn[disabled] {
+  opacity: 0.45;
+  color: #9ca3af;             /* soft gray text */
+  border-color: rgba(148,163,184,0.4);
+  background: rgba(30, 41, 59, 0.4);
+  cursor: not-allowed;
+}
+
+/* Prevent hover styles on disabled buttons */
+.mini-btn:disabled:hover,
+.mini-btn[disabled]:hover {
+  background: rgba(30, 41, 59, 0.4);
+  border-color: rgba(148,163,184,0.4);
+  transform: none;
+  box-shadow: none;
+}
 
     </style>
   </head>
@@ -801,45 +912,64 @@
     <div class="sup-shell">
       <!-- Top header -->
       <header class="sup-header">
-        <div class="sup-brand">
-          <div class="sup-logo">LeanOps</div>
-          <div class="sup-title">Supervisor — Live Stations</div>
-          <div class="sup-subtitle">
-            Lightweight MES view for jobs, stations, and flow — generic demo instance.
-          </div>
-        </div>
-        <div class="sup-actions">
-          <button class="lo-btn" id="btn-refresh">Quick refresh</button>
-          <button class="lo-btn lo-btn-primary" id="btn-simulate">
-            Simulate next hour
-          </button>
-        </div>
-      </header>
+  <div class="sup-brand">
+    <div class="sup-logo">LeanOps</div>
+    <div class="sup-title">Supervisor — Live Stations</div>
+    <div class="sup-subtitle">
+      Lightweight MES view for jobs, stations, and flow — generic demo instance.
+    </div>
+  </div>
+</header>
 
-      <!-- View Controls Bar -->
-      <section class="view-controls">
-        <div class="view-controls-left">
-          <span class="view-controls-label">Display options</span>
-          <button type="button" class="vc-btn" data-toggle="compact">
-            Compact
-          </button>
-          <button type="button" class="vc-btn" data-toggle="expanded">
-            Expanded
-          </button>
-          <button type="button" class="vc-btn" data-toggle="details">
-            Toggle details
-          </button>
-        </div>
+<section class="sup-filter-bar">
+  <div class="filter-left">
+    <span class="filter-bar-label">Display</span>
+    <button type="button" class="vc-btn" data-toggle="compact">Compact</button>
+    <button type="button" class="vc-btn" data-toggle="expanded">Expanded</button>
+    <button type="button" class="vc-btn" data-toggle="details">Toggle details</button>
+  </div>
 
-        <div class="view-controls-right">
-          <button type="button" class="vc-btn" data-toggle="theme">
-            Light / Dark
-          </button>
-          <button type="button" class="vc-btn" data-toggle="empty">
-            Hide empty stations
-          </button>
-        </div>
-      </section>
+  <div class="filter-right">
+    <button type="button" class="vc-btn" data-toggle="theme">Light / Dark</button>
+    <button type="button" class="vc-btn" data-toggle="empty">Hide empty stations</button>
+
+    <div class="filter-pill">
+      <span>Line</span>
+      <select id="filter-line" class="filter-select">
+        <option value="all">All lines</option>
+        <option value="Line A">Line A</option>
+        <option value="Line B">Line B</option>
+      </select>
+    </div>
+
+    <div class="filter-pill">
+      <span>Status</span>
+      <select id="filter-status" class="filter-select">
+        <option value="all">All statuses</option>
+        <option value="running">Running</option>
+        <option value="idle">Idle</option>
+        <option value="blocked">Blocked</option>
+      </select>
+    </div>
+
+    <div class="filter-pill">
+      <span>Sort</span>
+      <select id="filter-sort" class="filter-select">
+        <option value="name">By station name</option>
+        <option value="status">By status</option>
+        <option value="due">By due date</option>
+      </select>
+    </div>
+
+    <!-- ✅ moved here from sup-actions -->
+    <div class="filter-actions">
+      <button class="lo-btn" id="btn-refresh">Quick refresh</button>
+      <button class="lo-btn lo-btn-primary" id="btn-simulate">
+        Simulate next hour
+      </button>
+    </div>
+  </div>
+</section>
 
       <!-- Top metrics & filters -->
       <section class="sup-top-row">
@@ -863,40 +993,6 @@
               <div class="metric-label">Stations running</div>
               <div class="metric-main" id="metric-running">0 / 0</div>
               <div class="metric-sub" id="metric-running-sub">–</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sup-filters-panel">
-          <div class="sup-panel-title">
-            <h2>View controls</h2>
-            <div class="sup-panel-sub">Use filters to focus on a line or status.</div>
-          </div>
-          <div class="filters-grid">
-            <div class="filter-pill">
-              <span>Line</span>
-              <select id="filter-line" class="filter-select">
-                <option value="all">All lines</option>
-                <option value="Line A">Line A</option>
-                <option value="Line B">Line B</option>
-              </select>
-            </div>
-            <div class="filter-pill">
-              <span>Status</span>
-              <select id="filter-status" class="filter-select">
-                <option value="all">All statuses</option>
-                <option value="running">Running</option>
-                <option value="idle">Idle</option>
-                <option value="blocked">Blocked</option>
-              </select>
-            </div>
-            <div class="filter-pill">
-              <span>Sort</span>
-              <select id="filter-sort" class="filter-select">
-                <option value="name">By station name</option>
-                <option value="status">By status</option>
-                <option value="due">By due date</option>
-              </select>
             </div>
           </div>
         </div>
@@ -1663,7 +1759,8 @@ if (perfErr) {
     .addEventListener("click", simulateNextHour);
 
   // 🔴 Turn on realtime
-  setupRealtime();
+  // setupRealtime();
+
 
   // Initial load
   loadInitialData();
