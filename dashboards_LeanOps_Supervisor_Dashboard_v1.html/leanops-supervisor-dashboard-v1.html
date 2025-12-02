@@ -946,6 +946,50 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+      // ==========================
+  // Realtime listeners
+  // ==========================
+  function setupRealtime() {
+    // Listen for station status changes
+    supabase
+      .channel("stations-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "stations" },
+        (payload) => {
+          console.log("Realtime station change:", payload);
+          loadInitialData();
+        }
+      )
+      .subscribe();
+
+    // Listen for job status changes (e.g., waiting → completed)
+    supabase
+      .channel("jobs-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "jobs" },
+        (payload) => {
+          console.log("Realtime job change:", payload);
+          loadInitialData();
+        }
+      )
+      .subscribe();
+
+    // Listen for station_assignments changes (qty_done, etc.)
+    supabase
+      .channel("assignments-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "station_assignments" },
+        (payload) => {
+          console.log("Realtime assignment change:", payload);
+          loadInitialData();
+        }
+      )
+      .subscribe();
+  }
+
     // ==========================
     // In-memory state (fed from Supabase)
     // ==========================
@@ -1507,27 +1551,31 @@
 
     /* ---------- Init ---------- */
 
-    function init() {
-      document
-        .getElementById("filter-line")
-        .addEventListener("change", renderStations);
-      document
-        .getElementById("filter-status")
-        .addEventListener("change", renderStations);
-      document
-        .getElementById("filter-sort")
-        .addEventListener("change", renderStations);
+      function init() {
+    document
+      .getElementById("filter-line")
+      .addEventListener("change", renderStations);
+    document
+      .getElementById("filter-status")
+      .addEventListener("change", renderStations);
+    document
+      .getElementById("filter-sort")
+      .addEventListener("change", renderStations);
 
-      document.getElementById("btn-refresh").addEventListener("click", () => {
-        loadInitialData();
-      });
-
-      document
-        .getElementById("btn-simulate")
-        .addEventListener("click", simulateNextHour);
-
+    document.getElementById("btn-refresh").addEventListener("click", () => {
       loadInitialData();
-    }
+    });
+
+    document
+      .getElementById("btn-simulate")
+      .addEventListener("click", simulateNextHour);
+
+    // 🔴 NEW: turn on realtime
+    setupRealtime();
+
+    // Initial load
+    loadInitialData();
+  }
 
     document.addEventListener("DOMContentLoaded", init);
   </script>
