@@ -946,49 +946,52 @@
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-      // ==========================
-  // Realtime listeners
-  // ==========================
-  function setupRealtime() {
-    // Listen for station status changes
-    supabase
-      .channel("stations-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "stations" },
-        (payload) => {
-          console.log("Realtime station change:", payload);
-          loadInitialData();
-        }
-      )
-      .subscribe();
+   // ==========================
+// Realtime listeners
+// ==========================
+function setupRealtime() {
+  // 1) Stations — status changes, name, line updates, etc.
+  supabase
+    .channel("stations-changes")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "stations" },
+      (payload) => {
+        console.log("Realtime station change:", payload);
+        // Reloads stations + metrics from cloud
+        loadInitialData();
+      }
+    )
+    .subscribe();
 
-    // Listen for job status changes (e.g., waiting → completed)
-    supabase
-      .channel("jobs-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "jobs" },
-        (payload) => {
-          console.log("Realtime job change:", payload);
-          loadInitialData();
-        }
-      )
-      .subscribe();
+  // 2) Jobs — queue changes, status (waiting/completed), due dates, etc.
+  supabase
+    .channel("jobs-changes")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "jobs" },
+      (payload) => {
+        console.log("Realtime job change:", payload);
+        // Reloads jobs + queue from cloud
+        loadInitialData();
+      }
+    )
+    .subscribe();
 
-    // Listen for station_assignments changes (qty_done, etc.)
-    supabase
-      .channel("assignments-changes")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "station_assignments" },
-        (payload) => {
-          console.log("Realtime assignment change:", payload);
-          loadInitialData();
-        }
-      )
-      .subscribe();
-  }
+  // 3) Station assignments — which job is loaded on which station / qty_done
+  supabase
+    .channel("assignments-changes")
+    .on(
+      "postgres_changes",
+      { event: "*", schema: "public", table: "station_assignments" },
+      (payload) => {
+        console.log("Realtime assignment change:", payload);
+        // Reloads currentJob mapping from cloud
+        loadInitialData();
+      }
+    )
+    .subscribe();
+}
 
     // ==========================
     // In-memory state (fed from Supabase)
@@ -1292,65 +1295,75 @@
   const jobId = st.currentJob.id;
   const qtyTotal = st.currentJob.qtyTotal ?? 0;
 
-  console.log("Completing job", { stationId, jobId, qtyTotal });  // <--- add this
+  try {
+    // 1) Update job status -> completed
+    const { error: jobErr } = await supabase
+      .from("jobs")
+      .update({ status: "completed" })
+      .eq("id", jobId);
 
-    try {
-      // 1) Mark the job as completed in jobs
-      const { error: jobErr } = await supabase
-        .from("jobs")
-        .update({ status: "completed" })
-        .eq("id", jobId);
-
-      if (jobErr) {
-        console.error("Error updating job status:", jobErr);
-        alert("Could not mark job as completed (cloud error).");
-        return;
-      }
-
-      // 2) Update station_assignments for this station/job (qty_done)
-      const { error: assignErr } = await supabase
-        .from("station_assignments")
-        .update({ qty_done: qtyTotal })
-        .eq("station_id", stationId)
-        .eq("job_id", jobId);
-
-      if (assignErr) {
-        console.error("Error updating station assignment:", assignErr);
-        alert("Job completed in UI, but assignment update failed in cloud.");
-        // we still continue so UI doesn’t feel broken
-      }
-
-      // 3) Set the station to idle in stations
-      const { error: stationErr } = await supabase
-        .from("stations")
-        .update({ status: "idle" })
-        .eq("id", stationId);
-
-      if (stationErr) {
-        console.error("Error updating station status to idle:", stationErr);
-        alert("Could not update station status in cloud.");
-        // again, we still update local UI
-      }
-
-      // 4) Update local metrics + state so UI responds immediately
-      metrics.completedToday += 1;
-      // We'll keep the on-time % as a simple placeholder for now
-      metrics.completedOnTimeRate = Math.min(
-        100,
-        metrics.completedOnTimeRate + 1
-      );
-
-      st.currentJob = null;
-      st.status = "idle";
-
-      recalcRunning();
-      renderMetrics();
-      renderStations();
-    } catch (err) {
-      console.error("Unexpected error completing job:", err);
-      alert("Unexpected error while completing job.");
+    if (jobErr) {
+      console.error("Error updating job status:", jobErr);
+      alert("Could not mark job as completed (cloud error).");
+      return;
     }
+
+    // 2) Update station_assignments qty_done for this station/job
+    const { error: assignErr } = await supabase
+      .from("station_assignments")
+      .update({ qty_done: qtyTotal })
+      .eq("station_id", stationId)
+      .eq("job_id", jobId);
+
+    if (assignErr) {
+      console.error("Error updating station assignment:", assignErr);
+      alert("Job completed in UI, but assignment update failed in cloud.");
+      // Continue so UI still progresses
+    }
+
+    // 3) Insert a performance log entry (simple v1)
+    const { error: perfErr } = await supabase.from("performance_logs").insert({
+      station_id: stationId,
+      job_id: jobId,
+      qty_completed: qtyTotal,          // 🔁 adjust name if your column is different
+      logged_at: new Date().toISOString(), // optional if DB has default now()
+    });
+
+    if (perfErr) {
+      console.error("Error inserting performance log:", perfErr);
+      // Don't block the UI if just logging failed
+    }
+
+    // 4) Set the station to idle in stations
+    const { error: stationErr } = await supabase
+      .from("stations")
+      .update({ status: "idle" })
+      .eq("id", stationId);
+
+    if (stationErr) {
+      console.error("Error updating station status to idle:", stationErr);
+      alert("Could not update station status in cloud.");
+      // Still continue UI
+    }
+
+    // 5) Update local metrics + state
+    metrics.completedToday += 1;
+    metrics.completedOnTimeRate = Math.min(
+      100,
+      metrics.completedOnTimeRate + 1
+    );
+
+    st.currentJob = null;
+    st.status = "idle";
+
+    recalcRunning();
+    renderMetrics();
+    renderStations();
+  } catch (err) {
+    console.error("Unexpected error completing job:", err);
+    alert("Unexpected error while completing job.");
   }
+}
 
   async function simulateBlocked(stationId) {
     try {
@@ -1410,35 +1423,71 @@
     }
   }
 
-    function simulateAssignFromQueue(jobId) {
-      const idx = globalQueue.findIndex((j) => j.id === jobId);
-      if (idx === -1) return;
-      const job = globalQueue[idx];
+    async function simulateAssignFromQueue(jobId) {
+  const idx = globalQueue.findIndex((j) => j.id === jobId);
+  if (idx === -1) return;
 
-      const idleStation = stations.find(
-        (s) => s.status === "idle" && !s.currentJob
-      );
-      if (!idleStation) {
-        alert("No idle station available to assign this job.");
-        return;
-      }
+  const job = globalQueue[idx];
 
-      idleStation.currentJob = {
-        id: job.id,
-        part: job.part,
-        qtyTotal: job.qtyTotal,
-        qtyDone: 0,
-        due: job.due,
-        priority: job.priority,
-      };
-      idleStation.status = "running";
+  // Find an idle station with no current job
+  const idleStation = stations.find(
+    (s) => s.status === "idle" && !s.currentJob
+  );
 
-      globalQueue.splice(idx, 1);
-      recalcRunning();
-      renderMetrics();
-      renderStations();
-      renderQueue();
+  if (!idleStation) {
+    alert("No idle station available to assign this job.");
+    return;
+  }
+
+  try {
+    // 1) Create / log assignment in station_assignments
+    const { error: assignErr } = await supabase.from("station_assignments").insert({
+      station_id: idleStation.id,
+      job_id: job.id,
+      qty_done: 0,
+    });
+
+    if (assignErr) {
+      console.error("Error inserting station assignment:", assignErr);
+      alert("Could not assign job in cloud (assignment failed).");
+      return;
     }
+
+    // 2) Update job status -> running
+    const { error: jobErr } = await supabase
+      .from("jobs")
+      .update({ status: "running" })
+      .eq("id", job.id);
+
+    if (jobErr) {
+      console.error("Error updating job status to running:", jobErr);
+      alert("Job assigned locally, but could not update job status in cloud.");
+      // continue anyway so UI doesn’t feel broken
+    }
+
+    // 3) Update local state so UI responds immediately
+    idleStation.currentJob = {
+      id: job.id,
+      part: job.part,
+      qtyTotal: job.qtyTotal,
+      qtyDone: 0,
+      due: job.due,
+      priority: job.priority,
+    };
+    idleStation.status = "running";
+
+    globalQueue.splice(idx, 1);
+
+    recalcRunning();
+    renderMetrics();
+    renderStations();
+    renderQueue();
+  } catch (err) {
+    console.error("Unexpected error in simulateAssignFromQueue:", err);
+    alert("Unexpected error while assigning job.");
+  }
+}
+
 
     function simulateDropFromQueue(jobId) {
       const idx = globalQueue.findIndex((j) => j.id === jobId);
@@ -1552,30 +1601,32 @@
     /* ---------- Init ---------- */
 
       function init() {
-    document
-      .getElementById("filter-line")
-      .addEventListener("change", renderStations);
-    document
-      .getElementById("filter-status")
-      .addEventListener("change", renderStations);
-    document
-      .getElementById("filter-sort")
-      .addEventListener("change", renderStations);
+  // filters
+  document
+    .getElementById("filter-line")
+    .addEventListener("change", renderStations);
+  document
+    .getElementById("filter-status")
+    .addEventListener("change", renderStations);
+  document
+    .getElementById("filter-sort")
+    .addEventListener("change", renderStations);
 
-    document.getElementById("btn-refresh").addEventListener("click", () => {
-      loadInitialData();
-    });
-
-    document
-      .getElementById("btn-simulate")
-      .addEventListener("click", simulateNextHour);
-
-    // 🔴 NEW: turn on realtime
-    setupRealtime();
-
-    // Initial load
+  // buttons
+  document.getElementById("btn-refresh").addEventListener("click", () => {
     loadInitialData();
-  }
+  });
+
+  document
+    .getElementById("btn-simulate")
+    .addEventListener("click", simulateNextHour);
+
+  // 🔴 Turn on realtime
+  setupRealtime();
+
+  // Initial load
+  loadInitialData();
+}
 
     document.addEventListener("DOMContentLoaded", init);
   </script>
