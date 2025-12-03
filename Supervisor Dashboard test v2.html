@@ -62,9 +62,9 @@
 
     .sup-header {
       display: flex;
+      justify-content: space-between;
       align-items: flex-start;
-      justify-content: flex-start;
-      gap: 16px;
+      gap: 20px;
       margin-bottom: 6px;
     }
 
@@ -93,7 +93,19 @@
       color: var(--text-soft);
     }
 
-    /* ---------- Filter / Control bar (always open) ---------- */
+    .sup-header-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 10px;
+    }
+
+    .sup-header-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* ---------- Filter / Control bar ---------- */
 
     .sup-filter-bar {
       width: 100%;
@@ -103,29 +115,13 @@
       background: rgba(15, 23, 42, 0.85);
       border: 1px solid rgba(148, 163, 184, 0.45);
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-start;
       flex-wrap: wrap;
       gap: 12px;
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
+      align-items: flex-start;
     }
-
-    .sup-filter-bar {
-  align-items: flex-start;
-}
-
-.filter-right {
-  margin-left: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-/* Make the TODAY card a bit tighter when it lives in the header */
-.sup-metrics-inline {
-  padding: 10px 12px;
-  max-width: 420px;
-}
 
     .filter-left,
     .filter-center,
@@ -178,7 +174,6 @@
       font-size: 11px;
     }
 
-    /* Dropdown inside pills */
     .filter-select {
       background-color: transparent;
       border: none;
@@ -191,7 +186,6 @@
       color: #e5e7eb;
     }
 
-    /* Top-right actions inside filter bar */
     .filter-actions {
       display: flex;
       gap: 8px;
@@ -265,7 +259,7 @@
       color: #fed7aa;
     }
 
-    /* ---------- Top metrics bar ---------- */
+    /* ---------- Top metrics ---------- */
 
     .sup-top-row {
       display: grid;
@@ -286,6 +280,11 @@
       background: radial-gradient(circle at top left, #0b1120, #020617 55%);
       box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
       padding: 14px 16px 14px;
+    }
+
+    .sup-metrics-inline {
+      padding: 10px 14px;
+      max-width: 460px;
     }
 
     .sup-panel-title {
@@ -352,56 +351,17 @@
 
     .sup-main-row {
       display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(0, 2.1fr);
+      grid-template-columns: minmax(0, 1fr);
       gap: 16px;
     }
 
-    @media (max-width: 1024px) {
-      .sup-main-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .station-panel,
-    .queue-panel {
+    .station-panel {
       border-radius: var(--radius-lg);
       border: 1px solid rgba(148, 163, 184, 0.5);
       background: radial-gradient(circle at top left, #020617, #020617 60%);
       box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
       padding: 14px 16px 16px;
     }
-
-    .sup-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-}
-
-/* Right side of header: TODAY + buttons */
-.sup-header-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 10px;
-}
-
-/* Make TODAY card a bit tighter when used in the header */
-.sup-metrics-inline {
-  padding: 10px 14px;
-  max-width: 460px;
-}
-
-/* Header buttons row */
-.sup-header-actions {
-  display: flex;
-  gap: 8px;
-}
-
-/* Filter bar now only has filters */
-.sup-filter-bar {
-  justify-content: flex-start;
-}
 
     .panel-header {
       display: flex;
@@ -546,6 +506,12 @@
       font-style: italic;
     }
 
+    .job-remaining {
+      margin-top: 2px;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
     /* Station action row */
 
     .station-actions {
@@ -602,8 +568,6 @@
       transform: none;
       box-shadow: none;
     }
-
-    /* Per-station queue (collapsible) */
 
     .station-queue-toggle {
       margin-left: auto;
@@ -666,83 +630,6 @@
       flex-wrap: wrap;
       gap: 4px;
       margin-top: 3px;
-    }
-
-    /* Right-side global queue */
-
-    .queue-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 420px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-
-    .queue-item {
-      border-radius: 12px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.95);
-      padding: 8px 9px;
-      font-size: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .queue-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .queue-meta {
-      display: flex;
-      gap: 10px;
-      color: rgba(209, 213, 219, 0.9);
-      font-size: 10px;
-    }
-
-    .queue-actions {
-      display: flex;
-      gap: 6px;
-      margin-top: 3px;
-    }
-
-    .queue-item .job-label {
-      color: rgba(148, 163, 184, 0.95);
-    }
-
-    .badge-priority {
-      border-color: rgba(248, 250, 252, 0.55);
-      color: #e5e7eb;
-      background: rgba(15, 23, 42, 0.85);
-    }
-
-    .badge-priority--high {
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fee2e2;
-      background: rgba(127, 29, 29, 0.7);
-    }
-
-    .queue-empty-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      font-style: italic;
-      margin-top: 4px;
-    }
-
-    .queue-list::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .queue-list::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.8);
-    }
-
-    .queue-list::-webkit-scrollbar-thumb {
-      background: rgba(55, 65, 81, 0.9);
-      border-radius: 999px;
     }
 
     /* Modal (themed warning) */
@@ -818,207 +705,314 @@
       box-shadow: 0 14px 32px rgba(249, 115, 22, 0.8);
       transform: translateY(-1px);
     }
-/* Remaining units line under current job */
-.job-remaining {
-  margin-top: 2px;
-  font-size: 10px;
-  color: var(--text-soft);
-}
 
-/* ===== Report Units Modal ===== */
+    /* ===== Report Units Modal ===== */
 
-.report-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.75);
-  display: none; /* show via JS */
-  align-items: center;
-  justify-content: center;
-  z-index: 50;
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
+    .report-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
 
-.report-modal {
-  width: 100%;
-  max-width: 360px;
-  border-radius: 18px;
-  padding: 16px 18px 14px;
-  background: radial-gradient(circle at top left, #020617, #020617 70%);
-  border: 1px solid rgba(148,163,184,0.7);
-  box-shadow: 0 24px 50px rgba(15,23,42,0.9);
-}
+    .report-modal {
+      width: 100%;
+      max-width: 360px;
+      border-radius: 18px;
+      padding: 16px 18px 14px;
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.9);
+    }
 
-.report-modal-title {
-  font-family: var(--font-display);
-  font-size: 15px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  margin-bottom: 6px;
-}
+    .report-modal-title {
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
 
-.report-modal-body {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-}
+    .report-modal-body {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
 
-.report-modal-input {
-  width: 100%;
-  padding: 7px 9px;
-  border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.8);
-  background: rgba(15,23,42,0.9);
-  color: #e5e7eb;
-  font-size: 12px;
-  margin-bottom: 10px;
-}
+    .report-modal-input {
+      width: 100%;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
 
-.report-modal-input:focus {
-  outline: none;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px rgba(249,115,22,0.8);
-}
+    .report-modal-input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.8);
+    }
 
-.report-modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
+    .report-modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
 
-/* light mode tweaks */
-body.light-mode .report-modal {
-  background: #ffffff;
-  border-color: rgba(148,163,184,0.75);
-  box-shadow: 0 20px 40px rgba(15,23,42,0.18);
-}
+    body.light-mode .report-modal {
+      background: #ffffff;
+      border-color: rgba(148, 163, 184, 0.75);
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
+    }
 
-body.light-mode .report-modal-body {
-  color: #4b5563;
-}
+    body.light-mode .report-modal-body {
+      color: #4b5563;
+    }
 
-body.light-mode .report-modal-input {
-  background: #f9fafb;
-  color: #111827;
-  border-color: rgba(148,163,184,0.9);
-}
+    body.light-mode .report-modal-input {
+      background: #f9fafb;
+      color: #111827;
+      border-color: rgba(148, 163, 184, 0.9);
+    }
 
+    /* ===== Slide-over Global Queue Panel ===== */
+
+    .queue-sheet {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 420px;
+      height: 100vh;
+      background: #020617;
+      border-left: 1px solid rgba(148, 163, 184, 0.4);
+      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow-y: auto;
+    }
+
+    /* THIS is what makes hidden work */
+    .queue-sheet[hidden] {
+      display: none;
+    }
+
+    .queue-sheet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .queue-sheet h2 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .queue-close-btn {
+      cursor: pointer;
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 18px;
+    }
+
+    .queue-close-btn:hover {
+      color: #ffffff;
+    }
+
+    .queue-upload-box {
+      border: 1px dashed rgba(148, 163, 184, 0.5);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+      color: #9ca3af;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .queue-upload-box:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .queue-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .queue-table th,
+    .queue-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      font-size: 12px;
+    }
+
+    .queue-table tr:hover {
+      background: rgba(148, 163, 184, 0.08);
+      cursor: pointer;
+    }
+
+    .queue-row-selected {
+      background: rgba(249, 115, 22, 0.15) !important;
+      border-left: 3px solid var(--accent);
+    }
+
+    .queue-empty-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .queue-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .queue-list::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .queue-list::-webkit-scrollbar-thumb {
+      background: rgba(55, 65, 81, 0.9);
+      border-radius: 999px;
+    }
+
+    .badge-priority {
+      border-color: rgba(248, 250, 252, 0.55);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .badge-priority--high {
+      border-color: rgba(248, 113, 113, 0.85);
+      color: #fee2e2;
+      background: rgba(127, 29, 29, 0.7);
+    }
   </style>
 </head>
 <body>
   <div class="sup-shell">
     <!-- Top header -->
- <header class="sup-header">
-  <div class="sup-brand">
-    <div class="sup-logo">LeanOps</div>
-    <div class="sup-title">Supervisor — Live Stations</div>
-    <div class="sup-subtitle">
-      Lightweight MES view for jobs, stations, and flow — generic demo instance.
-    </div>
-  </div>
-
-  <div class="sup-header-right">
-    <div class="sup-metrics-panel sup-metrics-inline">
-      <div class="sup-panel-title">
-        <h2>Today</h2>
-        <div class="sup-panel-sub" id="metrics-date-label"></div>
-      </div>
-      <div class="metrics-grid">
-        <div class="metric-card">
-          <div class="metric-label">Jobs completed</div>
-          <div class="metric-main" id="metric-completed">0</div>
-          <div class="metric-sub" id="metric-completed-sub">–</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">On-time completion</div>
-          <div class="metric-main" id="metric-ontime">0%</div>
-          <div class="metric-sub" id="metric-ontime-sub">–</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">Stations running</div>
-          <div class="metric-main" id="metric-running">0 / 0</div>
-          <div class="metric-sub" id="metric-running-sub">–</div>
+    <header class="sup-header">
+      <div class="sup-brand">
+        <div class="sup-logo">LeanOps</div>
+        <div class="sup-title">Supervisor — Live Stations</div>
+        <div class="sup-subtitle">
+          Lightweight MES view for jobs, stations, and flow — generic demo instance.
         </div>
       </div>
-    </div>
 
-    <div class="sup-header-actions">
-  <button class="lo-btn" id="btn-refresh">Quick refresh</button>
+      <div class="sup-header-right">
+        <div class="sup-metrics-panel sup-metrics-inline">
+          <div class="sup-panel-title">
+            <h2>Today</h2>
+            <div class="sup-panel-sub" id="metrics-date-label"></div>
+          </div>
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-label">Jobs completed</div>
+              <div class="metric-main" id="metric-completed">0</div>
+              <div class="metric-sub" id="metric-completed-sub">–</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">On-time completion</div>
+              <div class="metric-main" id="metric-ontime">0%</div>
+              <div class="metric-sub" id="metric-ontime-sub">–</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-label">Stations running</div>
+              <div class="metric-main" id="metric-running">0 / 0</div>
+              <div class="metric-sub" id="metric-running-sub">–</div>
+            </div>
+          </div>
+        </div>
 
-  <!-- NEW BUTTON -->
-  <button class="lo-btn" id="btn-scroll-queue">Global job queue</button>
-
-  <button class="lo-btn lo-btn-primary" id="btn-simulate">
-    Simulate next hour
-  </button>
-</div>
-  </div>
-</header>
-
+        <div class="sup-header-actions">
+          <button class="lo-btn" id="btn-refresh">Quick refresh</button>
+          <button class="lo-btn" id="btn-scroll-queue">Global job queue</button>
+          <button class="lo-btn lo-btn-primary" id="btn-simulate">
+            Simulate next hour
+          </button>
+        </div>
+      </div>
+    </header>
 
     <!-- Filter / control bar (filters only) -->
-<section class="sup-filter-bar">
-  <div class="filter-left">
-    <span class="filter-bar-label">View</span>
+    <section class="sup-filter-bar">
+      <div class="filter-left">
+        <span class="filter-bar-label">View</span>
 
-    <!-- Display options -->
-    <div class="filter-group">
-      <span class="filter-section-label">Display</span>
-      <button type="button" class="vc-btn" data-toggle="compact">Compact</button>
-      <button type="button" class="vc-btn" data-toggle="expanded">Expanded</button>
-      <button type="button" class="vc-btn" data-toggle="details">Toggle details</button>
-    </div>
+        <!-- Display options -->
+        <div class="filter-group">
+          <span class="filter-section-label">Display</span>
+          <button type="button" class="vc-btn" data-toggle="compact">Compact</button>
+          <button type="button" class="vc-btn" data-toggle="expanded">Expanded</button>
+          <button type="button" class="vc-btn" data-toggle="details">Toggle details</button>
+        </div>
 
-    <!-- Station options -->
-    <div class="filter-group">
-      <span class="filter-section-label">Stations</span>
-      <button type="button" class="vc-btn" data-toggle="empty">Hide empty</button>
-      <button type="button" class="vc-btn" data-toggle="theme">Dark / Light</button>
-    </div>
+        <!-- Station options -->
+        <div class="filter-group">
+          <span class="filter-section-label">Stations</span>
+          <button type="button" class="vc-btn" data-toggle="empty">Hide empty</button>
+          <button type="button" class="vc-btn" data-toggle="theme">Dark / Light</button>
+        </div>
 
-    <!-- Line filter -->
-    <div class="filter-group">
-      <span class="filter-section-label">Line</span>
-      <div class="filter-pill">
-        <span>Line</span>
-        <select id="filter-line" class="filter-select">
-          <option value="all">All lines</option>
-          <option value="Line A">Line A</option>
-          <option value="Line B">Line B</option>
-        </select>
+        <!-- Line filter -->
+        <div class="filter-group">
+          <span class="filter-section-label">Line</span>
+          <div class="filter-pill">
+            <span>Line</span>
+            <select id="filter-line" class="filter-select">
+              <option value="all">All lines</option>
+              <option value="Line A">Line A</option>
+              <option value="Line B">Line B</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Status filter -->
+        <div class="filter-group">
+          <span class="filter-section-label">Status</span>
+          <div class="filter-pill">
+            <span>Status</span>
+            <select id="filter-status" class="filter-select">
+              <option value="all">All statuses</option>
+              <option value="running">Running</option>
+              <option value="idle">Idle</option>
+              <option value="blocked">Blocked</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Sort filter -->
+        <div class="filter-group">
+          <span class="filter-section-label">Sort</span>
+          <div class="filter-pill">
+            <span>Sort</span>
+            <select id="filter-sort" class="filter-select">
+              <option value="name">By station name</option>
+              <option value="status">By status</option>
+              <option value="due">By due date</option>
+            </select>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
 
-    <!-- Status filter -->
-    <div class="filter-group">
-      <span class="filter-section-label">Status</span>
-      <div class="filter-pill">
-        <span>Status</span>
-        <select id="filter-status" class="filter-select">
-          <option value="all">All statuses</option>
-          <option value="running">Running</option>
-          <option value="idle">Idle</option>
-          <option value="blocked">Blocked</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- Sort filter -->
-    <div class="filter-group">
-      <span class="filter-section-label">Sort</span>
-      <div class="filter-pill">
-        <span>Sort</span>
-        <select id="filter-sort" class="filter-select">
-          <option value="name">By station name</option>
-          <option value="status">By status</option>
-          <option value="due">By due date</option>
-        </select>
-      </div>
-    </div>
-  </div>
-</section>
-
-           <!-- Main row: stations + queue -->
+    <!-- Main row: stations -->
     <section class="sup-main-row">
       <section class="station-panel">
         <div class="panel-header">
@@ -1030,22 +1024,6 @@ body.light-mode .report-modal-input {
         </div>
         <div class="station-grid" id="station-grid">
           <!-- Stations rendered by JS -->
-        </div>
-      </section>
-
-      <section class="queue-panel">
-        <div class="panel-header">
-          <div>
-            <h3>Global job queue</h3>
-            <small>Jobs waiting to be started or reassigned.</small>
-          </div>
-          <small id="queue-count-label"></small>
-        </div>
-        <div class="queue-list" id="queue-list">
-          <!-- Global jobs rendered by JS -->
-        </div>
-        <div class="queue-empty-label" id="queue-empty-label" style="display:none;">
-          No waiting jobs in the global queue.
         </div>
       </section>
     </section>
@@ -1079,24 +1057,62 @@ body.light-mode .report-modal-input {
         </div>
       </div>
     </div>
-    
+
+    <!-- Themed warning modal for Mark Complete -->
+    <div id="complete-modal" class="modal-backdrop" hidden>
+      <div class="modal-panel">
+        <div class="modal-title">Confirm completion</div>
+        <p class="modal-body" id="complete-modal-text">
+          You’re about to mark this job complete. This will close the job and auto-promote the next job (if any) into the current slot.
+        </p>
+        <div class="modal-actions">
+          <button type="button" class="lo-btn modal-btn-cancel" id="modal-cancel">
+            Cancel
+          </button>
+          <button type="button" class="lo-btn modal-btn-confirm" id="modal-confirm">
+            Yes, mark complete
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Themed warning modal for Mark Complete -->
-  <div id="complete-modal" class="modal-backdrop" hidden>
-    <div class="modal-panel">
-      <div class="modal-title">Confirm completion</div>
-      <p class="modal-body" id="complete-modal-text">
-        You’re about to mark this job complete. This will close the job and auto-promote the next job (if any) into the current slot.
-      </p>
-      <div class="modal-actions">
-        <button type="button" class="lo-btn modal-btn-cancel" id="modal-cancel">
-          Cancel
-        </button>
-        <button type="button" class="lo-btn modal-btn-confirm" id="modal-confirm">
-          Yes, mark complete
-        </button>
+  <!-- Slide-over Global Job Queue Sheet -->
+  <div id="queue-sheet" class="queue-sheet" hidden>
+    <div class="queue-sheet-header">
+      <div>
+        <h2>Global Job Queue</h2>
+        <small id="queue-count-label">0 jobs</small>
       </div>
+      <button class="queue-close-btn" id="queue-sheet-close">&times;</button>
+    </div>
+
+    <!-- Upload/import -->
+    <label class="queue-upload-box" for="queue-file-input">
+      Click to upload CSV / XLSM / Google Sheets export
+    </label>
+    <input
+      type="file"
+      id="queue-file-input"
+      accept=".csv,.xls,.xlsx,.xlsm"
+      style="display:none"
+    />
+
+    <!-- Table of jobs -->
+    <table class="queue-table">
+      <thead>
+        <tr>
+          <th>Job ID</th>
+          <th>Part</th>
+          <th>Qty</th>
+          <th>Due</th>
+        </tr>
+      </thead>
+      <tbody id="queue-table-body"></tbody>
+    </table>
+
+    <div class="queue-empty-label" id="queue-empty-label">
+      No waiting jobs in the global queue.
     </div>
   </div>
 
@@ -1104,13 +1120,10 @@ body.light-mode .report-modal-input {
     import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
     const SUPABASE_URL = "https://xdjyjzdvpfnkbsnbcysx.supabase.co";
-    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
+    const SUPABASE_ANON_KEY =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
 
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    // ==========================
-    // State
-    // ==========================
 
     let stations = [];
     let globalQueue = [];
@@ -1123,11 +1136,7 @@ body.light-mode .report-modal-input {
     };
 
     let pendingCompleteStationId = null;
-        let reportModalStationId = null;
-
-    // ==========================
-    // Helpers
-    // ==========================
+    let reportModalStationId = null;
 
     function formatDateLabelToday() {
       const d = new Date();
@@ -1146,7 +1155,8 @@ body.light-mode .report-modal-input {
     }
 
     function priorityBadgeClass(priority) {
-      if (priority === "high") return "badge badge-priority badge-priority--high";
+      if (priority === "high")
+        return "badge badge-priority badge-priority--high";
       return "badge badge-priority";
     }
 
@@ -1166,13 +1176,11 @@ body.light-mode .report-modal-input {
     }
 
     function recalcRunning() {
-      metrics.stationsRunning = stations.filter((s) => s.status === "running").length;
+      metrics.stationsRunning = stations.filter(
+        (s) => s.status === "running"
+      ).length;
       metrics.stationCount = stations.length;
     }
-
-    // ==========================
-    // Modal helpers
-    // ==========================
 
     // --- Report Units modal ---
 
@@ -1194,7 +1202,9 @@ body.light-mode .report-modal-input {
       const total = job.qtyTotal ?? 0;
       const remaining = Math.max(0, (total || 0) - (done || 0));
 
-      textEl.textContent = `How many ${job.part} for ${job.id} did ${st.name} make? (Remaining: ${remaining})`;
+      textEl.textContent = `How many ${job.part} for ${
+        job.id
+      } did ${st.name} make? (Remaining: ${remaining})`;
       inputEl.value = "";
 
       backdrop.style.display = "flex";
@@ -1236,7 +1246,6 @@ body.light-mode .report-modal-input {
       const clampedDone = total ? Math.min(newDone, total) : newDone;
 
       try {
-        // 1) Update station_assignments.qty_done
         const { error: assignErr } = await supabase
           .from("station_assignments")
           .update({ qty_done: clampedDone })
@@ -1249,7 +1258,6 @@ body.light-mode .report-modal-input {
           return;
         }
 
-        // 2) Insert performance log for this increment
         const { error: perfErr } = await supabase
           .from("performance_logs")
           .insert({
@@ -1260,15 +1268,11 @@ body.light-mode .report-modal-input {
 
         if (perfErr) {
           console.error("Error inserting performance log:", perfErr);
-          // Non-blocking
         }
 
-        // 3) Update local state
         st.currentJob.qtyDone = clampedDone;
 
-        // Re-render UI
         renderStations();
-
         closeReportModal();
       } catch (err) {
         console.error("Unexpected error in submitReportModal:", err);
@@ -1307,14 +1311,12 @@ body.light-mode .report-modal-input {
       document.getElementById("complete-modal").hidden = true;
     }
 
-    // ==========================
-    // Metrics render
-    // ==========================
-
     function renderMetrics() {
-      document.getElementById("metrics-date-label").textContent = formatDateLabelToday();
+      document.getElementById("metrics-date-label").textContent =
+        formatDateLabelToday();
 
-      document.getElementById("metric-completed").textContent = metrics.completedToday;
+      document.getElementById("metric-completed").textContent =
+        metrics.completedToday;
       document.getElementById("metric-completed-sub").textContent =
         "Jobs / batches logged today";
 
@@ -1329,9 +1331,7 @@ body.light-mode .report-modal-input {
         "Stations currently marked as running";
     }
 
-    // ==========================
-    // Station queue helpers (local only, no cloud yet)
-    // ==========================
+    // Station queue helpers
 
     function ensureStationQueue(st) {
       if (!st.localQueue) st.localQueue = [];
@@ -1354,7 +1354,6 @@ body.light-mode .report-modal-input {
       const next = st.nextJob;
 
       if (next) {
-        // Push existing next down into queue (front)
         queue.unshift(next);
       }
 
@@ -1372,12 +1371,10 @@ body.light-mode .report-modal-input {
       const queue = ensureStationQueue(st);
       const current = st.currentJob;
 
-      // Push current into the front of queue
       queue.unshift(current);
       st.currentJob = null;
 
       if (st.nextJob) {
-        // Optionally auto-promote next into current
         st.currentJob = st.nextJob;
         st.nextJob = null;
         st.status = "running";
@@ -1396,7 +1393,6 @@ body.light-mode .report-modal-input {
       const current = st.currentJob;
       const next = st.nextJob;
 
-      // Current goes into queue (front) if it exists
       if (current) {
         queue.unshift(current);
       }
@@ -1417,7 +1413,6 @@ body.light-mode .report-modal-input {
 
       const job = queue.splice(index, 1)[0];
 
-      // Existing next goes down into queue (front)
       if (st.nextJob) {
         queue.unshift(st.nextJob);
       }
@@ -1438,10 +1433,6 @@ body.light-mode .report-modal-input {
       const oldCurrent = st.currentJob;
       const oldNext = st.nextJob;
 
-      // Push-down chain (Option A):
-      // newCurrent = queue job
-      // oldCurrent -> next
-      // oldNext -> queue
       if (oldNext) {
         queue.unshift(oldNext);
       }
@@ -1456,10 +1447,6 @@ body.light-mode .report-modal-input {
 
       renderStations();
     }
-
-    // ==========================
-    // Stations render
-    // ==========================
 
     function renderStations() {
       const lineFilter = document.getElementById("filter-line").value;
@@ -1508,7 +1495,6 @@ body.light-mode .report-modal-input {
         topRow.appendChild(badge);
         card.appendChild(topRow);
 
-        // CURRENT JOB
         if (st.currentJob) {
           const jb = document.createElement("div");
           jb.className = "job-block";
@@ -1521,23 +1507,22 @@ body.light-mode .report-modal-input {
           jb.appendChild(jbTitle);
 
           const meta = document.createElement("div");
-meta.className = "job-meta-row";
-const done = st.currentJob.qtyDone ?? 0;
-const total = st.currentJob.qtyTotal ?? 0;
-const remaining = Math.max(0, (total || 0) - (done || 0));
+          meta.className = "job-meta-row";
+          const done = st.currentJob.qtyDone ?? 0;
+          const total = st.currentJob.qtyTotal ?? 0;
+          const remaining = Math.max(0, (total || 0) - (done || 0));
 
-meta.innerHTML = `
-  <span>${st.currentJob.part}</span>
-  <span>${done}/${total} pcs</span>
-  <span>Due ${st.currentJob.due || "-"}</span>
-`;
-jb.appendChild(meta);
+          meta.innerHTML = `
+            <span>${st.currentJob.part}</span>
+            <span>${done}/${total} pcs</span>
+            <span>Due ${st.currentJob.due || "-"}</span>
+          `;
+          jb.appendChild(meta);
 
-// New: remaining line
-const remainingLine = document.createElement("div");
-remainingLine.className = "job-remaining";
-remainingLine.textContent = `There are ${remaining} ${st.currentJob.part} left to make.`;
-jb.appendChild(remainingLine);
+          const remainingLine = document.createElement("div");
+          remainingLine.className = "job-remaining";
+          remainingLine.textContent = `There are ${remaining} ${st.currentJob.part} left to make.`;
+          jb.appendChild(remainingLine);
 
           if (st.currentJob.priority) {
             const pr = document.createElement("div");
@@ -1556,7 +1541,6 @@ jb.appendChild(remainingLine);
           card.appendChild(label);
         }
 
-        // NEXT JOB
         if (st.nextJob) {
           const nb = document.createElement("div");
           nb.className = "job-block";
@@ -1579,11 +1563,9 @@ jb.appendChild(remainingLine);
           card.appendChild(nb);
         }
 
-        // ACTIONS
         const actionRow = document.createElement("div");
         actionRow.className = "station-actions";
 
-        // New: report units made (only useful if there is a current job)
         const btnReport = document.createElement("button");
         btnReport.className = "mini-btn";
         btnReport.textContent = "Report units made";
@@ -1634,7 +1616,6 @@ jb.appendChild(remainingLine);
         btnQueueToggle.textContent = st._queueOpen ? "Hide queue" : "Show queue";
         btnQueueToggle.onclick = () => toggleStationQueueOpen(st.id);
 
-        // order of buttons on card
         actionRow.appendChild(btnReport);
         actionRow.appendChild(btnComplete);
         actionRow.appendChild(btnMaterial);
@@ -1647,7 +1628,6 @@ jb.appendChild(remainingLine);
 
         card.appendChild(actionRow);
 
-        // STATION QUEUE (local only)
         const queue = st.localQueue || [];
         const queueWrapper = document.createElement("div");
         queueWrapper.className = "station-queue";
@@ -1727,75 +1707,95 @@ jb.appendChild(remainingLine);
         list.length + " stations in view";
     }
 
-    // ==========================
-    // Global queue render
-    // ==========================
+    // Global queue
 
     function renderQueue() {
-      const container = document.getElementById("queue-list");
-      container.innerHTML = "";
+      const tbody = document.getElementById("queue-table-body");
+      const countEl = document.getElementById("queue-count-label");
+      const emptyEl = document.getElementById("queue-empty-label");
+
+      if (!tbody) return;
+
+      tbody.innerHTML = "";
 
       if (!globalQueue.length) {
-        document.getElementById("queue-empty-label").style.display = "block";
-        document.getElementById("queue-count-label").textContent = "0 jobs waiting";
+        if (countEl) countEl.textContent = "0 jobs";
+        if (emptyEl) emptyEl.style.display = "block";
         return;
-      } else {
-        document.getElementById("queue-empty-label").style.display = "none";
       }
 
+      if (emptyEl) emptyEl.style.display = "none";
+
       globalQueue.forEach((job) => {
-        const item = document.createElement("article");
-        item.className = "queue-item";
-
-        const top = document.createElement("div");
-        top.className = "queue-top";
-        top.innerHTML = `
-          <div>
-            <div class="job-label">Job</div>
-            <div class="job-main">${job.id}</div>
-          </div>
-          <div class="${priorityBadgeClass(job.priority)}">
-            Priority: ${job.priority}
-          </div>
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${job.id}</td>
+          <td>${job.part}</td>
+          <td>${job.qtyTotal}</td>
+          <td>${job.due || "-"}</td>
         `;
-        item.appendChild(top);
 
-        const meta = document.createElement("div");
-        meta.className = "queue-meta";
-        meta.innerHTML = `
-          <span>${job.part}</span>
-          <span>${job.qtyTotal} pcs</span>
-          <span>Due ${job.due || "-"}</span>
-        `;
-        item.appendChild(meta);
+        tr.addEventListener("click", () => {
+          [...tbody.children].forEach((row) =>
+            row.classList.remove("queue-row-selected")
+          );
+          tr.classList.add("queue-row-selected");
+          openAssignPrompt(job);
+        });
 
-        const actions = document.createElement("div");
-        actions.className = "queue-actions";
-
-        const assignBtn = document.createElement("button");
-        assignBtn.className = "mini-btn mini-btn-primary";
-        assignBtn.textContent = "Assign to station";
-        assignBtn.onclick = () => simulateAssignFromQueue(job.id);
-
-        const dropBtn = document.createElement("button");
-        dropBtn.className = "mini-btn";
-        dropBtn.textContent = "Remove";
-        dropBtn.onclick = () => simulateDropFromQueue(job.id);
-
-        actions.appendChild(assignBtn);
-        actions.appendChild(dropBtn);
-
-        item.appendChild(actions);
-        container.appendChild(item);
+        tbody.appendChild(tr);
       });
 
-      document.getElementById("queue-count-label").textContent =
-        globalQueue.length + " jobs in queue";
+      if (countEl) {
+        countEl.textContent = `${globalQueue.length} job${
+          globalQueue.length === 1 ? "" : "s"
+        }`;
+      }
     }
 
-    // ==========================
-    // Simulation actions
-    // ==========================
+    function parseCSV(text) {
+      const rows = text
+        .split(/\r?\n/)
+        .map((r) => r.trim())
+        .filter(Boolean);
+      if (rows.length <= 1) return;
+
+      const dataRows = rows.slice(1);
+
+      globalQueue = dataRows.map((line) => {
+        const [jobId, part, qty, due] = line.split(",");
+
+        return {
+          id: (jobId || "").trim(),
+          part: (part || "").trim(),
+          qtyTotal: parseInt((qty || "0").trim(), 10) || 0,
+          due: (due || "").trim(),
+          priority: "normal",
+        };
+      });
+
+      renderQueue();
+
+      const sheet = document.getElementById("queue-sheet");
+      if (sheet) sheet.hidden = false;
+    }
+
+    function openAssignPrompt(job) {
+      const stationId = prompt(
+        `Assign job ${job.id} (${job.part}) to which station ID?`
+      );
+      if (!stationId) return;
+
+      const qty = prompt(
+        `How many units of ${job.id} to assign to ${stationId}? (Total: ${job.qtyTotal})`
+      );
+      if (!qty) return;
+
+      alert(
+        `Assigned ${qty} units of ${job.id} to station ${stationId}.\n\n` +
+          "Next step: wire this into Supabase station_assignments."
+      );
+    }
 
     function simulateCompleteJob(stationId) {
       openCompleteModal(stationId);
@@ -1813,7 +1813,6 @@ jb.appendChild(remainingLine);
       const qtyTotal = st.currentJob.qtyTotal ?? 0;
 
       try {
-        // 1) Update job status -> completed
         const { error: jobErr } = await supabase
           .from("jobs")
           .update({ status: "completed" })
@@ -1825,7 +1824,6 @@ jb.appendChild(remainingLine);
           return;
         }
 
-        // 2) Update station_assignments qty_done for this station/job
         const { error: assignErr } = await supabase
           .from("station_assignments")
           .update({ qty_done: qtyTotal })
@@ -1837,22 +1835,18 @@ jb.appendChild(remainingLine);
           alert("Job completed in UI, but assignment update failed in cloud.");
         }
 
-        // 3) Insert performance log (simple v1)
-        const logPayload = {
-          station_id: stationId,
-          job_id: jobId,
-          qty_completed: qtyTotal,
-        };
-
         const { error: perfErr } = await supabase
           .from("performance_logs")
-          .insert(logPayload);
+          .insert({
+            station_id: stationId,
+            job_id: jobId,
+            qty_completed: qtyTotal,
+          });
 
         if (perfErr) {
           console.error("Error inserting performance log:", perfErr);
         }
 
-        // 4) Set the station to idle in stations table
         const { error: stationErr } = await supabase
           .from("stations")
           .update({ status: "idle" })
@@ -1863,14 +1857,12 @@ jb.appendChild(remainingLine);
           alert("Could not update station status in cloud.");
         }
 
-        // 5) Local metrics + push-down behavior
         metrics.completedToday += 1;
         metrics.completedOnTimeRate = Math.min(
           100,
           metrics.completedOnTimeRate + 1
         );
 
-        // Remove current job, then auto-promote next if it exists
         const next = st.nextJob || null;
         st.currentJob = next;
         st.nextJob = null;
@@ -2033,16 +2025,14 @@ jb.appendChild(remainingLine);
     function simulateNextHour() {
       const running = stations.filter((s) => s.status === "running");
       if (!running.length) {
-        alert("No running stations to simulate — try assigning or starting a job.");
+        alert(
+          "No running stations to simulate — try assigning or starting a job."
+        );
         return;
       }
       const choice = running[Math.floor(Math.random() * running.length)];
       simulateCompleteJob(choice.id);
     }
-
-    // ==========================
-    // Load from Supabase
-    // ==========================
 
     async function loadInitialData() {
       try {
@@ -2091,9 +2081,9 @@ jb.appendChild(remainingLine);
             line: stRow.line,
             status: stRow.status,
             currentJob,
-            nextJob: null,     // reserved for future scheduling logic
-            localQueue: [],    // local-only station queue
-            _queueOpen: false, // UI state
+            nextJob: null,
+            localQueue: [],
+            _queueOpen: false,
           };
         });
 
@@ -2127,12 +2117,7 @@ jb.appendChild(remainingLine);
       }
     }
 
-    // ==========================
-    // Init
-    // ==========================
-
     function init() {
-      // filters
       document
         .getElementById("filter-line")
         .addEventListener("change", renderStations);
@@ -2143,26 +2128,32 @@ jb.appendChild(remainingLine);
         .getElementById("filter-sort")
         .addEventListener("change", renderStations);
 
-      // top buttons
+      const queueSheet = document.getElementById("queue-sheet");
+      const queueSheetClose = document.getElementById("queue-sheet-close");
+      const queueFileInput = document.getElementById("queue-file-input");
+
       document
         .getElementById("btn-refresh")
         .addEventListener("click", () => {
           loadInitialData();
         });
 
-        document
-  .getElementById("btn-scroll-queue")
-  .addEventListener("click", () => {
-    document
-      .querySelector(".queue-panel")
-      .scrollIntoView({ behavior: "smooth" });
-  });
+      document
+        .getElementById("btn-scroll-queue")
+        .addEventListener("click", () => {
+          if (queueSheet) queueSheet.hidden = false;
+        });
+
+      if (queueSheetClose) {
+        queueSheetClose.addEventListener("click", () => {
+          queueSheet.hidden = true;
+        });
+      }
 
       document
         .getElementById("btn-simulate")
         .addEventListener("click", simulateNextHour);
 
-      // modal buttons
       document
         .getElementById("modal-cancel")
         .addEventListener("click", closeCompleteModal);
@@ -2179,7 +2170,6 @@ jb.appendChild(remainingLine);
           }
         });
 
-      // Report units modal buttons
       document
         .getElementById("report-modal-cancel")
         .addEventListener("click", closeReportModal);
@@ -2188,7 +2178,6 @@ jb.appendChild(remainingLine);
         .getElementById("report-modal-submit")
         .addEventListener("click", submitReportModal);
 
-      // Allow Esc key to close the report modal
       document.addEventListener("keydown", (evt) => {
         if (evt.key === "Escape") {
           const backdrop = document.getElementById("report-modal-backdrop");
@@ -2198,7 +2187,22 @@ jb.appendChild(remainingLine);
         }
       });
 
-      // initial data load
+      if (queueFileInput) {
+        queueFileInput.addEventListener("change", async (evt) => {
+          const file = evt.target.files[0];
+          if (!file) return;
+
+          if (file.name.endsWith(".csv")) {
+            const text = await file.text();
+            parseCSV(text);
+          } else {
+            alert(
+              "Support for Excel (.xlsm/.xlsx) coming next. Convert to CSV for now."
+            );
+          }
+        });
+      }
+
       loadInitialData();
     }
 
