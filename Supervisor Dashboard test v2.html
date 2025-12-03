@@ -1,0 +1,2196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>LeanOps — Supervisor Dashboard v2</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    /* LeanOps — Supervisor Dashboard v2 (generic, non-employer) */
+
+    :root {
+      --hero-bg-top: #02081a;
+      --hero-bg-bottom: #07172b;
+      --accent: #f97316;
+      --accent-soft: rgba(249, 115, 22, 0.12);
+      --accent-strong: #ea580c;
+
+      --page-bg: #0b1020;
+      --panel-bg: #020617;
+      --panel-soft: #020617;
+      --card-bg: #020617;
+      --card-alt-bg: #020617;
+      --border-soft: rgba(148, 163, 184, 0.4);
+      --border-strong: rgba(15, 23, 42, 0.8);
+
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --text-soft: #6b7280;
+
+      --ok: #22c55e;
+      --warn: #facc15;
+      --danger: #f97373;
+
+      --radius-lg: 22px;
+      --radius-md: 14px;
+
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-display: "Georgia", "Times New Roman", serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background:
+        radial-gradient(circle at top left, #020617 0, #020617 50%, transparent 70%) fixed,
+        linear-gradient(to bottom, #020617 0, #020617 320px, #020617 420px, #020817 100%);
+      color: var(--text-main);
+    }
+
+    /* ---------- Page shell ---------- */
+
+    .sup-shell {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px 20px 40px;
+    }
+
+    .sup-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: flex-start;
+      gap: 16px;
+      margin-bottom: 6px;
+    }
+
+    .sup-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sup-logo {
+      font-size: 18px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #f9fafb;
+    }
+
+    .sup-title {
+      font-family: var(--font-display);
+      font-size: 18px;
+      color: #e5e7eb;
+    }
+
+    .sup-subtitle {
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+
+    /* ---------- Filter / Control bar (always open) ---------- */
+
+    .sup-filter-bar {
+      width: 100%;
+      margin: 12px 0 18px;
+      padding: 12px 16px;
+      border-radius: var(--radius-lg);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .sup-filter-bar {
+  align-items: flex-start;
+}
+
+.filter-right {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Make the TODAY card a bit tighter when it lives in the header */
+.sup-metrics-inline {
+  padding: 10px 12px;
+  max-width: 420px;
+}
+
+    .filter-left,
+    .filter-center,
+    .filter-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar-label {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.8;
+      color: rgba(209, 213, 219, 0.9);
+    }
+
+    .filter-section-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148, 163, 184, 0.9);
+      opacity: 0.9;
+    }
+
+    .filter-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(75, 85, 99, 0.9);
+    }
+
+    .filter-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      font-size: 11px;
+      padding: 6px 10px;
+    }
+
+    .filter-pill span {
+      font-size: 11px;
+    }
+
+    /* Dropdown inside pills */
+    .filter-select {
+      background-color: transparent;
+      border: none;
+      color: #e5e7eb;
+      font-size: 11px;
+    }
+
+    .filter-select option {
+      background-color: #020617;
+      color: #e5e7eb;
+    }
+
+    /* Top-right actions inside filter bar */
+    .filter-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-left: auto;
+    }
+
+    .lo-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.7);
+      color: #e5e7eb;
+      font-size: 12px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    }
+
+    .lo-btn:hover {
+      background: rgba(31, 41, 55, 0.9);
+      transform: translateY(-1px);
+    }
+
+    .lo-btn-primary {
+      border-color: rgba(249, 115, 22, 0.85);
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      font-weight: 600;
+      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.5);
+    }
+
+    .lo-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(249, 115, 22, 0.7);
+    }
+
+    .vc-btn {
+      border: none;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 10px;
+      cursor: pointer;
+      background: rgba(15, 23, 42, 0.9);
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition:
+        background 0.15s ease,
+        transform 0.08s ease,
+        box-shadow 0.15s ease,
+        opacity 0.15s ease;
+      box-shadow: 0 0 0 rgba(15, 23, 42, 0);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+    }
+
+    .vc-btn:hover {
+      background: rgba(31, 41, 55, 0.95);
+      transform: translateY(-0.5px);
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.6);
+    }
+
+    .vc-btn.is-active {
+      background: var(--accent-soft);
+      border-color: rgba(249, 115, 22, 0.9);
+      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.7);
+      color: #fed7aa;
+    }
+
+    /* ---------- Top metrics bar ---------- */
+
+    .sup-top-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(0, 3.2fr);
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 900px) {
+      .sup-top-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .sup-metrics-panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at top left, #0b1120, #020617 55%);
+      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
+      padding: 14px 16px 14px;
+    }
+
+    .sup-panel-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .sup-panel-title h2 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .sup-panel-sub {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 720px) {
+      .metrics-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .metric-card {
+      border-radius: 12px;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: radial-gradient(circle at top left, #1f2933, #020617 70%);
+      padding: 10px 10px 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .metric-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(156, 163, 175, 0.9);
+    }
+
+    .metric-main {
+      font-size: 18px;
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .metric-sub {
+      font-size: 11px;
+      color: rgba(209, 213, 219, 0.9);
+    }
+
+    /* ---------- Main layout ---------- */
+
+    .sup-main-row {
+      display: grid;
+      grid-template-columns: minmax(0, 2.3fr) minmax(0, 2.1fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 1024px) {
+      .sup-main-row {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .station-panel,
+    .queue-panel {
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at top left, #020617, #020617 60%);
+      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
+      padding: 14px 16px 16px;
+    }
+
+    .sup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+/* Right side of header: TODAY + buttons */
+.sup-header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+/* Make TODAY card a bit tighter when used in the header */
+.sup-metrics-inline {
+  padding: 10px 14px;
+  max-width: 460px;
+}
+
+/* Header buttons row */
+.sup-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+/* Filter bar now only has filters */
+.sup-filter-bar {
+  justify-content: flex-start;
+}
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+      gap: 10px;
+    }
+
+    .panel-header h3 {
+      font-family: var(--font-display);
+      font-size: 15px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .panel-header small {
+      font-size: 11px;
+      color: var(--text-soft);
+    }
+
+    .station-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .station-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .station-card {
+      position: relative;
+      border-radius: 14px;
+      border: 1px solid rgba(75, 85, 99, 0.85);
+      background: radial-gradient(circle at top left, #111827, #020617 70%);
+      padding: 10px 10px 11px;
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      overflow: hidden;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .station-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
+      border-color: rgba(249, 115, 22, 0.7);
+    }
+
+    .station-id-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .station-name {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #e5e7eb;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      border: 1px solid transparent;
+    }
+
+    .badge-ok {
+      border-color: rgba(34, 197, 94, 0.6);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.18);
+    }
+
+    .badge-warn {
+      border-color: rgba(250, 204, 21, 0.7);
+      color: #fef9c3;
+      background: rgba(234, 179, 8, 0.16);
+    }
+
+    .badge-danger {
+      border-color: rgba(248, 113, 113, 0.85);
+      color: #fee2e2;
+      background: rgba(248, 113, 113, 0.18);
+    }
+
+    /* Job blocks */
+
+    .job-block {
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 7px 8px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .job-block-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .job-label {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(148, 163, 184, 0.9);
+      font-size: 10px;
+    }
+
+    .job-main {
+      font-weight: 600;
+      color: #f9fafb;
+    }
+
+    .job-meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      color: rgba(209, 213, 219, 0.9);
+      font-size: 10px;
+    }
+
+    .job-meta-row span {
+      white-space: nowrap;
+    }
+
+    .no-job-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      font-style: italic;
+    }
+
+    /* Station action row */
+
+    .station-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .mini-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      font-size: 10px;
+      padding: 4px 9px;
+      cursor: pointer;
+      transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+    }
+
+    .mini-btn:hover {
+      background: rgba(31, 41, 55, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .mini-btn-primary {
+      border-color: rgba(249, 115, 22, 0.85);
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      font-weight: 600;
+    }
+
+    .mini-btn-primary:hover {
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      border-color: rgba(249, 115, 22, 0.95);
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.55);
+    }
+
+    .mini-btn:disabled,
+    .mini-btn[disabled] {
+      opacity: 0.45;
+      color: #9ca3af;
+      border-color: rgba(148, 163, 184, 0.4);
+      background: rgba(30, 41, 59, 0.4);
+      cursor: not-allowed;
+    }
+
+    .mini-btn:disabled:hover,
+    .mini-btn[disabled]:hover {
+      background: rgba(30, 41, 59, 0.4);
+      border-color: rgba(148, 163, 184, 0.4);
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Per-station queue (collapsible) */
+
+    .station-queue-toggle {
+      margin-left: auto;
+    }
+
+    .station-queue {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(55, 65, 81, 0.9);
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .station-queue.is-open {
+      display: flex;
+    }
+
+    .station-queue-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      color: var(--text-soft);
+    }
+
+    .station-queue-badge {
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .station-queue-item {
+      border-radius: 10px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 6px 7px;
+      font-size: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .station-queue-item-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .station-queue-item-meta {
+      display: flex;
+      gap: 8px;
+      color: rgba(209, 213, 219, 0.9);
+    }
+
+    .station-queue-item-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 3px;
+    }
+
+    /* Right-side global queue */
+
+    .queue-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 420px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .queue-item {
+      border-radius: 12px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.95);
+      padding: 8px 9px;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .queue-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .queue-meta {
+      display: flex;
+      gap: 10px;
+      color: rgba(209, 213, 219, 0.9);
+      font-size: 10px;
+    }
+
+    .queue-actions {
+      display: flex;
+      gap: 6px;
+      margin-top: 3px;
+    }
+
+    .queue-item .job-label {
+      color: rgba(148, 163, 184, 0.95);
+    }
+
+    .badge-priority {
+      border-color: rgba(248, 250, 252, 0.55);
+      color: #e5e7eb;
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .badge-priority--high {
+      border-color: rgba(248, 113, 113, 0.85);
+      color: #fee2e2;
+      background: rgba(127, 29, 29, 0.7);
+    }
+
+    .queue-empty-label {
+      font-size: 11px;
+      color: var(--text-soft);
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    .queue-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .queue-list::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .queue-list::-webkit-scrollbar-thumb {
+      background: rgba(55, 65, 81, 0.9);
+      border-radius: 999px;
+    }
+
+    /* Modal (themed warning) */
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.78);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .modal-backdrop[hidden] {
+      display: none;
+    }
+
+    .modal-panel {
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      padding: 18px 20px 16px;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.9);
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 16px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #f97373;
+      margin-bottom: 6px;
+    }
+
+    .modal-body {
+      font-size: 12px;
+      color: #e5e7eb;
+      margin-bottom: 14px;
+    }
+
+    .modal-body strong {
+      color: #facc15;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .modal-btn-cancel {
+      background: rgba(15, 23, 42, 0.9);
+      border-color: rgba(148, 163, 184, 0.8);
+      color: #e5e7eb;
+    }
+
+    .modal-btn-cancel:hover {
+      background: rgba(31, 41, 55, 0.95);
+    }
+
+    .modal-btn-confirm {
+      border-color: rgba(249, 115, 22, 0.9);
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      font-weight: 600;
+      box-shadow: 0 10px 26px rgba(249, 115, 22, 0.6);
+    }
+
+    .modal-btn-confirm:hover {
+      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.8);
+      transform: translateY(-1px);
+    }
+/* Remaining units line under current job */
+.job-remaining {
+  margin-top: 2px;
+  font-size: 10px;
+  color: var(--text-soft);
+}
+
+/* ===== Report Units Modal ===== */
+
+.report-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.75);
+  display: none; /* show via JS */
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.report-modal {
+  width: 100%;
+  max-width: 360px;
+  border-radius: 18px;
+  padding: 16px 18px 14px;
+  background: radial-gradient(circle at top left, #020617, #020617 70%);
+  border: 1px solid rgba(148,163,184,0.7);
+  box-shadow: 0 24px 50px rgba(15,23,42,0.9);
+}
+
+.report-modal-title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.report-modal-body {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.report-modal-input {
+  width: 100%;
+  padding: 7px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.8);
+  background: rgba(15,23,42,0.9);
+  color: #e5e7eb;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.report-modal-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px rgba(249,115,22,0.8);
+}
+
+.report-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* light mode tweaks */
+body.light-mode .report-modal {
+  background: #ffffff;
+  border-color: rgba(148,163,184,0.75);
+  box-shadow: 0 20px 40px rgba(15,23,42,0.18);
+}
+
+body.light-mode .report-modal-body {
+  color: #4b5563;
+}
+
+body.light-mode .report-modal-input {
+  background: #f9fafb;
+  color: #111827;
+  border-color: rgba(148,163,184,0.9);
+}
+
+  </style>
+</head>
+<body>
+  <div class="sup-shell">
+    <!-- Top header -->
+ <header class="sup-header">
+  <div class="sup-brand">
+    <div class="sup-logo">LeanOps</div>
+    <div class="sup-title">Supervisor — Live Stations</div>
+    <div class="sup-subtitle">
+      Lightweight MES view for jobs, stations, and flow — generic demo instance.
+    </div>
+  </div>
+
+  <div class="sup-header-right">
+    <div class="sup-metrics-panel sup-metrics-inline">
+      <div class="sup-panel-title">
+        <h2>Today</h2>
+        <div class="sup-panel-sub" id="metrics-date-label"></div>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-label">Jobs completed</div>
+          <div class="metric-main" id="metric-completed">0</div>
+          <div class="metric-sub" id="metric-completed-sub">–</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">On-time completion</div>
+          <div class="metric-main" id="metric-ontime">0%</div>
+          <div class="metric-sub" id="metric-ontime-sub">–</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Stations running</div>
+          <div class="metric-main" id="metric-running">0 / 0</div>
+          <div class="metric-sub" id="metric-running-sub">–</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sup-header-actions">
+      <button class="lo-btn" id="btn-refresh">Quick refresh</button>
+      <button class="lo-btn lo-btn-primary" id="btn-simulate">
+        Simulate next hour
+      </button>
+    </div>
+  </div>
+</header>
+
+
+    <!-- Filter / control bar (filters only) -->
+<section class="sup-filter-bar">
+  <div class="filter-left">
+    <span class="filter-bar-label">View</span>
+
+    <!-- Display options -->
+    <div class="filter-group">
+      <span class="filter-section-label">Display</span>
+      <button type="button" class="vc-btn" data-toggle="compact">Compact</button>
+      <button type="button" class="vc-btn" data-toggle="expanded">Expanded</button>
+      <button type="button" class="vc-btn" data-toggle="details">Toggle details</button>
+    </div>
+
+    <!-- Station options -->
+    <div class="filter-group">
+      <span class="filter-section-label">Stations</span>
+      <button type="button" class="vc-btn" data-toggle="empty">Hide empty</button>
+      <button type="button" class="vc-btn" data-toggle="theme">Dark / Light</button>
+    </div>
+
+    <!-- Line filter -->
+    <div class="filter-group">
+      <span class="filter-section-label">Line</span>
+      <div class="filter-pill">
+        <span>Line</span>
+        <select id="filter-line" class="filter-select">
+          <option value="all">All lines</option>
+          <option value="Line A">Line A</option>
+          <option value="Line B">Line B</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Status filter -->
+    <div class="filter-group">
+      <span class="filter-section-label">Status</span>
+      <div class="filter-pill">
+        <span>Status</span>
+        <select id="filter-status" class="filter-select">
+          <option value="all">All statuses</option>
+          <option value="running">Running</option>
+          <option value="idle">Idle</option>
+          <option value="blocked">Blocked</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Sort filter -->
+    <div class="filter-group">
+      <span class="filter-section-label">Sort</span>
+      <div class="filter-pill">
+        <span>Sort</span>
+        <select id="filter-sort" class="filter-select">
+          <option value="name">By station name</option>
+          <option value="status">By status</option>
+          <option value="due">By due date</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</section>
+
+           <!-- Main row: stations + queue -->
+    <section class="sup-main-row">
+      <section class="station-panel">
+        <div class="panel-header">
+          <div>
+            <h3>Stations</h3>
+            <small id="station-count-label"></small>
+          </div>
+          <small>Use actions to drive the day and see how jobs flow.</small>
+        </div>
+        <div class="station-grid" id="station-grid">
+          <!-- Stations rendered by JS -->
+        </div>
+      </section>
+
+      <section class="queue-panel">
+        <div class="panel-header">
+          <div>
+            <h3>Global job queue</h3>
+            <small>Jobs waiting to be started or reassigned.</small>
+          </div>
+          <small id="queue-count-label"></small>
+        </div>
+        <div class="queue-list" id="queue-list">
+          <!-- Global jobs rendered by JS -->
+        </div>
+        <div class="queue-empty-label" id="queue-empty-label" style="display:none;">
+          No waiting jobs in the global queue.
+        </div>
+      </section>
+    </section>
+
+    <!-- Report Units Made Modal -->
+    <div id="report-modal-backdrop" class="report-modal-backdrop">
+      <div class="report-modal">
+        <div class="report-modal-title">Report units made</div>
+        <div class="report-modal-body" id="report-modal-text">
+          <!-- Filled by JS -->
+        </div>
+        <input
+          id="report-modal-input"
+          class="report-modal-input"
+          type="number"
+          min="1"
+          step="1"
+          placeholder="Enter units made (e.g. 40)"
+        />
+        <div class="report-modal-actions">
+          <button type="button" class="mini-btn" id="report-modal-cancel">
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="mini-btn mini-btn-primary"
+            id="report-modal-submit"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+
+  <!-- Themed warning modal for Mark Complete -->
+  <div id="complete-modal" class="modal-backdrop" hidden>
+    <div class="modal-panel">
+      <div class="modal-title">Confirm completion</div>
+      <p class="modal-body" id="complete-modal-text">
+        You’re about to mark this job complete. This will close the job and auto-promote the next job (if any) into the current slot.
+      </p>
+      <div class="modal-actions">
+        <button type="button" class="lo-btn modal-btn-cancel" id="modal-cancel">
+          Cancel
+        </button>
+        <button type="button" class="lo-btn modal-btn-confirm" id="modal-confirm">
+          Yes, mark complete
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+    const SUPABASE_URL = "https://xdjyjzdvpfnkbsnbcysx.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // ==========================
+    // State
+    // ==========================
+
+    let stations = [];
+    let globalQueue = [];
+
+    const metrics = {
+      completedToday: 0,
+      completedOnTimeRate: 0,
+      stationsRunning: 0,
+      stationCount: 0,
+    };
+
+    let pendingCompleteStationId = null;
+        let reportModalStationId = null;
+
+    // ==========================
+    // Helpers
+    // ==========================
+
+    function formatDateLabelToday() {
+      const d = new Date();
+      return d.toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function statusBadgeClass(status) {
+      if (status === "running") return "badge badge-ok";
+      if (status === "blocked") return "badge badge-danger";
+      if (status === "idle") return "badge badge-warn";
+      return "badge";
+    }
+
+    function priorityBadgeClass(priority) {
+      if (priority === "high") return "badge badge-priority badge-priority--high";
+      return "badge badge-priority";
+    }
+
+    function compareByName(a, b) {
+      return a.name.localeCompare(b.name);
+    }
+
+    function compareByStatus(a, b) {
+      const weight = { running: 1, idle: 2, blocked: 3 };
+      return (weight[a.status] || 99) - (weight[b.status] || 99);
+    }
+
+    function compareByDue(a, b) {
+      const da = a.currentJob?.due || a.nextJob?.due || "9999-12-31";
+      const db = b.currentJob?.due || b.nextJob?.due || "9999-12-31";
+      return da.localeCompare(db);
+    }
+
+    function recalcRunning() {
+      metrics.stationsRunning = stations.filter((s) => s.status === "running").length;
+      metrics.stationCount = stations.length;
+    }
+
+    // ==========================
+    // Modal helpers
+    // ==========================
+
+    // --- Report Units modal ---
+
+    function openReportModal(stationId) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st || !st.currentJob) {
+        alert("No active job on this station to report units for.");
+        return;
+      }
+
+      reportModalStationId = stationId;
+
+      const backdrop = document.getElementById("report-modal-backdrop");
+      const textEl = document.getElementById("report-modal-text");
+      const inputEl = document.getElementById("report-modal-input");
+
+      const job = st.currentJob;
+      const done = job.qtyDone ?? 0;
+      const total = job.qtyTotal ?? 0;
+      const remaining = Math.max(0, (total || 0) - (done || 0));
+
+      textEl.textContent = `How many ${job.part} for ${job.id} did ${st.name} make? (Remaining: ${remaining})`;
+      inputEl.value = "";
+
+      backdrop.style.display = "flex";
+      inputEl.focus();
+    }
+
+    function closeReportModal() {
+      reportModalStationId = null;
+      const backdrop = document.getElementById("report-modal-backdrop");
+      backdrop.style.display = "none";
+    }
+
+    async function submitReportModal() {
+      if (!reportModalStationId) {
+        closeReportModal();
+        return;
+      }
+
+      const st = stations.find((s) => s.id === reportModalStationId);
+      if (!st || !st.currentJob) {
+        alert("Station no longer has an active job.");
+        closeReportModal();
+        return;
+      }
+
+      const inputEl = document.getElementById("report-modal-input");
+      const raw = inputEl.value.trim();
+      const delta = parseInt(raw, 10);
+
+      if (isNaN(delta) || delta <= 0) {
+        alert("Please enter a positive whole number for units made.");
+        return;
+      }
+
+      const jobId = st.currentJob.id;
+      const currentDone = st.currentJob.qtyDone ?? 0;
+      const total = st.currentJob.qtyTotal ?? 0;
+      const newDone = currentDone + delta;
+      const clampedDone = total ? Math.min(newDone, total) : newDone;
+
+      try {
+        // 1) Update station_assignments.qty_done
+        const { error: assignErr } = await supabase
+          .from("station_assignments")
+          .update({ qty_done: clampedDone })
+          .eq("station_id", st.id)
+          .eq("job_id", jobId);
+
+        if (assignErr) {
+          console.error("Error updating qty_done:", assignErr);
+          alert("Could not update units in the cloud.");
+          return;
+        }
+
+        // 2) Insert performance log for this increment
+        const { error: perfErr } = await supabase
+          .from("performance_logs")
+          .insert({
+            station_id: st.id,
+            job_id: jobId,
+            qty_completed: delta,
+          });
+
+        if (perfErr) {
+          console.error("Error inserting performance log:", perfErr);
+          // Non-blocking
+        }
+
+        // 3) Update local state
+        st.currentJob.qtyDone = clampedDone;
+
+        // Re-render UI
+        renderStations();
+
+        closeReportModal();
+      } catch (err) {
+        console.error("Unexpected error in submitReportModal:", err);
+        alert("Unexpected error while reporting units made.");
+      }
+    }
+
+    // --- Complete job warning modal ---
+
+    function openCompleteModal(stationId) {
+      pendingCompleteStationId = stationId;
+      const modal = document.getElementById("complete-modal");
+      const textEl = document.getElementById("complete-modal-text");
+      const st = stations.find((s) => s.id === stationId);
+
+      if (st && st.currentJob) {
+        const jobId = st.currentJob.id ?? "this job";
+        const done = st.currentJob.qtyDone ?? 0;
+        const total = st.currentJob.qtyTotal ?? 0;
+        const remaining = Math.max(total - done, 0);
+
+        textEl.innerHTML =
+          `You’re about to mark <strong>${jobId}</strong> complete on <strong>${st.name}</strong>.<br>` +
+          `Remaining qty: <strong>${remaining} pcs</strong>.<br><br>` +
+          `This will close the job and <strong>auto-promote the next job</strong> (if any) into the current slot.`;
+      } else {
+        textEl.textContent =
+          "You’re about to mark this job complete. This will close the job and auto-promote the next job (if any) into the current slot.";
+      }
+
+      modal.hidden = false;
+    }
+
+    function closeCompleteModal() {
+      pendingCompleteStationId = null;
+      document.getElementById("complete-modal").hidden = true;
+    }
+
+    // ==========================
+    // Metrics render
+    // ==========================
+
+    function renderMetrics() {
+      document.getElementById("metrics-date-label").textContent = formatDateLabelToday();
+
+      document.getElementById("metric-completed").textContent = metrics.completedToday;
+      document.getElementById("metric-completed-sub").textContent =
+        "Jobs / batches logged today";
+
+      document.getElementById("metric-ontime").textContent =
+        metrics.completedOnTimeRate + "%";
+      document.getElementById("metric-ontime-sub").textContent =
+        "On-time completion rate (demo)";
+
+      document.getElementById("metric-running").textContent =
+        metrics.stationsRunning + " / " + metrics.stationCount;
+      document.getElementById("metric-running-sub").textContent =
+        "Stations currently marked as running";
+    }
+
+    // ==========================
+    // Station queue helpers (local only, no cloud yet)
+    // ==========================
+
+    function ensureStationQueue(st) {
+      if (!st.localQueue) st.localQueue = [];
+      return st.localQueue;
+    }
+
+    function toggleStationQueueOpen(stationId) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st) return;
+      st._queueOpen = !st._queueOpen;
+      renderStations();
+    }
+
+    function moveCurrentToNext(stationId) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st || !st.currentJob) return;
+
+      const queue = ensureStationQueue(st);
+      const current = st.currentJob;
+      const next = st.nextJob;
+
+      if (next) {
+        // Push existing next down into queue (front)
+        queue.unshift(next);
+      }
+
+      st.nextJob = current;
+      st.currentJob = null;
+      st.status = "idle";
+
+      renderStations();
+    }
+
+    function moveCurrentToQueue(stationId) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st || !st.currentJob) return;
+
+      const queue = ensureStationQueue(st);
+      const current = st.currentJob;
+
+      // Push current into the front of queue
+      queue.unshift(current);
+      st.currentJob = null;
+
+      if (st.nextJob) {
+        // Optionally auto-promote next into current
+        st.currentJob = st.nextJob;
+        st.nextJob = null;
+        st.status = "running";
+      } else {
+        st.status = "idle";
+      }
+
+      renderStations();
+    }
+
+    function promoteNextToCurrent(stationId) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st || !st.nextJob) return;
+
+      const queue = ensureStationQueue(st);
+      const current = st.currentJob;
+      const next = st.nextJob;
+
+      // Current goes into queue (front) if it exists
+      if (current) {
+        queue.unshift(current);
+      }
+
+      st.currentJob = next;
+      st.nextJob = null;
+      st.status = "running";
+
+      renderStations();
+    }
+
+    function promoteQueueJobToNext(stationId, index) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st) return;
+
+      const queue = ensureStationQueue(st);
+      if (index < 0 || index >= queue.length) return;
+
+      const job = queue.splice(index, 1)[0];
+
+      // Existing next goes down into queue (front)
+      if (st.nextJob) {
+        queue.unshift(st.nextJob);
+      }
+
+      st.nextJob = job;
+      renderStations();
+    }
+
+    function promoteQueueJobToCurrent(stationId, index) {
+      const st = stations.find((s) => s.id === stationId);
+      if (!st) return;
+
+      const queue = ensureStationQueue(st);
+      if (index < 0 || index >= queue.length) return;
+
+      const job = queue.splice(index, 1)[0];
+
+      const oldCurrent = st.currentJob;
+      const oldNext = st.nextJob;
+
+      // Push-down chain (Option A):
+      // newCurrent = queue job
+      // oldCurrent -> next
+      // oldNext -> queue
+      if (oldNext) {
+        queue.unshift(oldNext);
+      }
+      if (oldCurrent) {
+        st.nextJob = oldCurrent;
+      } else {
+        st.nextJob = null;
+      }
+
+      st.currentJob = job;
+      st.status = "running";
+
+      renderStations();
+    }
+
+    // ==========================
+    // Stations render
+    // ==========================
+
+    function renderStations() {
+      const lineFilter = document.getElementById("filter-line").value;
+      const statusFilter = document.getElementById("filter-status").value;
+      const sortValue = document.getElementById("filter-sort").value;
+
+      let list = [...stations];
+
+      if (lineFilter !== "all") {
+        list = list.filter((s) => s.line === lineFilter);
+      }
+      if (statusFilter !== "all") {
+        list = list.filter((s) => s.status === statusFilter);
+      }
+
+      if (sortValue === "name") list.sort(compareByName);
+      else if (sortValue === "status") list.sort(compareByStatus);
+      else if (sortValue === "due") list.sort(compareByDue);
+
+      const container = document.getElementById("station-grid");
+      container.innerHTML = "";
+
+      list.forEach((st) => {
+        const card = document.createElement("article");
+        card.className = "station-card";
+
+        const topRow = document.createElement("div");
+        topRow.className = "station-id-row";
+
+        const title = document.createElement("div");
+        title.className = "station-name";
+        title.textContent = st.name + " · " + st.id;
+
+        const badge = document.createElement("div");
+        badge.className = statusBadgeClass(st.status);
+        badge.textContent =
+          st.status === "running"
+            ? "Running"
+            : st.status === "idle"
+            ? "Idle"
+            : st.status === "blocked"
+            ? "Blocked"
+            : st.status;
+
+        topRow.appendChild(title);
+        topRow.appendChild(badge);
+        card.appendChild(topRow);
+
+        // CURRENT JOB
+        if (st.currentJob) {
+          const jb = document.createElement("div");
+          jb.className = "job-block";
+
+          const jbTitle = document.createElement("div");
+          jbTitle.className = "job-block-title";
+          jbTitle.innerHTML =
+            '<span class="job-label">Current job</span>' +
+            `<span class="job-main">${st.currentJob.id}</span>`;
+          jb.appendChild(jbTitle);
+
+          const meta = document.createElement("div");
+meta.className = "job-meta-row";
+const done = st.currentJob.qtyDone ?? 0;
+const total = st.currentJob.qtyTotal ?? 0;
+const remaining = Math.max(0, (total || 0) - (done || 0));
+
+meta.innerHTML = `
+  <span>${st.currentJob.part}</span>
+  <span>${done}/${total} pcs</span>
+  <span>Due ${st.currentJob.due || "-"}</span>
+`;
+jb.appendChild(meta);
+
+// New: remaining line
+const remainingLine = document.createElement("div");
+remainingLine.className = "job-remaining";
+remainingLine.textContent = `There are ${remaining} ${st.currentJob.part} left to make.`;
+jb.appendChild(remainingLine);
+
+          if (st.currentJob.priority) {
+            const pr = document.createElement("div");
+            pr.className = "job-meta-row";
+            pr.innerHTML = `<span class="${priorityBadgeClass(
+              st.currentJob.priority
+            )}">Priority: ${st.currentJob.priority}</span>`;
+            jb.appendChild(pr);
+          }
+
+          card.appendChild(jb);
+        } else {
+          const label = document.createElement("div");
+          label.className = "no-job-label";
+          label.textContent = "No current job loaded.";
+          card.appendChild(label);
+        }
+
+        // NEXT JOB
+        if (st.nextJob) {
+          const nb = document.createElement("div");
+          nb.className = "job-block";
+          const nbTitle = document.createElement("div");
+          nbTitle.className = "job-block-title";
+          nbTitle.innerHTML =
+            '<span class="job-label">Next job</span>' +
+            `<span class="job-main">${st.nextJob.id}</span>`;
+          nb.appendChild(nbTitle);
+
+          const meta = document.createElement("div");
+          meta.className = "job-meta-row";
+          meta.innerHTML = `
+            <span>${st.nextJob.part}</span>
+            <span>${st.nextJob.qtyTotal ?? 0} pcs</span>
+            <span>Due ${st.nextJob.due || "-"}</span>
+          `;
+          nb.appendChild(meta);
+
+          card.appendChild(nb);
+        }
+
+        // ACTIONS
+        const actionRow = document.createElement("div");
+        actionRow.className = "station-actions";
+
+        // New: report units made (only useful if there is a current job)
+        const btnReport = document.createElement("button");
+        btnReport.className = "mini-btn";
+        btnReport.textContent = "Report units made";
+        btnReport.disabled = !st.currentJob;
+        btnReport.onclick = () => openReportModal(st.id);
+
+        const btnComplete = document.createElement("button");
+        btnComplete.className = "mini-btn mini-btn-primary";
+        btnComplete.textContent = "Mark complete";
+        btnComplete.onclick = () => simulateCompleteJob(st.id);
+
+        const btnMaterial = document.createElement("button");
+        btnMaterial.className = "mini-btn";
+        btnMaterial.textContent = "Need material";
+        btnMaterial.onclick = () =>
+          alert("Material request triggered for " + st.name);
+
+        const btnBlocked = document.createElement("button");
+        btnBlocked.className = "mini-btn";
+        btnBlocked.textContent = "Mark blocked";
+        btnBlocked.onclick = () => simulateBlocked(st.id);
+
+        const btnIdle = document.createElement("button");
+        btnIdle.className = "mini-btn";
+        btnIdle.textContent = "Set idle";
+        btnIdle.onclick = () => simulateIdle(st.id);
+
+        const btnCurrentToNext = document.createElement("button");
+        btnCurrentToNext.className = "mini-btn";
+        btnCurrentToNext.textContent = "Current → Next";
+        btnCurrentToNext.disabled = !st.currentJob;
+        btnCurrentToNext.onclick = () => moveCurrentToNext(st.id);
+
+        const btnCurrentToQueue = document.createElement("button");
+        btnCurrentToQueue.className = "mini-btn";
+        btnCurrentToQueue.textContent = "Current → Queue";
+        btnCurrentToQueue.disabled = !st.currentJob;
+        btnCurrentToQueue.onclick = () => moveCurrentToQueue(st.id);
+
+        const btnNextToCurrent = document.createElement("button");
+        btnNextToCurrent.className = "mini-btn";
+        btnNextToCurrent.textContent = "Next → Current";
+        btnNextToCurrent.disabled = !st.nextJob;
+        btnNextToCurrent.onclick = () => promoteNextToCurrent(st.id);
+
+        const btnQueueToggle = document.createElement("button");
+        btnQueueToggle.className = "mini-btn station-queue-toggle";
+        btnQueueToggle.textContent = st._queueOpen ? "Hide queue" : "Show queue";
+        btnQueueToggle.onclick = () => toggleStationQueueOpen(st.id);
+
+        // order of buttons on card
+        actionRow.appendChild(btnReport);
+        actionRow.appendChild(btnComplete);
+        actionRow.appendChild(btnMaterial);
+        actionRow.appendChild(btnBlocked);
+        actionRow.appendChild(btnIdle);
+        actionRow.appendChild(btnCurrentToNext);
+        actionRow.appendChild(btnCurrentToQueue);
+        actionRow.appendChild(btnNextToCurrent);
+        actionRow.appendChild(btnQueueToggle);
+
+        card.appendChild(actionRow);
+
+        // STATION QUEUE (local only)
+        const queue = st.localQueue || [];
+        const queueWrapper = document.createElement("div");
+        queueWrapper.className = "station-queue";
+        if (st._queueOpen) {
+          queueWrapper.classList.add("is-open");
+        }
+
+        const headerRow = document.createElement("div");
+        headerRow.className = "station-queue-header";
+        headerRow.innerHTML = `
+          <span>Station queue</span>
+          <span class="station-queue-badge">${queue.length} job${
+          queue.length === 1 ? "" : "s"
+        }</span>
+        `;
+        queueWrapper.appendChild(headerRow);
+
+        if (!queue.length) {
+          const empty = document.createElement("div");
+          empty.className = "no-job-label";
+          empty.textContent = "No additional jobs staged for this station.";
+          queueWrapper.appendChild(empty);
+        } else {
+          queue.forEach((job, index) => {
+            const item = document.createElement("div");
+            item.className = "station-queue-item";
+
+            const top = document.createElement("div");
+            top.className = "station-queue-item-top";
+            top.innerHTML = `
+              <div>
+                <div class="job-label">Queued job</div>
+                <div class="job-main">${job.id}</div>
+              </div>
+              <div class="${priorityBadgeClass(job.priority)}">
+                Priority: ${job.priority || "normal"}
+              </div>
+            `;
+            item.appendChild(top);
+
+            const meta = document.createElement("div");
+            meta.className = "station-queue-item-meta";
+            meta.innerHTML = `
+              <span>${job.part}</span>
+              <span>${job.qtyTotal ?? 0} pcs</span>
+              <span>Due ${job.due || "-"}</span>
+            `;
+            item.appendChild(meta);
+
+            const actions = document.createElement("div");
+            actions.className = "station-queue-item-actions";
+
+            const btnToNext = document.createElement("button");
+            btnToNext.className = "mini-btn";
+            btnToNext.textContent = "Promote → Next";
+            btnToNext.onclick = () => promoteQueueJobToNext(st.id, index);
+
+            const btnToCurrent = document.createElement("button");
+            btnToCurrent.className = "mini-btn mini-btn-primary";
+            btnToCurrent.textContent = "Promote → Current";
+            btnToCurrent.onclick = () => promoteQueueJobToCurrent(st.id, index);
+
+            actions.appendChild(btnToNext);
+            actions.appendChild(btnToCurrent);
+            item.appendChild(actions);
+
+            queueWrapper.appendChild(item);
+          });
+        }
+
+        card.appendChild(queueWrapper);
+
+        container.appendChild(card);
+      });
+
+      document.getElementById("station-count-label").textContent =
+        list.length + " stations in view";
+    }
+
+    // ==========================
+    // Global queue render
+    // ==========================
+
+    function renderQueue() {
+      const container = document.getElementById("queue-list");
+      container.innerHTML = "";
+
+      if (!globalQueue.length) {
+        document.getElementById("queue-empty-label").style.display = "block";
+        document.getElementById("queue-count-label").textContent = "0 jobs waiting";
+        return;
+      } else {
+        document.getElementById("queue-empty-label").style.display = "none";
+      }
+
+      globalQueue.forEach((job) => {
+        const item = document.createElement("article");
+        item.className = "queue-item";
+
+        const top = document.createElement("div");
+        top.className = "queue-top";
+        top.innerHTML = `
+          <div>
+            <div class="job-label">Job</div>
+            <div class="job-main">${job.id}</div>
+          </div>
+          <div class="${priorityBadgeClass(job.priority)}">
+            Priority: ${job.priority}
+          </div>
+        `;
+        item.appendChild(top);
+
+        const meta = document.createElement("div");
+        meta.className = "queue-meta";
+        meta.innerHTML = `
+          <span>${job.part}</span>
+          <span>${job.qtyTotal} pcs</span>
+          <span>Due ${job.due || "-"}</span>
+        `;
+        item.appendChild(meta);
+
+        const actions = document.createElement("div");
+        actions.className = "queue-actions";
+
+        const assignBtn = document.createElement("button");
+        assignBtn.className = "mini-btn mini-btn-primary";
+        assignBtn.textContent = "Assign to station";
+        assignBtn.onclick = () => simulateAssignFromQueue(job.id);
+
+        const dropBtn = document.createElement("button");
+        dropBtn.className = "mini-btn";
+        dropBtn.textContent = "Remove";
+        dropBtn.onclick = () => simulateDropFromQueue(job.id);
+
+        actions.appendChild(assignBtn);
+        actions.appendChild(dropBtn);
+
+        item.appendChild(actions);
+        container.appendChild(item);
+      });
+
+      document.getElementById("queue-count-label").textContent =
+        globalQueue.length + " jobs in queue";
+    }
+
+    // ==========================
+    // Simulation actions
+    // ==========================
+
+    function simulateCompleteJob(stationId) {
+      openCompleteModal(stationId);
+    }
+
+    async function doCompleteJob(stationId) {
+      const st = stations.find((s) => s.id === stationId);
+
+      if (!st || !st.currentJob) {
+        alert("No active job on " + stationId + " to complete.");
+        return;
+      }
+
+      const jobId = st.currentJob.id;
+      const qtyTotal = st.currentJob.qtyTotal ?? 0;
+
+      try {
+        // 1) Update job status -> completed
+        const { error: jobErr } = await supabase
+          .from("jobs")
+          .update({ status: "completed" })
+          .eq("id", jobId);
+
+        if (jobErr) {
+          console.error("Error updating job status:", jobErr);
+          alert("Could not mark job as completed (cloud error).");
+          return;
+        }
+
+        // 2) Update station_assignments qty_done for this station/job
+        const { error: assignErr } = await supabase
+          .from("station_assignments")
+          .update({ qty_done: qtyTotal })
+          .eq("station_id", stationId)
+          .eq("job_id", jobId);
+
+        if (assignErr) {
+          console.error("Error updating station assignment:", assignErr);
+          alert("Job completed in UI, but assignment update failed in cloud.");
+        }
+
+        // 3) Insert performance log (simple v1)
+        const logPayload = {
+          station_id: stationId,
+          job_id: jobId,
+          qty_completed: qtyTotal,
+        };
+
+        const { error: perfErr } = await supabase
+          .from("performance_logs")
+          .insert(logPayload);
+
+        if (perfErr) {
+          console.error("Error inserting performance log:", perfErr);
+        }
+
+        // 4) Set the station to idle in stations table
+        const { error: stationErr } = await supabase
+          .from("stations")
+          .update({ status: "idle" })
+          .eq("id", stationId);
+
+        if (stationErr) {
+          console.error("Error updating station status to idle:", stationErr);
+          alert("Could not update station status in cloud.");
+        }
+
+        // 5) Local metrics + push-down behavior
+        metrics.completedToday += 1;
+        metrics.completedOnTimeRate = Math.min(
+          100,
+          metrics.completedOnTimeRate + 1
+        );
+
+        // Remove current job, then auto-promote next if it exists
+        const next = st.nextJob || null;
+        st.currentJob = next;
+        st.nextJob = null;
+
+        if (st.currentJob) {
+          st.status = "running";
+        } else {
+          st.status = "idle";
+        }
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+      } catch (err) {
+        console.error("Unexpected error completing job:", err);
+        alert("Unexpected error while completing job.");
+      }
+    }
+
+    async function simulateBlocked(stationId) {
+      try {
+        const { error } = await supabase
+          .from("stations")
+          .update({ status: "blocked" })
+          .eq("id", stationId);
+
+        if (error) {
+          console.error("Error updating station status:", error);
+          alert("Could not mark station as blocked (cloud error).");
+          return;
+        }
+
+        const st = stations.find((s) => s.id === stationId);
+        if (st) {
+          st.status = "blocked";
+        }
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+      } catch (err) {
+        console.error("Unexpected error in simulateBlocked:", err);
+        alert("Unexpected error marking station blocked.");
+      }
+    }
+
+    async function simulateIdle(stationId) {
+      try {
+        const { error } = await supabase
+          .from("stations")
+          .update({ status: "idle" })
+          .eq("id", stationId);
+
+        if (error) {
+          console.error("Error updating station to idle:", error);
+          alert("Could not set station to idle (cloud error).");
+          return;
+        }
+
+        const st = stations.find((s) => s.id === stationId);
+        if (st) {
+          st.status = "idle";
+        }
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+      } catch (err) {
+        console.error("Unexpected error in simulateIdle:", err);
+        alert("Unexpected error setting station idle.");
+      }
+    }
+
+    async function simulateAssignFromQueue(jobId) {
+      const idx = globalQueue.findIndex((j) => j.id === jobId);
+      if (idx === -1) return;
+
+      const job = globalQueue[idx];
+
+      const idleStation = stations.find(
+        (s) => s.status === "idle" && !s.currentJob
+      );
+
+      if (!idleStation) {
+        alert("No idle station available to assign this job.");
+        return;
+      }
+
+      try {
+        const { error: assignErr } = await supabase
+          .from("station_assignments")
+          .insert({
+            station_id: idleStation.id,
+            job_id: job.id,
+            qty_done: 0,
+          });
+
+        if (assignErr) {
+          console.error("Error inserting station assignment:", assignErr);
+          alert("Could not assign job in cloud (assignment failed).");
+          return;
+        }
+
+        const { error: jobErr } = await supabase
+          .from("jobs")
+          .update({ status: "running" })
+          .eq("id", job.id);
+
+        if (jobErr) {
+          console.error("Error updating job status to running:", jobErr);
+          alert("Job assigned locally, but could not update job status in cloud.");
+        }
+
+        idleStation.currentJob = {
+          id: job.id,
+          part: job.part,
+          qtyTotal: job.qtyTotal,
+          qtyDone: 0,
+          due: job.due,
+          priority: job.priority,
+        };
+        idleStation.status = "running";
+
+        globalQueue.splice(idx, 1);
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+        renderQueue();
+      } catch (err) {
+        console.error("Unexpected error in simulateAssignFromQueue:", err);
+        alert("Unexpected error while assigning job.");
+      }
+    }
+
+    async function simulateDropFromQueue(jobId) {
+      const idx = globalQueue.findIndex((j) => j.id === jobId);
+      if (idx === -1) return;
+
+      try {
+        const { error: jobErr } = await supabase
+          .from("jobs")
+          .update({ status: "dropped" })
+          .eq("id", jobId);
+
+        if (jobErr) {
+          console.error("Error updating job status to dropped:", jobErr);
+          alert("Could not drop job from queue (cloud error).");
+          return;
+        }
+
+        globalQueue.splice(idx, 1);
+        renderQueue();
+      } catch (err) {
+        console.error("Unexpected error in simulateDropFromQueue:", err);
+        alert("Unexpected error while dropping job from queue.");
+      }
+    }
+
+    function simulateNextHour() {
+      const running = stations.filter((s) => s.status === "running");
+      if (!running.length) {
+        alert("No running stations to simulate — try assigning or starting a job.");
+        return;
+      }
+      const choice = running[Math.floor(Math.random() * running.length)];
+      simulateCompleteJob(choice.id);
+    }
+
+    // ==========================
+    // Load from Supabase
+    // ==========================
+
+    async function loadInitialData() {
+      try {
+        const [
+          { data: stationRows, error: stationErr },
+          { data: jobRows, error: jobErr },
+          { data: assignRows, error: assignErr },
+          { data: perfRows, error: perfErr },
+        ] = await Promise.all([
+          supabase.from("stations").select("*").order("id"),
+          supabase.from("jobs").select("*"),
+          supabase.from("station_assignments").select("*"),
+          supabase.from("performance_logs").select("*"),
+        ]);
+
+        if (stationErr) throw stationErr;
+        if (jobErr) throw jobErr;
+        if (assignErr) throw assignErr;
+        if (perfErr) throw perfErr;
+
+        const jobsById = new Map(jobRows.map((j) => [j.id, j]));
+        const assignsByStation = new Map();
+        assignRows.forEach((a) => assignsByStation.set(a.station_id, a));
+
+        stations = stationRows.map((stRow) => {
+          const assignment = assignsByStation.get(stRow.id);
+          let currentJob = null;
+
+          if (assignment) {
+            const job = jobsById.get(assignment.job_id);
+            if (job) {
+              currentJob = {
+                id: job.id,
+                part: job.part_name,
+                qtyTotal: job.qty_total,
+                qtyDone: assignment.qty_done,
+                due: job.due_date,
+                priority: job.priority,
+              };
+            }
+          }
+
+          return {
+            id: stRow.id,
+            name: stRow.name,
+            line: stRow.line,
+            status: stRow.status,
+            currentJob,
+            nextJob: null,     // reserved for future scheduling logic
+            localQueue: [],    // local-only station queue
+            _queueOpen: false, // UI state
+          };
+        });
+
+        globalQueue = jobRows
+          .filter((j) => j.status === "waiting")
+          .map((job) => ({
+            id: job.id,
+            part: job.part_name,
+            qtyTotal: job.qty_total,
+            due: job.due_date,
+            priority: job.priority,
+          }));
+
+        const totalCompletedEntries = perfRows?.length ?? 0;
+        metrics.completedToday = totalCompletedEntries;
+        metrics.completedOnTimeRate = 92;
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+        renderQueue();
+      } catch (err) {
+        console.error("Error loading initial data from Supabase:", err);
+        alert("Error loading data from cloud — using empty demo state.");
+        stations = [];
+        globalQueue = [];
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+        renderQueue();
+      }
+    }
+
+    // ==========================
+    // Init
+    // ==========================
+
+    function init() {
+      // filters
+      document
+        .getElementById("filter-line")
+        .addEventListener("change", renderStations);
+      document
+        .getElementById("filter-status")
+        .addEventListener("change", renderStations);
+      document
+        .getElementById("filter-sort")
+        .addEventListener("change", renderStations);
+
+      // top buttons
+      document
+        .getElementById("btn-refresh")
+        .addEventListener("click", () => {
+          loadInitialData();
+        });
+
+      document
+        .getElementById("btn-simulate")
+        .addEventListener("click", simulateNextHour);
+
+      // modal buttons
+      document
+        .getElementById("modal-cancel")
+        .addEventListener("click", closeCompleteModal);
+
+      document
+        .getElementById("modal-confirm")
+        .addEventListener("click", async () => {
+          if (pendingCompleteStationId) {
+            const id = pendingCompleteStationId;
+            closeCompleteModal();
+            await doCompleteJob(id);
+          } else {
+            closeCompleteModal();
+          }
+        });
+
+      // Report units modal buttons
+      document
+        .getElementById("report-modal-cancel")
+        .addEventListener("click", closeReportModal);
+
+      document
+        .getElementById("report-modal-submit")
+        .addEventListener("click", submitReportModal);
+
+      // Allow Esc key to close the report modal
+      document.addEventListener("keydown", (evt) => {
+        if (evt.key === "Escape") {
+          const backdrop = document.getElementById("report-modal-backdrop");
+          if (backdrop && backdrop.style.display === "flex") {
+            closeReportModal();
+          }
+        }
+      });
+
+      // initial data load
+      loadInitialData();
+    }
+
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+</body>
+</html>
