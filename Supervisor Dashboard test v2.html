@@ -943,11 +943,15 @@ body.light-mode .report-modal-input {
     </div>
 
     <div class="sup-header-actions">
-      <button class="lo-btn" id="btn-refresh">Quick refresh</button>
-      <button class="lo-btn lo-btn-primary" id="btn-simulate">
-        Simulate next hour
-      </button>
-    </div>
+  <button class="lo-btn" id="btn-refresh">Quick refresh</button>
+
+  <!-- NEW BUTTON -->
+  <button class="lo-btn" id="btn-scroll-queue">Global job queue</button>
+
+  <button class="lo-btn lo-btn-primary" id="btn-simulate">
+    Simulate next hour
+  </button>
+</div>
   </div>
 </header>
 
@@ -2145,6 +2149,14 @@ jb.appendChild(remainingLine);
         .addEventListener("click", () => {
           loadInitialData();
         });
+
+        document
+  .getElementById("btn-scroll-queue")
+  .addEventListener("click", () => {
+    document
+      .querySelector(".queue-panel")
+      .scrollIntoView({ behavior: "smooth" });
+  });
 
       document
         .getElementById("btn-simulate")
