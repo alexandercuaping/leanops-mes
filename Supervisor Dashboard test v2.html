@@ -409,6 +409,21 @@
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
     }
 
+    .station-card--compact {
+      padding: 8px 8px 9px;
+      gap: 4px;
+    }
+
+    .station-card--compact .station-actions {
+      margin-top: 2px;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+    }
+
+    .station-card--compact .station-actions .mini-btn {
+      white-space: nowrap;
+    }
+
     .station-card:hover {
       transform: translateY(-3px);
       box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
@@ -457,43 +472,52 @@
       background: rgba(248, 113, 113, 0.18);
     }
 
-    /* Job blocks */
+    /* Job blocks — UPDATED for bigger, clearer current job */
 
     .job-block {
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      padding: 7px 8px;
+      background: rgba(15, 23, 42, 0.95);
+      padding: 10px 11px;
       font-size: 11px;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
+    }
+
+    /* Slight emphasis for the first job block on the card (usually Current job) */
+    .station-card .job-block:first-of-type {
+      background: rgba(15, 23, 42, 1);
+      border-color: rgba(148, 163, 184, 0.9);
+      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.8);
     }
 
     .job-block-title {
       display: flex;
       justify-content: space-between;
+      align-items: baseline;
       gap: 6px;
     }
 
     .job-label {
       text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(148, 163, 184, 0.9);
-      font-size: 10px;
+      letter-spacing: 0.14em;
+      color: rgba(148, 163, 184, 0.95);
+      font-size: 11px;
     }
 
     .job-main {
       font-weight: 600;
       color: #f9fafb;
+      font-size: 13px;   /* bigger job ID / title */
     }
 
     .job-meta-row {
       display: flex;
       justify-content: space-between;
       gap: 6px;
-      color: rgba(209, 213, 219, 0.9);
-      font-size: 10px;
+      color: rgba(209, 213, 219, 0.95);
+      font-size: 11px;   /* bigger meta line */
     }
 
     .job-meta-row span {
@@ -507,9 +531,9 @@
     }
 
     .job-remaining {
-      margin-top: 2px;
-      font-size: 10px;
-      color: var(--text-soft);
+      margin-top: 3px;
+      font-size: 11px;     /* bumped up */
+      color: #9ca3af;      /* a bit brighter */
     }
 
     /* Station action row */
@@ -1128,6 +1152,9 @@
     let stations = [];
     let globalQueue = [];
 
+    // "expanded" (full controls) or "compact" (minimal)
+    let viewMode = "expanded";
+
     const metrics = {
       completedToday: 0,
       completedOnTimeRate: 0,
@@ -1472,6 +1499,9 @@
       list.forEach((st) => {
         const card = document.createElement("article");
         card.className = "station-card";
+        if (viewMode === "compact") {
+          card.classList.add("station-card--compact");
+        }
 
         const topRow = document.createElement("div");
         topRow.className = "station-id-row";
@@ -1541,7 +1571,8 @@
           card.appendChild(label);
         }
 
-        if (st.nextJob) {
+        // Only show Next job in expanded mode
+        if (st.nextJob && viewMode === "expanded") {
           const nb = document.createElement("div");
           nb.className = "job-block";
           const nbTitle = document.createElement("div");
@@ -1616,15 +1647,23 @@
         btnQueueToggle.textContent = st._queueOpen ? "Hide queue" : "Show queue";
         btnQueueToggle.onclick = () => toggleStationQueueOpen(st.id);
 
-        actionRow.appendChild(btnReport);
-        actionRow.appendChild(btnComplete);
-        actionRow.appendChild(btnMaterial);
-        actionRow.appendChild(btnBlocked);
-        actionRow.appendChild(btnIdle);
-        actionRow.appendChild(btnCurrentToNext);
-        actionRow.appendChild(btnCurrentToQueue);
-        actionRow.appendChild(btnNextToCurrent);
-        actionRow.appendChild(btnQueueToggle);
+        // Compact mode: only show the key buttons
+        if (viewMode === "compact") {
+          actionRow.appendChild(btnReport);
+          actionRow.appendChild(btnComplete);
+          actionRow.appendChild(btnQueueToggle);
+        } else {
+          // Expanded mode: show full control surface
+          actionRow.appendChild(btnReport);
+          actionRow.appendChild(btnComplete);
+          actionRow.appendChild(btnMaterial);
+          actionRow.appendChild(btnBlocked);
+          actionRow.appendChild(btnIdle);
+          actionRow.appendChild(btnCurrentToNext);
+          actionRow.appendChild(btnCurrentToQueue);
+          actionRow.appendChild(btnNextToCurrent);
+          actionRow.appendChild(btnQueueToggle);
+        }
 
         card.appendChild(actionRow);
 
@@ -2127,6 +2166,29 @@
       document
         .getElementById("filter-sort")
         .addEventListener("change", renderStations);
+
+      // View mode toggle (Compact / Expanded)
+      const compactBtn = document.querySelector('.vc-btn[data-toggle="compact"]');
+      const expandedBtn = document.querySelector('.vc-btn[data-toggle="expanded"]');
+
+      function setViewMode(mode) {
+        viewMode = mode;
+        if (compactBtn && expandedBtn) {
+          compactBtn.classList.toggle("is-active", mode === "compact");
+          expandedBtn.classList.toggle("is-active", mode === "expanded");
+        }
+        renderStations();
+      }
+
+      if (compactBtn) {
+        compactBtn.addEventListener("click", () => setViewMode("compact"));
+      }
+      if (expandedBtn) {
+        expandedBtn.addEventListener("click", () => setViewMode("expanded"));
+      }
+
+      // Default view mode when page loads
+      setViewMode("expanded");
 
       const queueSheet = document.getElementById("queue-sheet");
       const queueSheetClose = document.getElementById("queue-sheet-close");
