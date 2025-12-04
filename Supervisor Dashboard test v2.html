@@ -405,8 +405,12 @@
       display: flex;
       flex-direction: column;
       gap: 6px;
-      overflow: hidden;
+      overflow: visible;
       transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .station-card.status-menu-open {
+    z-index: 60;
     }
 
     .station-card--compact {
@@ -419,6 +423,43 @@
       flex-wrap: nowrap;
       overflow-x: auto;
     }
+
+    /* Station status dropdown (new) */
+
+    .station-status-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .station-status-menu {
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 260px;
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.95);
+      padding: 6px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 70; /* above other cards */
+    }
+
+    .station-status-menu.is-open {
+      display: flex;
+    }
+
+    .station-status-menu .mini-btn {
+      width: 100%;
+      justify-content: center;
+      font-size: 11px;
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
 
     .station-card--compact .station-actions .mini-btn {
       white-space: nowrap;
@@ -1614,37 +1655,85 @@
         btnMaterial.onclick = () =>
           alert("Material request triggered for " + st.name);
 
-        const btnBlocked = document.createElement("button");
-        btnBlocked.className = "mini-btn";
-        btnBlocked.textContent = "Mark blocked";
-        btnBlocked.onclick = () => simulateBlocked(st.id);
+        // Station status dropdown
+        const statusWrapper = document.createElement("div");
+        statusWrapper.className = "station-status-wrapper";
 
-        const btnIdle = document.createElement("button");
-        btnIdle.className = "mini-btn";
-        btnIdle.textContent = "Set idle";
-        btnIdle.onclick = () => simulateIdle(st.id);
+        const statusBtn = document.createElement("button");
+        statusBtn.className = "mini-btn";
+        statusBtn.textContent = "Station status";
+
+        const statusMenu = document.createElement("div");
+        statusMenu.className = "station-status-menu";
+        statusMenu.innerHTML = `
+          <button class="mini-btn" data-action="running">Set station to running</button>
+          <button class="mini-btn" data-action="idle">Set station to idle</button>
+          <button class="mini-btn" data-action="blocked">Set station to blocked</button>
+        `;
+
+        function closeStatusMenuForCard() {
+          statusMenu.classList.remove("is-open");
+          card.classList.remove("status-menu-open");
+        }
+
+        statusBtn.addEventListener("click", (evt) => {
+          evt.stopPropagation();
+
+          const isOpen = statusMenu.classList.contains("is-open");
+
+          // Close any other open menus + reset z-index
+          document.querySelectorAll(".station-status-menu.is-open")
+            .forEach((m) => m.classList.remove("is-open"));
+          document.querySelectorAll(".station-card.status-menu-open")
+            .forEach((c) => c.classList.remove("status-menu-open"));
+
+          if (!isOpen) {
+            statusMenu.classList.add("is-open");
+            card.classList.add("status-menu-open");
+          }
+        });
+
+        statusMenu.querySelector('[data-action="running"]').addEventListener("click", () => {
+          simulateRunning(st.id);   // your existing status → running helper
+          closeStatusMenuForCard();
+        });
+
+        statusMenu.querySelector('[data-action="idle"]').addEventListener("click", () => {
+          simulateIdle(st.id);
+          closeStatusMenuForCard();
+        });
+
+        statusMenu.querySelector('[data-action="blocked"]').addEventListener("click", () => {
+          simulateBlocked(st.id);
+          closeStatusMenuForCard();
+        });
+
+        statusWrapper.appendChild(statusBtn);
+        statusWrapper.appendChild(statusMenu);
+        actionRow.appendChild(statusWrapper);
+
 
         const btnCurrentToNext = document.createElement("button");
         btnCurrentToNext.className = "mini-btn";
-        btnCurrentToNext.textContent = "Current → Next";
+        btnCurrentToNext.textContent = "Send to next job section";
         btnCurrentToNext.disabled = !st.currentJob;
         btnCurrentToNext.onclick = () => moveCurrentToNext(st.id);
 
         const btnCurrentToQueue = document.createElement("button");
         btnCurrentToQueue.className = "mini-btn";
-        btnCurrentToQueue.textContent = "Current → Queue";
+        btnCurrentToQueue.textContent = "Send to queue list";
         btnCurrentToQueue.disabled = !st.currentJob;
         btnCurrentToQueue.onclick = () => moveCurrentToQueue(st.id);
 
         const btnNextToCurrent = document.createElement("button");
         btnNextToCurrent.className = "mini-btn";
-        btnNextToCurrent.textContent = "Next → Current";
+        btnNextToCurrent.textContent = "Send to current job section";
         btnNextToCurrent.disabled = !st.nextJob;
         btnNextToCurrent.onclick = () => promoteNextToCurrent(st.id);
 
         const btnQueueToggle = document.createElement("button");
         btnQueueToggle.className = "mini-btn station-queue-toggle";
-        btnQueueToggle.textContent = st._queueOpen ? "Hide queue" : "Show queue";
+        btnQueueToggle.textContent = st._queueOpen ? "Hide queue list" : "Show queue list";
         btnQueueToggle.onclick = () => toggleStationQueueOpen(st.id);
 
         // Compact mode: only show the key buttons
@@ -1654,15 +1743,14 @@
           actionRow.appendChild(btnQueueToggle);
         } else {
           // Expanded mode: show full control surface
-          actionRow.appendChild(btnReport);
-          actionRow.appendChild(btnComplete);
-          actionRow.appendChild(btnMaterial);
-          actionRow.appendChild(btnBlocked);
-          actionRow.appendChild(btnIdle);
-          actionRow.appendChild(btnCurrentToNext);
-          actionRow.appendChild(btnCurrentToQueue);
-          actionRow.appendChild(btnNextToCurrent);
-          actionRow.appendChild(btnQueueToggle);
+        actionRow.appendChild(btnReport);
+        actionRow.appendChild(btnComplete);
+        actionRow.appendChild(btnMaterial);
+        actionRow.appendChild(statusWrapper);
+        actionRow.appendChild(btnCurrentToNext);
+        actionRow.appendChild(btnCurrentToQueue);
+        actionRow.appendChild(btnNextToCurrent);
+        actionRow.appendChild(btnQueueToggle);
         }
 
         card.appendChild(actionRow);
@@ -1721,12 +1809,12 @@
 
             const btnToNext = document.createElement("button");
             btnToNext.className = "mini-btn";
-            btnToNext.textContent = "Promote → Next";
+            btnToNext.textContent = "Send to next job section";
             btnToNext.onclick = () => promoteQueueJobToNext(st.id, index);
 
             const btnToCurrent = document.createElement("button");
             btnToCurrent.className = "mini-btn mini-btn-primary";
-            btnToCurrent.textContent = "Promote → Current";
+            btnToCurrent.textContent = "Send to current job section";
             btnToCurrent.onclick = () => promoteQueueJobToCurrent(st.id, index);
 
             actions.appendChild(btnToNext);
@@ -1972,6 +2060,33 @@
       } catch (err) {
         console.error("Unexpected error in simulateIdle:", err);
         alert("Unexpected error setting station idle.");
+      }
+    }
+
+        async function simulateRunning(stationId) {
+      try {
+        const { error } = await supabase
+          .from("stations")
+          .update({ status: "running" })
+          .eq("id", stationId);
+
+        if (error) {
+          console.error("Error updating station to running:", error);
+          alert("Could not set station to running (cloud error).");
+          return;
+        }
+
+        const st = stations.find((s) => s.id === stationId);
+        if (st) {
+          st.status = "running";
+        }
+
+        recalcRunning();
+        renderMetrics();
+        renderStations();
+      } catch (err) {
+        console.error("Unexpected error in simulateRunning:", err);
+        alert("Unexpected error setting station running.");
       }
     }
 
@@ -2241,13 +2356,25 @@
         .addEventListener("click", submitReportModal);
 
       document.addEventListener("keydown", (evt) => {
-        if (evt.key === "Escape") {
-          const backdrop = document.getElementById("report-modal-backdrop");
-          if (backdrop && backdrop.style.display === "flex") {
-            closeReportModal();
-          }
-        }
-      });
+  if (evt.key === "Escape") {
+    const backdrop = document.getElementById("report-modal-backdrop");
+    if (backdrop && backdrop.style.display === "flex") {
+      closeReportModal();
+    }
+  }
+});
+
+// Close any open station-status menus when clicking outside
+document.addEventListener("click", (evt) => {
+  if (!evt.target.closest(".station-status-wrapper")) {
+    document
+      .querySelectorAll(".station-status-menu.is-open")
+      .forEach((menu) => menu.classList.remove("is-open"));
+    document
+      .querySelectorAll(".station-card.status-menu-open")
+      .forEach((card) => card.classList.remove("status-menu-open"));
+  }
+});
 
       if (queueFileInput) {
         queueFileInput.addEventListener("change", async (evt) => {
