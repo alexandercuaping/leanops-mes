@@ -420,8 +420,8 @@
 
     .station-card--compact .station-actions {
       margin-top: 2px;
-      flex-wrap: nowrap;
-      overflow-x: auto;
+      flex-wrap: wrap;      /* allow buttons to wrap instead of scrolling */
+      overflow: visible;    /* no scroll clipping so dropdown lines up */
     }
 
     /* Station status dropdown (new) */
@@ -1710,9 +1710,8 @@
 
         statusWrapper.appendChild(statusBtn);
         statusWrapper.appendChild(statusMenu);
-        actionRow.appendChild(statusWrapper);
 
-
+        // (no actionRow.appendChild(statusWrapper) here)
         const btnCurrentToNext = document.createElement("button");
         btnCurrentToNext.className = "mini-btn";
         btnCurrentToNext.textContent = "Send to next job section";
@@ -1736,21 +1735,22 @@
         btnQueueToggle.textContent = st._queueOpen ? "Hide queue list" : "Show queue list";
         btnQueueToggle.onclick = () => toggleStationQueueOpen(st.id);
 
-        // Compact mode: only show the key buttons
+        // Compact mode: key buttons, but still include Station status
         if (viewMode === "compact") {
           actionRow.appendChild(btnReport);
           actionRow.appendChild(btnComplete);
+          actionRow.appendChild(statusWrapper);
           actionRow.appendChild(btnQueueToggle);
         } else {
-          // Expanded mode: show full control surface
-        actionRow.appendChild(btnReport);
-        actionRow.appendChild(btnComplete);
-        actionRow.appendChild(btnMaterial);
-        actionRow.appendChild(statusWrapper);
-        actionRow.appendChild(btnCurrentToNext);
-        actionRow.appendChild(btnCurrentToQueue);
-        actionRow.appendChild(btnNextToCurrent);
-        actionRow.appendChild(btnQueueToggle);
+          // Expanded mode: full control surface
+          actionRow.appendChild(btnReport);
+          actionRow.appendChild(btnComplete);
+          actionRow.appendChild(btnMaterial);
+          actionRow.appendChild(statusWrapper);
+          actionRow.appendChild(btnCurrentToNext);
+          actionRow.appendChild(btnCurrentToQueue);
+          actionRow.appendChild(btnNextToCurrent);
+          actionRow.appendChild(btnQueueToggle);
         }
 
         card.appendChild(actionRow);
