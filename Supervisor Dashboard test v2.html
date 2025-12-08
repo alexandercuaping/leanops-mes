@@ -2,2400 +2,1325 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>LeanOps — Supervisor Dashboard v2</title>
+  <title>LeanOps — Supervisor Dashboard v3</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    /* LeanOps — Supervisor Dashboard v2 (generic, non-employer) */
 
+  <style>
     :root {
-      --hero-bg-top: #02081a;
-      --hero-bg-bottom: #07172b;
+      --bg: #020617;
+      --bg-elevated: #020617;
+      --bg-panel: #020617;
+      --bg-panel-soft: #0b1220;
+      --bg-chip: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --border-strong: rgba(148, 163, 184, 0.7);
+
       --accent: #f97316;
       --accent-soft: rgba(249, 115, 22, 0.12);
       --accent-strong: #ea580c;
 
-      --page-bg: #0b1020;
-      --panel-bg: #020617;
-      --panel-soft: #020617;
-      --card-bg: #020617;
-      --card-alt-bg: #020617;
-      --border-soft: rgba(148, 163, 184, 0.4);
-      --border-strong: rgba(15, 23, 42, 0.8);
-
       --text-main: #e5e7eb;
       --text-muted: #9ca3af;
-      --text-soft: #6b7280;
+      --text-softer: #6b7280;
 
       --ok: #22c55e;
       --warn: #facc15;
-      --danger: #f97373;
+      --danger: #f97316;
+      --idle: #64748b;
 
-      --radius-lg: 22px;
+      --radius-lg: 20px;
       --radius-md: 14px;
+      --radius-pill: 999px;
 
       --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --font-display: "Georgia", "Times New Roman", serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; }
 
     body {
-      min-height: 100vh;
+      margin: 0;
       font-family: var(--font-main);
-      background:
-        radial-gradient(circle at top left, #020617 0, #020617 50%, transparent 70%) fixed,
-        linear-gradient(to bottom, #020617 0, #020617 320px, #020617 420px, #020817 100%);
+      background: radial-gradient(circle at top left, #0b1120, #020617 55%, #020617 100%);
       color: var(--text-main);
     }
 
-    /* ---------- Page shell ---------- */
-
-    .sup-shell {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 24px 20px 40px;
+    body.light {
+      background: #f5f5f7;
+      color: #0f172a;
     }
 
-    .sup-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 20px;
-      margin-bottom: 6px;
+    /* ---------- Layout shell ---------- */
+
+    .sd-shell {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      min-height: 100vh;
     }
 
-    .sup-brand {
+    /* Collapsed sidebar (desktop) */
+    .sd-shell.sidebar-collapsed {
+      grid-template-columns: 0 minmax(0, 1fr);
+    }
+
+
+    @media (max-width: 920px) {
+      .sd-shell {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .sd-sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 30;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 16px;
+        gap: 14px;
+      }
+      .sd-sidebar-main,
+      .sd-sidebar-filters {
+        display: none;
+      }
+      .sd-sidebar.open .sd-sidebar-main,
+      .sd-sidebar.open .sd-sidebar-filters {
+        display: block;
+      }
+      .sd-sidebar.open {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    /* ---------- Sidebar ---------- */
+
+    .sd-sidebar {
+      background: radial-gradient(circle at top left, #020617, #020617 55%);
+      border-right: 1px solid rgba(15, 23, 42, 0.9);
+      padding: 20px 18px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 18px;
+      transition: transform 0.25s ease, opacity 0.2s ease;
     }
 
-    .sup-logo {
-      font-size: 18px;
+    /* When shell is collapsed, slide sidebar out and disable pointer events */
+    .sd-shell.sidebar-collapsed .sd-sidebar {
+      opacity: 0;
+      transform: translateX(-24px);
+      pointer-events: none;
+    }
+
+    body.light .sd-sidebar {
+      background: #ffffff;
+      border-right: 1px solid #e5e7eb;
+    }
+
+    .sd-logo {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-left: 48px; /* <-- add this */
+    }
+
+
+    .sd-logo-mark {
+      font-size: 15px;
       letter-spacing: 0.32em;
       text-transform: uppercase;
       font-weight: 800;
       color: #f9fafb;
     }
 
-    .sup-title {
-      font-family: var(--font-display);
-      font-size: 18px;
-      color: #e5e7eb;
+    .sd-logo-sub {
+      font-size: 11px;
+      color: var(--text-muted);
     }
 
-    .sup-subtitle {
-      font-size: 12px;
-      color: var(--text-soft);
+    body.light .sd-logo-mark {
+      color: #020617;
     }
 
-    .sup-header-right {
+    body.light .sd-sidebar-toggle {
+      background: #f9fafb;
+      color: #0f172a;
+    }
+
+    .sd-sidebar-main {
+      margin-top: 6px;
+    }
+
+    .sd-nav {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
-      gap: 10px;
+      gap: 4px;
+      font-size: 13px;
     }
 
-    .sup-header-actions {
-      display: flex;
-      gap: 8px;
+    .sd-nav button {
+      border: none;
+      background: transparent;
+      text-align: left;
+      padding: 8px 10px;
+      border-radius: var(--radius-pill);
+      color: var(--text-muted);
+      cursor: pointer;
     }
 
-    /* ---------- Filter / Control bar ---------- */
+    .sd-nav button.sd-nav-active {
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-main);
+      box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.9);
+    }
 
-    .sup-filter-bar {
-      width: 100%;
-      margin: 12px 0 18px;
-      padding: 12px 16px;
-      border-radius: var(--radius-lg);
-      background: rgba(15, 23, 42, 0.85);
-      border: 1px solid rgba(148, 163, 184, 0.45);
+    body.light .sd-nav button.sd-nav-active {
+      background: #0f172a;
+      color: #f9fafb;
+    }
+
+    .sd-sidebar-filters {
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(30, 64, 175, 0.6);
+    }
+
+    body.light .sd-sidebar-filters {
+      border-top: 1px solid #e5e7eb;
+    }
+
+    .sd-filter-group {
+      margin-bottom: 12px;
+    }
+
+    .sd-filter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .sd-chip-row {
       display: flex;
-      justify-content: flex-start;
       flex-wrap: wrap;
-      gap: 12px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      align-items: flex-start;
+      gap: 6px;
     }
 
-    .filter-left,
-    .filter-center,
-    .filter-right {
+    .sd-chip {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      padding: 4px 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-chip);
+      cursor: pointer;
+    }
+
+    .sd-chip.sd-chip-active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: #fed7aa;
+    }
+
+    body.light .sd-chip {
+      background: #f3f4f6;
+      color: #4b5563;
+    }
+
+    body.light .sd-chip.sd-chip-active {
+      background: #f97316;
+      color: #111827;
+      border-color: #ea580c;
+    }
+
+    .sd-theme-toggle {
+      margin-top: auto;
       display: flex;
       align-items: center;
+      justify-content: space-between;
       gap: 10px;
-      flex-wrap: wrap;
+      font-size: 12px;
+      color: var(--text-muted);
     }
 
-    .filter-bar-label {
-      font-size: 10px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      opacity: 0.8;
-      color: rgba(209, 213, 219, 0.9);
-    }
+.sd-hamburger {
+  position: fixed;
+  top: 18px;  /* was 14px */
+  left: 14px;
+  z-index: 50;
+  width: 34px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 16px;
+}
 
-    .filter-section-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: rgba(148, 163, 184, 0.9);
-      opacity: 0.9;
-    }
+body.light .sd-hamburger {
+  background: #f9fafb;
+  color: #0f172a;
+}
 
-    .filter-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 10px;
+    .sd-switch {
+      width: 42px;
+      height: 22px;
       border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      padding: 2px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
       background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(75, 85, 99, 0.9);
     }
 
-    .filter-pill {
+    .sd-switch-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      transform: translateX(0);
+      transition: transform 0.2s ease;
+    }
+
+    body.light .sd-switch {
+      background: #e5e7eb;
+    }
+
+    body.light .sd-switch-thumb {
+      transform: translateX(18px);
+    }
+
+    /* ---------- Main area ---------- */
+
+    .sd-main {
+      padding: 18px 22px 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 720px) {
+      .sd-main {
+        padding-inline: 14px;
+      }
+    }
+
+    .sd-top-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .sd-top-title {
+      font-family: var(--font-display);
+      font-size: 22px;
+      letter-spacing: 0.02em;
+    }
+
+    .sd-top-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .sd-top-meta-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .sd-main-filter-toggle {
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-muted);
+      padding: 5px 10px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    body.light .sd-main-filter-toggle {
+      background: #ffffff;
+      color: #4b5563;
+    }
+
+    /* Hide desktop toggle on small screens (we already have the mobile Filters button) */
+    @media (max-width: 920px) {
+      .sd-main-filter-toggle {
+        display: none;
+      }
+    }
+
+    .sd-today-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    @media (max-width: 920px) {
+      .sd-today-summary {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 580px) {
+      .sd-today-summary {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .sd-summary-card {
+      border-radius: 16px;
+      padding: 10px 12px;
+      background: radial-gradient(circle at top left, #0b1120, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.6);
+      font-size: 12px;
+    }
+
+    body.light .sd-summary-card {
+      background: #ffffff;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    .sd-summary-label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .sd-summary-value {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .sd-summary-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .sd-priority-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 18px;
+    }
+
+    .sd-priority-pill {
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(248, 250, 252, 0.06);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .sd-priority-pill span.sd-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--danger);
+    }
+
+    .sd-priority-pill.sd-pill-warn span.sd-dot { background: var(--warn); }
+    .sd-priority-pill.sd-pill-ok span.sd-dot { background: var(--ok); }
+
+    body.light .sd-priority-pill {
+      background: #ffffff;
+      border-color: #e5e7eb;
+      color: #4b5563;
+    }
+
+    .sd-view-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .sd-view-toggle {
+      display: inline-flex;
+      padding: 3px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .sd-view-toggle button {
+      border: none;
+      background: transparent;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .sd-view-toggle button.sd-view-active {
+      background: #f97316;
+      color: #111827;
+      font-weight: 600;
+    }
+
+    body.light .sd-view-toggle {
+      background: #f3f4f6;
+    }
+
+    .sd-inline-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sd-inline-btn {
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.7);
       background: rgba(15, 23, 42, 0.9);
       color: var(--text-muted);
+      padding: 5px 10px;
       font-size: 11px;
-      padding: 6px 10px;
-    }
-
-    .filter-pill span {
-      font-size: 11px;
-    }
-
-    .filter-select {
-      background-color: transparent;
-      border: none;
-      color: #e5e7eb;
-      font-size: 11px;
-    }
-
-    .filter-select option {
-      background-color: #020617;
-      color: #e5e7eb;
-    }
-
-    .filter-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-left: auto;
-    }
-
-    .lo-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 8px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.7);
-      color: #e5e7eb;
-      font-size: 12px;
-      text-decoration: none;
       cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
     }
 
-    .lo-btn:hover {
-      background: rgba(31, 41, 55, 0.9);
-      transform: translateY(-1px);
+    body.light .sd-inline-btn {
+      background: #ffffff;
+      color: #4b5563;
     }
 
-    .lo-btn-primary {
-      border-color: rgba(249, 115, 22, 0.85);
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #111827;
-      font-weight: 600;
-      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.5);
-    }
+    /* ---------- Station grid & cards ---------- */
 
-    .lo-btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(249, 115, 22, 0.7);
-    }
-
-    .vc-btn {
-      border: none;
-      padding: 6px 10px;
-      border-radius: 999px;
-      font-size: 10px;
-      cursor: pointer;
-      background: rgba(15, 23, 42, 0.9);
-      color: inherit;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition:
-        background 0.15s ease,
-        transform 0.08s ease,
-        box-shadow 0.15s ease,
-        opacity 0.15s ease;
-      box-shadow: 0 0 0 rgba(15, 23, 42, 0);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-    }
-
-    .vc-btn:hover {
-      background: rgba(31, 41, 55, 0.95);
-      transform: translateY(-0.5px);
-      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.6);
-    }
-
-    .vc-btn.is-active {
-      background: var(--accent-soft);
-      border-color: rgba(249, 115, 22, 0.9);
-      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.7);
-      color: #fed7aa;
-    }
-
-    /* ---------- Top metrics ---------- */
-
-    .sup-top-row {
-      display: grid;
-      grid-template-columns: minmax(0, 2.3fr) minmax(0, 3.2fr);
-      gap: 16px;
-      margin-bottom: 18px;
-    }
-
-    @media (max-width: 900px) {
-      .sup-top-row {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .sup-metrics-panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top left, #0b1120, #020617 55%);
-      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
-      padding: 14px 16px 14px;
-    }
-
-    .sup-metrics-inline {
-      padding: 10px 14px;
-      max-width: 460px;
-    }
-
-    .sup-panel-title {
-      display: flex;
-      align-items: baseline;
-      justify-content: space-between;
-      margin-bottom: 10px;
-    }
-
-    .sup-panel-title h2 {
-      font-family: var(--font-display);
-      font-size: 16px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #e5e7eb;
-    }
-
-    .sup-panel-sub {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    @media (max-width: 720px) {
-      .metrics-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    .metric-card {
-      border-radius: 12px;
-      border: 1px solid rgba(75, 85, 99, 0.9);
-      background: radial-gradient(circle at top left, #1f2933, #020617 70%);
-      padding: 10px 10px 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .metric-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: rgba(156, 163, 175, 0.9);
-    }
-
-    .metric-main {
-      font-size: 18px;
-      font-weight: 600;
-      color: #f9fafb;
-    }
-
-    .metric-sub {
-      font-size: 11px;
-      color: rgba(209, 213, 219, 0.9);
-    }
-
-    /* ---------- Main layout ---------- */
-
-    .sup-main-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      gap: 16px;
-    }
-
-    .station-panel {
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top left, #020617, #020617 60%);
-      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.7);
-      padding: 14px 16px 16px;
-    }
-
-    .panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 10px;
-      gap: 10px;
-    }
-
-    .panel-header h3 {
-      font-family: var(--font-display);
-      font-size: 15px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .panel-header small {
-      font-size: 11px;
-      color: var(--text-soft);
-    }
-
-    .station-grid {
+    .sd-stations {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+      gap: 14px;
     }
 
-    @media (max-width: 900px) {
-      .station-grid {
+    @media (max-width: 1000px) {
+      .sd-stations {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
-    .station-card {
+    .sd-station-card {
       position: relative;
-      border-radius: 14px;
-      border: 1px solid rgba(75, 85, 99, 0.85);
-      background: radial-gradient(circle at top left, #111827, #020617 70%);
-      padding: 10px 10px 11px;
-      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.75);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(145deg, #020617, #020617 35%, #020617 100%);
+      border: 1px solid rgba(15, 23, 42, 0.9);
+      box-shadow:
+        0 16px 36px rgba(15, 23, 42, 0.8),
+        0 0 0 1px rgba(148, 163, 184, 0.22);
+      padding: 12px 14px 12px;
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      overflow: visible;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+      gap: 10px;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
 
-    .station-card.status-menu-open {
-    z-index: 60;
-    }
-
-    .station-card--compact {
-      padding: 8px 8px 9px;
-      gap: 4px;
-    }
-
-    .station-card--compact .station-actions {
-      margin-top: 2px;
-      flex-wrap: wrap;      /* allow buttons to wrap instead of scrolling */
-      overflow: visible;    /* no scroll clipping so dropdown lines up */
-    }
-
-    /* Station status dropdown (new) */
-
-    .station-status-wrapper {
-      position: relative;
-      display: inline-block;
-    }
-
-    .station-status-menu {
-      position: absolute;
-      top: 110%;
-      left: 50%;
-      transform: translateX(-50%);
-      min-width: 260px;
-      background: rgba(15, 23, 42, 0.98);
-      border-radius: 18px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.95);
-      padding: 6px;
-      display: none;
-      flex-direction: column;
-      gap: 4px;
-      z-index: 70; /* above other cards */
-    }
-
-    .station-status-menu.is-open {
-      display: flex;
-    }
-
-    .station-status-menu .mini-btn {
-      width: 100%;
-      justify-content: center;
-      font-size: 11px;
-      padding: 6px 10px;
-      border-radius: 999px;
-    }
-
-
-    .station-card--compact .station-actions .mini-btn {
-      white-space: nowrap;
-    }
-
-    .station-card:hover {
+    .sd-station-card:hover {
       transform: translateY(-3px);
-      box-shadow: 0 22px 40px rgba(15, 23, 42, 0.9);
-      border-color: rgba(249, 115, 22, 0.7);
+      box-shadow:
+        0 22px 46px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(248, 250, 252, 0.08);
+      border-color: rgba(248, 250, 252, 0.12);
     }
 
-    .station-id-row {
+    body.light .sd-station-card {
+      background: #ffffff;
+      border-color: #e5e7eb;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    .sd-station-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 6px;
+      gap: 10px;
     }
 
-    .station-name {
-      font-size: 13px;
+    .sd-station-title {
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #e5e7eb;
+      letter-spacing: 0.02em;
     }
 
-    .badge {
+    .sd-station-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .sd-status-pill {
       border-radius: 999px;
-      padding: 3px 9px;
+      padding: 3px 8px;
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.14em;
-      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-muted);
     }
 
-    .badge-ok {
-      border-color: rgba(34, 197, 94, 0.6);
-      color: #bbf7d0;
-      background: rgba(22, 163, 74, 0.18);
+    .sd-status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--idle);
     }
 
-    .badge-warn {
-      border-color: rgba(250, 204, 21, 0.7);
-      color: #fef9c3;
-      background: rgba(234, 179, 8, 0.16);
+    .sd-status-running .sd-status-dot { background: var(--ok); }
+    .sd-status-waiting .sd-status-dot { background: var(--warn); }
+    .sd-status-blocked .sd-status-dot { background: var(--danger); }
+
+    body.light .sd-status-pill {
+      background: #f9fafb;
+      color: #4b5563;
     }
 
-    .badge-danger {
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fee2e2;
-      background: rgba(248, 113, 113, 0.18);
+    .sd-station-main {
+      display: grid;
+      grid-template-columns: minmax(0, 2.1fr) minmax(0, 1.6fr);
+      gap: 10px;
+      font-size: 12px;
     }
 
-    /* Job blocks — UPDATED for bigger, clearer current job */
-
-    .job-block {
-      border-radius: 12px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.95);
-      padding: 10px 11px;
-      font-size: 11px;
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    @media (max-width: 680px) {
+      .sd-station-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
     }
 
-    /* Slight emphasis for the first job block on the card (usually Current job) */
-    .station-card .job-block:first-of-type {
-      background: rgba(15, 23, 42, 1);
-      border-color: rgba(148, 163, 184, 0.9);
-      box-shadow: 0 8px 18px rgba(15, 23, 42, 0.8);
-    }
-
-    .job-block-title {
+    .sd-job-meta-row {
       display: flex;
       justify-content: space-between;
-      align-items: baseline;
-      gap: 6px;
+      gap: 8px;
+      margin-bottom: 3px;
     }
 
-    .job-label {
-      text-transform: uppercase;
-      letter-spacing: 0.14em;
-      color: rgba(148, 163, 184, 0.95);
-      font-size: 11px;
+    .sd-job-label {
+      color: var(--text-muted);
     }
 
-    .job-main {
-      font-weight: 600;
-      color: #f9fafb;
-      font-size: 13px;   /* bigger job ID / title */
+    .sd-job-value {
+      font-weight: 500;
     }
 
-    .job-meta-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-      color: rgba(209, 213, 219, 0.95);
-      font-size: 11px;   /* bigger meta line */
-    }
-
-    .job-meta-row span {
-      white-space: nowrap;
-    }
-
-    .no-job-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      font-style: italic;
-    }
-
-    .job-remaining {
-      margin-top: 3px;
-      font-size: 11px;     /* bumped up */
-      color: #9ca3af;      /* a bit brighter */
-    }
-
-    /* Station action row */
-
-    .station-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
+    .sd-progress-wrap {
       margin-top: 4px;
     }
 
-    .mini-btn {
+    .sd-progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+
+    .sd-progress-bar {
+      position: relative;
+      height: 7px;
       border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      overflow: hidden;
+    }
+
+    .sd-progress-fill {
+      position: absolute;
+      inset: 0;
+      width: 40%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #22c55e, #a3e635);
+      transition: width 0.25s ease;
+    }
+
+    body.light .sd-progress-bar {
+      background: #e5e7eb;
+    }
+
+    .sd-metrics {
+      background: rgba(15, 23, 42, 0.8);
+      border-radius: 14px;
       border: 1px solid rgba(148, 163, 184, 0.6);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 10px;
-      padding: 4px 9px;
-      cursor: pointer;
-      transition: background 0.15s ease, border-color 0.15s ease, transform 0.08s ease;
+      padding: 8px 9px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 4px;
+      font-size: 11px;
     }
 
-    .mini-btn:hover {
-      background: rgba(31, 41, 55, 0.95);
-      transform: translateY(-1px);
+    body.light .sd-metrics {
+      background: #f9fafb;
+      border-color: #e5e7eb;
     }
 
-    .mini-btn-primary {
-      border-color: rgba(249, 115, 22, 0.85);
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #111827;
+    .sd-metric-label {
+      color: var(--text-muted);
+    }
+
+    .sd-metric-value {
       font-weight: 600;
+      font-size: 12px;
     }
 
-    .mini-btn-primary:hover {
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #111827;
-      border-color: rgba(249, 115, 22, 0.95);
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(249, 115, 22, 0.55);
-    }
-
-    .mini-btn:disabled,
-    .mini-btn[disabled] {
-      opacity: 0.45;
-      color: #9ca3af;
-      border-color: rgba(148, 163, 184, 0.4);
-      background: rgba(30, 41, 59, 0.4);
-      cursor: not-allowed;
-    }
-
-    .mini-btn:disabled:hover,
-    .mini-btn[disabled]:hover {
-      background: rgba(30, 41, 59, 0.4);
-      border-color: rgba(148, 163, 184, 0.4);
-      transform: none;
-      box-shadow: none;
-    }
-
-    .station-queue-toggle {
-      margin-left: auto;
-    }
-
-    .station-queue {
-      margin-top: 6px;
-      padding-top: 6px;
-      border-top: 1px dashed rgba(55, 65, 81, 0.9);
-      display: none;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .station-queue.is-open {
-      display: flex;
-    }
-
-    .station-queue-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 10px;
-      color: var(--text-soft);
-    }
-
-    .station-queue-badge {
-      border-radius: 999px;
-      padding: 2px 8px;
-      font-size: 10px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.9);
-    }
-
-    .station-queue-item {
-      border-radius: 10px;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      background: rgba(15, 23, 42, 0.95);
-      padding: 6px 7px;
-      font-size: 10px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    .station-queue-item-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 6px;
-    }
-
-    .station-queue-item-meta {
-      display: flex;
-      gap: 8px;
-      color: rgba(209, 213, 219, 0.9);
-    }
-
-    .station-queue-item-actions {
+    .sd-station-actions {
+      margin-top: 4px;
       display: flex;
       flex-wrap: wrap;
-      gap: 4px;
-      margin-top: 3px;
+      gap: 6px;
+      font-size: 11px;
     }
 
-    /* Modal (themed warning) */
-
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(15, 23, 42, 0.78);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 40;
-    }
-
-    .modal-backdrop[hidden] {
-      display: none;
-    }
-
-    .modal-panel {
-      background: radial-gradient(circle at top left, #020617, #020617 70%);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(148, 163, 184, 0.9);
-      padding: 18px 20px 16px;
-      max-width: 360px;
-      width: 100%;
-      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.9);
-    }
-
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 16px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #f97373;
-      margin-bottom: 6px;
-    }
-
-    .modal-body {
-      font-size: 12px;
-      color: #e5e7eb;
-      margin-bottom: 14px;
-    }
-
-    .modal-body strong {
-      color: #facc15;
-    }
-
-    .modal-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .modal-btn-cancel {
+    .sd-action-chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.75);
+      padding: 5px 9px;
       background: rgba(15, 23, 42, 0.9);
-      border-color: rgba(148, 163, 184, 0.8);
-      color: #e5e7eb;
+      color: var(--text-muted);
     }
 
-    .modal-btn-cancel:hover {
-      background: rgba(31, 41, 55, 0.95);
+    body.light .sd-action-chip {
+      background: #ffffff;
+      color: #4b5563;
     }
 
-    .modal-btn-confirm {
-      border-color: rgba(249, 115, 22, 0.9);
-      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-      color: #111827;
-      font-weight: 600;
-      box-shadow: 0 10px 26px rgba(249, 115, 22, 0.6);
+    /* Compact view */
+    .view-compact .sd-station-main {
+      grid-template-columns: minmax(0, 1fr);
     }
 
-    .modal-btn-confirm:hover {
-      box-shadow: 0 14px 32px rgba(249, 115, 22, 0.8);
-      transform: translateY(-1px);
+    .view-compact .sd-metrics {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    /* ===== Report Units Modal ===== */
+    /* ---------- Action drawer ---------- */
 
-    .report-modal-backdrop {
+    .sd-drawer-backdrop {
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, 0.75);
       display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-    }
-
-    .report-modal {
-      width: 100%;
-      max-width: 360px;
-      border-radius: 18px;
-      padding: 16px 18px 14px;
-      background: radial-gradient(circle at top left, #020617, #020617 70%);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      box-shadow: 0 24px 50px rgba(15, 23, 42, 0.9);
-    }
-
-    .report-modal-title {
-      font-family: var(--font-display);
-      font-size: 15px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .report-modal-body {
-      font-size: 12px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .report-modal-input {
-      width: 100%;
-      padding: 7px 9px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 12px;
-      margin-bottom: 10px;
-    }
-
-    .report-modal-input:focus {
-      outline: none;
-      border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(249, 115, 22, 0.8);
-    }
-
-    .report-modal-actions {
-      display: flex;
+      align-items: stretch;
       justify-content: flex-end;
-      gap: 8px;
+      z-index: 40;
     }
 
-    body.light-mode .report-modal {
-      background: #ffffff;
-      border-color: rgba(148, 163, 184, 0.75);
-      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.18);
-    }
-
-    body.light-mode .report-modal-body {
-      color: #4b5563;
-    }
-
-    body.light-mode .report-modal-input {
-      background: #f9fafb;
-      color: #111827;
-      border-color: rgba(148, 163, 184, 0.9);
-    }
-
-    /* ===== Slide-over Global Queue Panel ===== */
-
-    .queue-sheet {
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 420px;
-      height: 100vh;
-      background: #020617;
-      border-left: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: -8px 0 30px rgba(0, 0, 0, 0.5);
-      padding: 20px;
-      z-index: 99;
+    .sd-drawer-backdrop.open {
       display: flex;
-      flex-direction: column;
-      gap: 16px;
-      overflow-y: auto;
     }
 
-    /* THIS is what makes hidden work */
-    .queue-sheet[hidden] {
-      display: none;
+    .sd-drawer {
+      width: 360px;
+      max-width: 100%;
+      background: radial-gradient(circle at top left, #020617, #020617 75%);
+      border-left: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow: -18px 0 38px rgba(15, 23, 42, 0.9);
+      padding: 18px 18px 22px;
     }
 
-    .queue-sheet-header {
+    body.light .sd-drawer {
+      background: #ffffff;
+      border-left: 1px solid #e5e7eb;
+      box-shadow: -14px 0 34px rgba(15, 23, 42, 0.16);
+    }
+
+    .sd-drawer-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
     }
 
-    .queue-sheet h2 {
+    .sd-drawer-title {
       font-family: var(--font-display);
-      font-size: 16px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .queue-close-btn {
-      cursor: pointer;
-      background: none;
-      border: none;
-      color: #9ca3af;
       font-size: 18px;
     }
 
-    .queue-close-btn:hover {
-      color: #ffffff;
-    }
-
-    .queue-upload-box {
-      border: 1px dashed rgba(148, 163, 184, 0.5);
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center;
-      color: #9ca3af;
-      font-size: 13px;
-      cursor: pointer;
-    }
-
-    .queue-upload-box:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-
-    .queue-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 12px;
-    }
-
-    .queue-table th,
-    .queue-table td {
-      padding: 8px 10px;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-      font-size: 12px;
-    }
-
-    .queue-table tr:hover {
-      background: rgba(148, 163, 184, 0.08);
-      cursor: pointer;
-    }
-
-    .queue-row-selected {
-      background: rgba(249, 115, 22, 0.15) !important;
-      border-left: 3px solid var(--accent);
-    }
-
-    .queue-empty-label {
-      font-size: 11px;
-      color: var(--text-soft);
-      font-style: italic;
-      margin-top: 4px;
-    }
-
-    .queue-list::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .queue-list::-webkit-scrollbar-track {
-      background: rgba(15, 23, 42, 0.8);
-    }
-
-    .queue-list::-webkit-scrollbar-thumb {
-      background: rgba(55, 65, 81, 0.9);
+    .sd-drawer-close {
       border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      padding: 4px 9px;
+      font-size: 12px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
     }
 
-    .badge-priority {
-      border-color: rgba(248, 250, 252, 0.55);
-      color: #e5e7eb;
-      background: rgba(15, 23, 42, 0.85);
+    .sd-drawer-section-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-muted);
+      margin-top: 14px;
+      margin-bottom: 4px;
     }
 
-    .badge-priority--high {
-      border-color: rgba(248, 113, 113, 0.85);
-      color: #fee2e2;
-      background: rgba(127, 29, 29, 0.7);
+    .sd-drawer-box {
+      border-radius: 14px;
+      border: 1px solid rgba(148, 163, 184, 0.65);
+      padding: 10px 11px;
+      font-size: 12px;
+      background: rgba(15, 23, 42, 0.9);
     }
+
+    body.light .sd-drawer-box {
+      background: #f9fafb;
+      border-color: #e5e7eb;
+    }
+
+    .sd-drawer-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .sd-drawer-btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-main);
+      padding: 7px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .sd-drawer-btn.sd-primary {
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      font-weight: 600;
+    }
+
+    body.light .sd-drawer-btn {
+      background: #111827;
+      color: #f9fafb;
+    }
+
+    body.light .sd-drawer-btn.sd-primary {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+    }
+
   </style>
 </head>
-<body>
-  <div class="sup-shell">
-    <!-- Top header -->
-    <header class="sup-header">
-      <div class="sup-brand">
-        <div class="sup-logo">LeanOps</div>
-        <div class="sup-title">Supervisor — Live Stations</div>
-        <div class="sup-subtitle">
-          Lightweight MES view for jobs, stations, and flow — generic demo instance.
+
+<body class="dark">
+  <button class="sd-hamburger" id="toggleSidebarGlobal">☰</button>
+  <div class="sd-shell">
+    <!-- SIDEBAR -->
+    <aside class="sd-sidebar">
+      <div class="sd-logo">
+  <div>
+    <div class="sd-logo-mark">LEANOPS</div>
+    <div class="sd-logo-sub">Supervisor — Live Stations</div>
+  </div>
+</div>
+
+      <div class="sd-sidebar-main">
+        <nav class="sd-nav">
+          <button class="sd-nav-active">Live stations</button>
+          <button disabled title="Coming soon">Job queue (coming soon)</button>
+          <button disabled title="Coming soon">Analytics (coming soon)</button>
+        </nav>
+      </div>
+
+      <div class="sd-sidebar-filters">
+        <div class="sd-filter-group">
+          <div class="sd-filter-label">View</div>
+          <div class="sd-chip-row">
+            <button class="sd-chip sd-chip-active" data-view="expanded">Expanded</button>
+            <button class="sd-chip" data-view="compact">Compact</button>
+          </div>
+        </div>
+
+        <div class="sd-filter-group">
+          <div class="sd-filter-label">Status</div>
+          <div class="sd-chip-row">
+            <button class="sd-chip sd-chip-active" data-status="all">All</button>
+            <button class="sd-chip" data-status="running">Running</button>
+            <button class="sd-chip" data-status="waiting">Waiting</button>
+            <button class="sd-chip" data-status="blocked">Blocked</button>
+          </div>
+        </div>
+
+        <div class="sd-filter-group">
+          <div class="sd-filter-label">Line</div>
+          <div class="sd-chip-row">
+            <button class="sd-chip sd-chip-active" data-line="all">All lines</button>
+            <button class="sd-chip" data-line="A">Line A</button>
+            <button class="sd-chip" data-line="B">Line B</button>
+          </div>
         </div>
       </div>
 
-      <div class="sup-header-right">
-        <div class="sup-metrics-panel sup-metrics-inline">
-          <div class="sup-panel-title">
-            <h2>Today</h2>
-            <div class="sup-panel-sub" id="metrics-date-label"></div>
-          </div>
-          <div class="metrics-grid">
-            <div class="metric-card">
-              <div class="metric-label">Jobs completed</div>
-              <div class="metric-main" id="metric-completed">0</div>
-              <div class="metric-sub" id="metric-completed-sub">–</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">On-time completion</div>
-              <div class="metric-main" id="metric-ontime">0%</div>
-              <div class="metric-sub" id="metric-ontime-sub">–</div>
-            </div>
-            <div class="metric-card">
-              <div class="metric-label">Stations running</div>
-              <div class="metric-main" id="metric-running">0 / 0</div>
-              <div class="metric-sub" id="metric-running-sub">–</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sup-header-actions">
-          <button class="lo-btn" id="btn-refresh">Quick refresh</button>
-          <button class="lo-btn" id="btn-scroll-queue">Global job queue</button>
-          <button class="lo-btn lo-btn-primary" id="btn-simulate">
-            Simulate next hour
-          </button>
+      <div class="sd-theme-toggle">
+        <span>Theme</span>
+        <div class="sd-switch" id="themeToggle">
+          <div class="sd-switch-thumb"></div>
         </div>
       </div>
-    </header>
+    </aside>
 
-    <!-- Filter / control bar (filters only) -->
-    <section class="sup-filter-bar">
-      <div class="filter-left">
-        <span class="filter-bar-label">View</span>
-
-        <!-- Display options -->
-        <div class="filter-group">
-          <span class="filter-section-label">Display</span>
-          <button type="button" class="vc-btn" data-toggle="compact">Compact</button>
-          <button type="button" class="vc-btn" data-toggle="expanded">Expanded</button>
-          <button type="button" class="vc-btn" data-toggle="details">Toggle details</button>
+    <!-- MAIN AREA -->
+    <main class="sd-main">
+      <div class="sd-top-row">
+        <div>
+          <div class="sd-top-title">Today’s flow</div>
+          <div class="sd-top-meta">Lightweight MES view for jobs, stations, and flow.</div>
         </div>
-
-        <!-- Station options -->
-        <div class="filter-group">
-          <span class="filter-section-label">Stations</span>
-          <button type="button" class="vc-btn" data-toggle="empty">Hide empty</button>
-          <button type="button" class="vc-btn" data-toggle="theme">Dark / Light</button>
-        </div>
-
-        <!-- Line filter -->
-        <div class="filter-group">
-          <span class="filter-section-label">Line</span>
-          <div class="filter-pill">
-            <span>Line</span>
-            <select id="filter-line" class="filter-select">
-              <option value="all">All lines</option>
-              <option value="Line A">Line A</option>
-              <option value="Line B">Line B</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Status filter -->
-        <div class="filter-group">
-          <span class="filter-section-label">Status</span>
-          <div class="filter-pill">
-            <span>Status</span>
-            <select id="filter-status" class="filter-select">
-              <option value="all">All statuses</option>
-              <option value="running">Running</option>
-              <option value="idle">Idle</option>
-              <option value="blocked">Blocked</option>
-            </select>
-          </div>
-        </div>
-
-        <!-- Sort filter -->
-        <div class="filter-group">
-          <span class="filter-section-label">Sort</span>
-          <div class="filter-pill">
-            <span>Sort</span>
-            <select id="filter-sort" class="filter-select">
-              <option value="name">By station name</option>
-              <option value="status">By status</option>
-              <option value="due">By due date</option>
-            </select>
-          </div>
-        </div>
+        <div class="sd-top-meta" id="sd-date"></div>
       </div>
-    </section>
 
-    <!-- Main row: stations -->
-    <section class="sup-main-row">
-      <section class="station-panel">
-        <div class="panel-header">
-          <div>
-            <h3>Stations</h3>
-            <small id="station-count-label"></small>
-          </div>
-          <small>Use actions to drive the day and see how jobs flow.</small>
-        </div>
-        <div class="station-grid" id="station-grid">
-          <!-- Stations rendered by JS -->
-        </div>
+      <!-- TODAY SUMMARY -->
+      <section class="sd-today-summary">
+        <article class="sd-summary-card">
+          <div class="sd-summary-label">Jobs completed</div>
+          <div class="sd-summary-value" id="summaryCompleted">7</div>
+          <div class="sd-summary-sub">Batches logged today (demo)</div>
+        </article>
+        <article class="sd-summary-card">
+          <div class="sd-summary-label">On-time completion</div>
+          <div class="sd-summary-value" id="summaryOnTime">92%</div>
+          <div class="sd-summary-sub">Based on current schedule</div>
+        </article>
+        <article class="sd-summary-card">
+          <div class="sd-summary-label">Stations running</div>
+          <div class="sd-summary-value" id="summaryRunning">3 / 8</div>
+          <div class="sd-summary-sub">Actively marked as running</div>
+        </article>
+        <article class="sd-summary-card">
+          <div class="sd-summary-label">Material flags</div>
+          <div class="sd-summary-value" id="summaryMaterial">2</div>
+          <div class="sd-summary-sub">Stations waiting on material</div>
+        </article>
       </section>
-    </section>
 
-    <!-- Report Units Made Modal -->
-    <div id="report-modal-backdrop" class="report-modal-backdrop">
-      <div class="report-modal">
-        <div class="report-modal-title">Report units made</div>
-        <div class="report-modal-body" id="report-modal-text">
-          <!-- Filled by JS -->
-        </div>
-        <input
-          id="report-modal-input"
-          class="report-modal-input"
-          type="number"
-          min="1"
-          step="1"
-          placeholder="Enter units made (e.g. 40)"
-        />
-        <div class="report-modal-actions">
-          <button type="button" class="mini-btn" id="report-modal-cancel">
-            Cancel
-          </button>
-          <button
-            type="button"
-            class="mini-btn mini-btn-primary"
-            id="report-modal-submit"
-          >
-            Submit
-          </button>
-        </div>
+      <!-- PRIORITY STRIP -->
+      <div class="sd-priority-strip">
+        <button class="sd-priority-pill" data-status-filter="blocked">
+          <span class="sd-dot"></span>
+          <span>1 station blocked</span>
+        </button>
+        <button class="sd-priority-pill sd-pill-warn" data-status-filter="waiting">
+          <span class="sd-dot"></span>
+          <span>2 waiting on material</span>
+        </button>
+        <button class="sd-priority-pill sd-pill-ok" data-status-filter="running">
+          <span class="sd-dot"></span>
+          <span>3 running at or above pace</span>
+        </button>
       </div>
-    </div>
 
-    <!-- Themed warning modal for Mark Complete -->
-    <div id="complete-modal" class="modal-backdrop" hidden>
-      <div class="modal-panel">
-        <div class="modal-title">Confirm completion</div>
-        <p class="modal-body" id="complete-modal-text">
-          You’re about to mark this job complete. This will close the job and auto-promote the next job (if any) into the current slot.
-        </p>
-        <div class="modal-actions">
-          <button type="button" class="lo-btn modal-btn-cancel" id="modal-cancel">
-            Cancel
-          </button>
-          <button type="button" class="lo-btn modal-btn-confirm" id="modal-confirm">
-            Yes, mark complete
-          </button>
+      <!-- VIEW CONTROLS -->
+      <div class="sd-view-row">
+        <div class="sd-view-toggle">
+          <button class="sd-view-active" data-view-main="expanded">Expanded</button>
+          <button data-view-main="compact">Compact</button>
+        </div>
+        <div class="sd-inline-actions">
+          <button class="sd-inline-btn">Quick refresh</button>
+          <button class="sd-inline-btn">Global job queue</button>
+          <button class="sd-inline-btn">Simulate next hour</button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- Slide-over Global Job Queue Sheet -->
-  <div id="queue-sheet" class="queue-sheet" hidden>
-    <div class="queue-sheet-header">
-      <div>
-        <h2>Global Job Queue</h2>
-        <small id="queue-count-label">0 jobs</small>
-      </div>
-      <button class="queue-close-btn" id="queue-sheet-close">&times;</button>
-    </div>
-
-    <!-- Upload/import -->
-    <label class="queue-upload-box" for="queue-file-input">
-      Click to upload CSV / XLSM / Google Sheets export
-    </label>
-    <input
-      type="file"
-      id="queue-file-input"
-      accept=".csv,.xls,.xlsx,.xlsm"
-      style="display:none"
-    />
-
-    <!-- Table of jobs -->
-    <table class="queue-table">
-      <thead>
-        <tr>
-          <th>Job ID</th>
-          <th>Part</th>
-          <th>Qty</th>
-          <th>Due</th>
-        </tr>
-      </thead>
-      <tbody id="queue-table-body"></tbody>
-    </table>
-
-    <div class="queue-empty-label" id="queue-empty-label">
-      No waiting jobs in the global queue.
-    </div>
-  </div>
-
-  <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-    const SUPABASE_URL = "https://xdjyjzdvpfnkbsnbcysx.supabase.co";
-    const SUPABASE_ANON_KEY =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhkanlqemR2cGZua2JzbmJjeXN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ0MTk1MDQsImV4cCI6MjA3OTk5NTUwNH0._jy-dtd664bg-YsvhzsYjwBb8ZfOA-gPDBjRmi6zWCU";
-
-    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-    let stations = [];
-    let globalQueue = [];
-
-    // "expanded" (full controls) or "compact" (minimal)
-    let viewMode = "expanded";
-
-    const metrics = {
-      completedToday: 0,
-      completedOnTimeRate: 0,
-      stationsRunning: 0,
-      stationCount: 0,
-    };
-
-    let pendingCompleteStationId = null;
-    let reportModalStationId = null;
-
-    function formatDateLabelToday() {
-      const d = new Date();
-      return d.toLocaleDateString(undefined, {
-        weekday: "short",
-        month: "short",
-        day: "numeric",
-      });
-    }
-
-    function statusBadgeClass(status) {
-      if (status === "running") return "badge badge-ok";
-      if (status === "blocked") return "badge badge-danger";
-      if (status === "idle") return "badge badge-warn";
-      return "badge";
-    }
-
-    function priorityBadgeClass(priority) {
-      if (priority === "high")
-        return "badge badge-priority badge-priority--high";
-      return "badge badge-priority";
-    }
-
-    function compareByName(a, b) {
-      return a.name.localeCompare(b.name);
-    }
-
-    function compareByStatus(a, b) {
-      const weight = { running: 1, idle: 2, blocked: 3 };
-      return (weight[a.status] || 99) - (weight[b.status] || 99);
-    }
-
-    function compareByDue(a, b) {
-      const da = a.currentJob?.due || a.nextJob?.due || "9999-12-31";
-      const db = b.currentJob?.due || b.nextJob?.due || "9999-12-31";
-      return da.localeCompare(db);
-    }
-
-    function recalcRunning() {
-      metrics.stationsRunning = stations.filter(
-        (s) => s.status === "running"
-      ).length;
-      metrics.stationCount = stations.length;
-    }
-
-    // --- Report Units modal ---
-
-    function openReportModal(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st || !st.currentJob) {
-        alert("No active job on this station to report units for.");
-        return;
-      }
-
-      reportModalStationId = stationId;
-
-      const backdrop = document.getElementById("report-modal-backdrop");
-      const textEl = document.getElementById("report-modal-text");
-      const inputEl = document.getElementById("report-modal-input");
-
-      const job = st.currentJob;
-      const done = job.qtyDone ?? 0;
-      const total = job.qtyTotal ?? 0;
-      const remaining = Math.max(0, (total || 0) - (done || 0));
-
-      textEl.textContent = `How many ${job.part} for ${
-        job.id
-      } did ${st.name} make? (Remaining: ${remaining})`;
-      inputEl.value = "";
-
-      backdrop.style.display = "flex";
-      inputEl.focus();
-    }
-
-    function closeReportModal() {
-      reportModalStationId = null;
-      const backdrop = document.getElementById("report-modal-backdrop");
-      backdrop.style.display = "none";
-    }
-
-    async function submitReportModal() {
-      if (!reportModalStationId) {
-        closeReportModal();
-        return;
-      }
-
-      const st = stations.find((s) => s.id === reportModalStationId);
-      if (!st || !st.currentJob) {
-        alert("Station no longer has an active job.");
-        closeReportModal();
-        return;
-      }
-
-      const inputEl = document.getElementById("report-modal-input");
-      const raw = inputEl.value.trim();
-      const delta = parseInt(raw, 10);
-
-      if (isNaN(delta) || delta <= 0) {
-        alert("Please enter a positive whole number for units made.");
-        return;
-      }
-
-      const jobId = st.currentJob.id;
-      const currentDone = st.currentJob.qtyDone ?? 0;
-      const total = st.currentJob.qtyTotal ?? 0;
-      const newDone = currentDone + delta;
-      const clampedDone = total ? Math.min(newDone, total) : newDone;
-
-      try {
-        const { error: assignErr } = await supabase
-          .from("station_assignments")
-          .update({ qty_done: clampedDone })
-          .eq("station_id", st.id)
-          .eq("job_id", jobId);
-
-        if (assignErr) {
-          console.error("Error updating qty_done:", assignErr);
-          alert("Could not update units in the cloud.");
-          return;
-        }
-
-        const { error: perfErr } = await supabase
-          .from("performance_logs")
-          .insert({
-            station_id: st.id,
-            job_id: jobId,
-            qty_completed: delta,
-          });
-
-        if (perfErr) {
-          console.error("Error inserting performance log:", perfErr);
-        }
-
-        st.currentJob.qtyDone = clampedDone;
-
-        renderStations();
-        closeReportModal();
-      } catch (err) {
-        console.error("Unexpected error in submitReportModal:", err);
-        alert("Unexpected error while reporting units made.");
-      }
-    }
-
-    // --- Complete job warning modal ---
-
-    function openCompleteModal(stationId) {
-      pendingCompleteStationId = stationId;
-      const modal = document.getElementById("complete-modal");
-      const textEl = document.getElementById("complete-modal-text");
-      const st = stations.find((s) => s.id === stationId);
-
-      if (st && st.currentJob) {
-        const jobId = st.currentJob.id ?? "this job";
-        const done = st.currentJob.qtyDone ?? 0;
-        const total = st.currentJob.qtyTotal ?? 0;
-        const remaining = Math.max(total - done, 0);
-
-        textEl.innerHTML =
-          `You’re about to mark <strong>${jobId}</strong> complete on <strong>${st.name}</strong>.<br>` +
-          `Remaining qty: <strong>${remaining} pcs</strong>.<br><br>` +
-          `This will close the job and <strong>auto-promote the next job</strong> (if any) into the current slot.`;
-      } else {
-        textEl.textContent =
-          "You’re about to mark this job complete. This will close the job and auto-promote the next job (if any) into the current slot.";
-      }
-
-      modal.hidden = false;
-    }
-
-    function closeCompleteModal() {
-      pendingCompleteStationId = null;
-      document.getElementById("complete-modal").hidden = true;
-    }
-
-    function renderMetrics() {
-      document.getElementById("metrics-date-label").textContent =
-        formatDateLabelToday();
-
-      document.getElementById("metric-completed").textContent =
-        metrics.completedToday;
-      document.getElementById("metric-completed-sub").textContent =
-        "Jobs / batches logged today";
-
-      document.getElementById("metric-ontime").textContent =
-        metrics.completedOnTimeRate + "%";
-      document.getElementById("metric-ontime-sub").textContent =
-        "On-time completion rate (demo)";
-
-      document.getElementById("metric-running").textContent =
-        metrics.stationsRunning + " / " + metrics.stationCount;
-      document.getElementById("metric-running-sub").textContent =
-        "Stations currently marked as running";
-    }
-
-    // Station queue helpers
-
-    function ensureStationQueue(st) {
-      if (!st.localQueue) st.localQueue = [];
-      return st.localQueue;
-    }
-
-    function toggleStationQueueOpen(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st) return;
-      st._queueOpen = !st._queueOpen;
-      renderStations();
-    }
-
-    function moveCurrentToNext(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st || !st.currentJob) return;
-
-      const queue = ensureStationQueue(st);
-      const current = st.currentJob;
-      const next = st.nextJob;
-
-      if (next) {
-        queue.unshift(next);
-      }
-
-      st.nextJob = current;
-      st.currentJob = null;
-      st.status = "idle";
-
-      renderStations();
-    }
-
-    function moveCurrentToQueue(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st || !st.currentJob) return;
-
-      const queue = ensureStationQueue(st);
-      const current = st.currentJob;
-
-      queue.unshift(current);
-      st.currentJob = null;
-
-      if (st.nextJob) {
-        st.currentJob = st.nextJob;
-        st.nextJob = null;
-        st.status = "running";
-      } else {
-        st.status = "idle";
-      }
-
-      renderStations();
-    }
-
-    function promoteNextToCurrent(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st || !st.nextJob) return;
-
-      const queue = ensureStationQueue(st);
-      const current = st.currentJob;
-      const next = st.nextJob;
-
-      if (current) {
-        queue.unshift(current);
-      }
-
-      st.currentJob = next;
-      st.nextJob = null;
-      st.status = "running";
-
-      renderStations();
-    }
-
-    function promoteQueueJobToNext(stationId, index) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st) return;
-
-      const queue = ensureStationQueue(st);
-      if (index < 0 || index >= queue.length) return;
-
-      const job = queue.splice(index, 1)[0];
-
-      if (st.nextJob) {
-        queue.unshift(st.nextJob);
-      }
-
-      st.nextJob = job;
-      renderStations();
-    }
-
-    function promoteQueueJobToCurrent(stationId, index) {
-      const st = stations.find((s) => s.id === stationId);
-      if (!st) return;
-
-      const queue = ensureStationQueue(st);
-      if (index < 0 || index >= queue.length) return;
-
-      const job = queue.splice(index, 1)[0];
-
-      const oldCurrent = st.currentJob;
-      const oldNext = st.nextJob;
-
-      if (oldNext) {
-        queue.unshift(oldNext);
-      }
-      if (oldCurrent) {
-        st.nextJob = oldCurrent;
-      } else {
-        st.nextJob = null;
-      }
-
-      st.currentJob = job;
-      st.status = "running";
-
-      renderStations();
-    }
-
-    function renderStations() {
-      const lineFilter = document.getElementById("filter-line").value;
-      const statusFilter = document.getElementById("filter-status").value;
-      const sortValue = document.getElementById("filter-sort").value;
-
-      let list = [...stations];
-
-      if (lineFilter !== "all") {
-        list = list.filter((s) => s.line === lineFilter);
-      }
-      if (statusFilter !== "all") {
-        list = list.filter((s) => s.status === statusFilter);
-      }
-
-      if (sortValue === "name") list.sort(compareByName);
-      else if (sortValue === "status") list.sort(compareByStatus);
-      else if (sortValue === "due") list.sort(compareByDue);
-
-      const container = document.getElementById("station-grid");
-      container.innerHTML = "";
-
-      list.forEach((st) => {
-        const card = document.createElement("article");
-        card.className = "station-card";
-        if (viewMode === "compact") {
-          card.classList.add("station-card--compact");
-        }
-
-        const topRow = document.createElement("div");
-        topRow.className = "station-id-row";
-
-        const title = document.createElement("div");
-        title.className = "station-name";
-        title.textContent = st.name + " · " + st.id;
-
-        const badge = document.createElement("div");
-        badge.className = statusBadgeClass(st.status);
-        badge.textContent =
-          st.status === "running"
-            ? "Running"
-            : st.status === "idle"
-            ? "Idle"
-            : st.status === "blocked"
-            ? "Blocked"
-            : st.status;
-
-        topRow.appendChild(title);
-        topRow.appendChild(badge);
-        card.appendChild(topRow);
-
-        if (st.currentJob) {
-          const jb = document.createElement("div");
-          jb.className = "job-block";
-
-          const jbTitle = document.createElement("div");
-          jbTitle.className = "job-block-title";
-          jbTitle.innerHTML =
-            '<span class="job-label">Current job</span>' +
-            `<span class="job-main">${st.currentJob.id}</span>`;
-          jb.appendChild(jbTitle);
-
-          const meta = document.createElement("div");
-          meta.className = "job-meta-row";
-          const done = st.currentJob.qtyDone ?? 0;
-          const total = st.currentJob.qtyTotal ?? 0;
-          const remaining = Math.max(0, (total || 0) - (done || 0));
-
-          meta.innerHTML = `
-            <span>${st.currentJob.part}</span>
-            <span>${done}/${total} pcs</span>
-            <span>Due ${st.currentJob.due || "-"}</span>
-          `;
-          jb.appendChild(meta);
-
-          const remainingLine = document.createElement("div");
-          remainingLine.className = "job-remaining";
-          remainingLine.textContent = `There are ${remaining} ${st.currentJob.part} left to make.`;
-          jb.appendChild(remainingLine);
-
-          if (st.currentJob.priority) {
-            const pr = document.createElement("div");
-            pr.className = "job-meta-row";
-            pr.innerHTML = `<span class="${priorityBadgeClass(
-              st.currentJob.priority
-            )}">Priority: ${st.currentJob.priority}</span>`;
-            jb.appendChild(pr);
-          }
-
-          card.appendChild(jb);
-        } else {
-          const label = document.createElement("div");
-          label.className = "no-job-label";
-          label.textContent = "No current job loaded.";
-          card.appendChild(label);
-        }
-
-        // Only show Next job in expanded mode
-        if (st.nextJob && viewMode === "expanded") {
-          const nb = document.createElement("div");
-          nb.className = "job-block";
-          const nbTitle = document.createElement("div");
-          nbTitle.className = "job-block-title";
-          nbTitle.innerHTML =
-            '<span class="job-label">Next job</span>' +
-            `<span class="job-main">${st.nextJob.id}</span>`;
-          nb.appendChild(nbTitle);
-
-          const meta = document.createElement("div");
-          meta.className = "job-meta-row";
-          meta.innerHTML = `
-            <span>${st.nextJob.part}</span>
-            <span>${st.nextJob.qtyTotal ?? 0} pcs</span>
-            <span>Due ${st.nextJob.due || "-"}</span>
-          `;
-          nb.appendChild(meta);
-
-          card.appendChild(nb);
-        }
-
-        const actionRow = document.createElement("div");
-        actionRow.className = "station-actions";
-
-        const btnReport = document.createElement("button");
-        btnReport.className = "mini-btn";
-        btnReport.textContent = "Report units made";
-        btnReport.disabled = !st.currentJob;
-        btnReport.onclick = () => openReportModal(st.id);
-
-        const btnComplete = document.createElement("button");
-        btnComplete.className = "mini-btn mini-btn-primary";
-        btnComplete.textContent = "Mark complete";
-        btnComplete.onclick = () => simulateCompleteJob(st.id);
-
-        const btnMaterial = document.createElement("button");
-        btnMaterial.className = "mini-btn";
-        btnMaterial.textContent = "Need material";
-        btnMaterial.onclick = () =>
-          alert("Material request triggered for " + st.name);
-
-        // Station status dropdown
-        const statusWrapper = document.createElement("div");
-        statusWrapper.className = "station-status-wrapper";
-
-        const statusBtn = document.createElement("button");
-        statusBtn.className = "mini-btn";
-        statusBtn.textContent = "Station status";
-
-        const statusMenu = document.createElement("div");
-        statusMenu.className = "station-status-menu";
-        statusMenu.innerHTML = `
-          <button class="mini-btn" data-action="running">Set station to running</button>
-          <button class="mini-btn" data-action="idle">Set station to idle</button>
-          <button class="mini-btn" data-action="blocked">Set station to blocked</button>
-        `;
-
-        function closeStatusMenuForCard() {
-          statusMenu.classList.remove("is-open");
-          card.classList.remove("status-menu-open");
-        }
-
-        statusBtn.addEventListener("click", (evt) => {
-          evt.stopPropagation();
-
-          const isOpen = statusMenu.classList.contains("is-open");
-
-          // Close any other open menus + reset z-index
-          document.querySelectorAll(".station-status-menu.is-open")
-            .forEach((m) => m.classList.remove("is-open"));
-          document.querySelectorAll(".station-card.status-menu-open")
-            .forEach((c) => c.classList.remove("status-menu-open"));
-
-          if (!isOpen) {
-            statusMenu.classList.add("is-open");
-            card.classList.add("status-menu-open");
-          }
-        });
-
-        statusMenu.querySelector('[data-action="running"]').addEventListener("click", () => {
-          simulateRunning(st.id);   // your existing status → running helper
-          closeStatusMenuForCard();
-        });
-
-        statusMenu.querySelector('[data-action="idle"]').addEventListener("click", () => {
-          simulateIdle(st.id);
-          closeStatusMenuForCard();
-        });
-
-        statusMenu.querySelector('[data-action="blocked"]').addEventListener("click", () => {
-          simulateBlocked(st.id);
-          closeStatusMenuForCard();
-        });
-
-        statusWrapper.appendChild(statusBtn);
-        statusWrapper.appendChild(statusMenu);
-
-        // (no actionRow.appendChild(statusWrapper) here)
-        const btnCurrentToNext = document.createElement("button");
-        btnCurrentToNext.className = "mini-btn";
-        btnCurrentToNext.textContent = "Send to next job section";
-        btnCurrentToNext.disabled = !st.currentJob;
-        btnCurrentToNext.onclick = () => moveCurrentToNext(st.id);
-
-        const btnCurrentToQueue = document.createElement("button");
-        btnCurrentToQueue.className = "mini-btn";
-        btnCurrentToQueue.textContent = "Send to queue list";
-        btnCurrentToQueue.disabled = !st.currentJob;
-        btnCurrentToQueue.onclick = () => moveCurrentToQueue(st.id);
-
-        const btnNextToCurrent = document.createElement("button");
-        btnNextToCurrent.className = "mini-btn";
-        btnNextToCurrent.textContent = "Send to current job section";
-        btnNextToCurrent.disabled = !st.nextJob;
-        btnNextToCurrent.onclick = () => promoteNextToCurrent(st.id);
-
-        const btnQueueToggle = document.createElement("button");
-        btnQueueToggle.className = "mini-btn station-queue-toggle";
-        btnQueueToggle.textContent = st._queueOpen ? "Hide queue list" : "Show queue list";
-        btnQueueToggle.onclick = () => toggleStationQueueOpen(st.id);
-
-        // Compact mode: key buttons, but still include Station status
-        if (viewMode === "compact") {
-          actionRow.appendChild(btnReport);
-          actionRow.appendChild(btnComplete);
-          actionRow.appendChild(statusWrapper);
-          actionRow.appendChild(btnQueueToggle);
-        } else {
-          // Expanded mode: full control surface
-          actionRow.appendChild(btnReport);
-          actionRow.appendChild(btnComplete);
-          actionRow.appendChild(btnMaterial);
-          actionRow.appendChild(statusWrapper);
-          actionRow.appendChild(btnCurrentToNext);
-          actionRow.appendChild(btnCurrentToQueue);
-          actionRow.appendChild(btnNextToCurrent);
-          actionRow.appendChild(btnQueueToggle);
-        }
-
-        card.appendChild(actionRow);
-
-        const queue = st.localQueue || [];
-        const queueWrapper = document.createElement("div");
-        queueWrapper.className = "station-queue";
-        if (st._queueOpen) {
-          queueWrapper.classList.add("is-open");
-        }
-
-        const headerRow = document.createElement("div");
-        headerRow.className = "station-queue-header";
-        headerRow.innerHTML = `
-          <span>Station queue</span>
-          <span class="station-queue-badge">${queue.length} job${
-          queue.length === 1 ? "" : "s"
-        }</span>
-        `;
-        queueWrapper.appendChild(headerRow);
-
-        if (!queue.length) {
-          const empty = document.createElement("div");
-          empty.className = "no-job-label";
-          empty.textContent = "No additional jobs staged for this station.";
-          queueWrapper.appendChild(empty);
-        } else {
-          queue.forEach((job, index) => {
-            const item = document.createElement("div");
-            item.className = "station-queue-item";
-
-            const top = document.createElement("div");
-            top.className = "station-queue-item-top";
-            top.innerHTML = `
+      <!-- STATION GRID -->
+      <section id="stationsGrid" class="sd-stations view-expanded">
+        <!-- Example station cards (these will later be driven by data) -->
+        <article class="sd-station-card sd-status-running"
+                 data-status="running" data-line="A" data-station="ST-01">
+          <div class="sd-station-header">
+            <div>
+              <div class="sd-station-title">Station 1 — Panel Assembly</div>
+              <div class="sd-station-sub">Line A · ST-01</div>
+            </div>
+            <div class="sd-status-pill">
+              <span class="sd-status-dot"></span>
+              <span>Running</span>
+            </div>
+          </div>
+
+          <div class="sd-station-main">
+            <div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Current job</div>
+                <div class="sd-job-value">JOB-1001</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Description</div>
+                <div class="sd-job-value">Panel Assembly</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Due</div>
+                <div class="sd-job-value">Nov 30</div>
+              </div>
+
+              <div class="sd-progress-wrap">
+                <div class="sd-progress-label">
+                  <span>Progress</span>
+                  <span>40 / 50 pcs</span>
+                </div>
+                <div class="sd-progress-bar">
+                  <div class="sd-progress-fill" style="width:80%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-metrics">
               <div>
-                <div class="job-label">Queued job</div>
-                <div class="job-main">${job.id}</div>
+                <div class="sd-metric-label">Pace vs std</div>
+                <div class="sd-metric-value">104%</div>
               </div>
-              <div class="${priorityBadgeClass(job.priority)}">
-                Priority: ${job.priority || "normal"}
+              <div>
+                <div class="sd-metric-label">Units this hour</div>
+                <div class="sd-metric-value">12</div>
               </div>
-            `;
-            item.appendChild(top);
+              <div>
+                <div class="sd-metric-label">Material OK</div>
+                <div class="sd-metric-value">Yes</div>
+              </div>
+            </div>
+          </div>
 
-            const meta = document.createElement("div");
-            meta.className = "station-queue-item-meta";
-            meta.innerHTML = `
-              <span>${job.part}</span>
-              <span>${job.qtyTotal ?? 0} pcs</span>
-              <span>Due ${job.due || "-"}</span>
-            `;
-            item.appendChild(meta);
+          <div class="sd-station-actions">
+            <span class="sd-action-chip">✔ Mark complete</span>
+            <span class="sd-action-chip">📦 Request material</span>
+            <span class="sd-action-chip">↪ Move to next station</span>
+            <span class="sd-action-chip">⚠ Flag issue</span>
+          </div>
+        </article>
 
-            const actions = document.createElement("div");
-            actions.className = "station-queue-item-actions";
+        <article class="sd-station-card sd-status-waiting"
+                 data-status="waiting" data-line="A" data-station="ST-02">
+          <div class="sd-station-header">
+            <div>
+              <div class="sd-station-title">Station 2 — Frame Assembly</div>
+              <div class="sd-station-sub">Line A · ST-02</div>
+            </div>
+            <div class="sd-status-pill">
+              <span class="sd-status-dot"></span>
+              <span>Waiting material</span>
+            </div>
+          </div>
 
-            const btnToNext = document.createElement("button");
-            btnToNext.className = "mini-btn";
-            btnToNext.textContent = "Send to next job section";
-            btnToNext.onclick = () => promoteQueueJobToNext(st.id, index);
+          <div class="sd-station-main">
+            <div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Current job</div>
+                <div class="sd-job-value">JOB-1005</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Description</div>
+                <div class="sd-job-value">Frame Assembly</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Due</div>
+                <div class="sd-job-value">Nov 29</div>
+              </div>
 
-            const btnToCurrent = document.createElement("button");
-            btnToCurrent.className = "mini-btn mini-btn-primary";
-            btnToCurrent.textContent = "Send to current job section";
-            btnToCurrent.onclick = () => promoteQueueJobToCurrent(st.id, index);
+              <div class="sd-progress-wrap">
+                <div class="sd-progress-label">
+                  <span>Progress</span>
+                  <span>18 / 40 pcs</span>
+                </div>
+                <div class="sd-progress-bar">
+                  <div class="sd-progress-fill" style="width:45%"></div>
+                </div>
+              </div>
+            </div>
 
-            actions.appendChild(btnToNext);
-            actions.appendChild(btnToCurrent);
-            item.appendChild(actions);
+            <div class="sd-metrics">
+              <div>
+                <div class="sd-metric-label">Pace vs std</div>
+                <div class="sd-metric-value">88%</div>
+              </div>
+              <div>
+                <div class="sd-metric-label">Units this hour</div>
+                <div class="sd-metric-value">4</div>
+              </div>
+              <div>
+                <div class="sd-metric-label">Material OK</div>
+                <div class="sd-metric-value">No</div>
+              </div>
+            </div>
+          </div>
 
-            queueWrapper.appendChild(item);
-          });
-        }
+          <div class="sd-station-actions">
+            <span class="sd-action-chip">📦 Request material</span>
+            <span class="sd-action-chip">📝 Add note</span>
+            <span class="sd-action-chip">⚠ Escalate</span>
+          </div>
+        </article>
 
-        card.appendChild(queueWrapper);
+        <article class="sd-station-card sd-status-blocked"
+                 data-status="blocked" data-line="B" data-station="ST-03">
+          <div class="sd-station-header">
+            <div>
+              <div class="sd-station-title">Station 3 — Final Inspection</div>
+              <div class="sd-station-sub">Line B · ST-03</div>
+            </div>
+            <div class="sd-status-pill">
+              <span class="sd-status-dot"></span>
+              <span>Blocked</span>
+            </div>
+          </div>
 
-        container.appendChild(card);
+          <div class="sd-station-main">
+            <div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Current job</div>
+                <div class="sd-job-value">JOB-1012</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Description</div>
+                <div class="sd-job-value">QC & Pack</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Due</div>
+                <div class="sd-job-value">Today</div>
+              </div>
+
+              <div class="sd-progress-wrap">
+                <div class="sd-progress-label">
+                  <span>Progress</span>
+                  <span>6 / 20 pcs</span>
+                </div>
+                <div class="sd-progress-bar">
+                  <div class="sd-progress-fill" style="width:30%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-metrics">
+              <div>
+                <div class="sd-metric-label">Issue</div>
+                <div class="sd-metric-value">Rework</div>
+              </div>
+              <div>
+                <div class="sd-metric-label">Time blocked</div>
+                <div class="sd-metric-value">32 min</div>
+              </div>
+              <div>
+                <div class="sd-metric-label">Support</div>
+                <div class="sd-metric-value">Requested</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sd-station-actions">
+            <span class="sd-action-chip">🛠 Open issue</span>
+            <span class="sd-action-chip">👀 Request supervisor</span>
+            <span class="sd-action-chip">↪ Reassign job</span>
+          </div>
+        </article>
+
+        <!-- Add more demo stations or generate via JS once wired to Supabase -->
+      </section>
+    </main>
+  </div>
+
+  <!-- ACTION DRAWER -->
+  <div class="sd-drawer-backdrop" id="drawerBackdrop">
+    <div class="sd-drawer">
+      <div class="sd-drawer-header">
+        <div>
+          <div class="sd-drawer-title" id="drawerTitle">Station details</div>
+          <div class="sd-top-meta" id="drawerSubtitle">Line · Station · Current job</div>
+        </div>
+        <button class="sd-drawer-close" id="drawerClose">Close</button>
+      </div>
+
+      <div>
+        <div class="sd-drawer-section-label">Snapshot</div>
+        <div class="sd-drawer-box" id="drawerSnapshot">
+          Select a station to see live details.
+        </div>
+
+        <div class="sd-drawer-section-label">Quick actions</div>
+        <div class="sd-drawer-actions">
+          <button class="sd-drawer-btn sd-primary">Mark job complete</button>
+          <button class="sd-drawer-btn">Request material</button>
+          <button class="sd-drawer-btn">Move to next station</button>
+          <button class="sd-drawer-btn">Log issue</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- Date label ---
+    const dateEl = document.getElementById('sd-date');
+    const now = new Date();
+    dateEl.textContent = now.toLocaleDateString(undefined, {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric'
+    });
+
+    // --- Theme toggle ---
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('light');
+    });
+
+    // --- Sidebar toggle (hamburger) ---
+    const shell = document.querySelector('.sd-shell');
+    const sidebar = document.querySelector('.sd-sidebar');
+    const toggleSidebarGlobal = document.getElementById('toggleSidebarGlobal');
+
+    toggleSidebarGlobal.addEventListener('click', () => {
+      if (window.innerWidth <= 920) {
+        sidebar.classList.toggle('open');
+      } else {
+        shell.classList.toggle('sidebar-collapsed');
+      }
+    });
+
+
+    // --- View toggle (compact / expanded) ---
+    const stationsGrid = document.getElementById('stationsGrid');
+    document.querySelectorAll('[data-view-main]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('[data-view-main]').forEach(b => b.classList.remove('sd-view-active'));
+        btn.classList.add('sd-view-active');
+
+        const view = btn.getAttribute('data-view-main');
+        stationsGrid.classList.toggle('view-compact', view === 'compact');
       });
+    });
 
-      document.getElementById("station-count-label").textContent =
-        list.length + " stations in view";
-    }
+    // Sidebar view chips keep in sync
+    document.querySelectorAll('.sd-chip[data-view]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.sd-chip[data-view]').forEach(c => c.classList.remove('sd-chip-active'));
+        chip.classList.add('sd-chip-active');
 
-    // Global queue
-
-    function renderQueue() {
-      const tbody = document.getElementById("queue-table-body");
-      const countEl = document.getElementById("queue-count-label");
-      const emptyEl = document.getElementById("queue-empty-label");
-
-      if (!tbody) return;
-
-      tbody.innerHTML = "";
-
-      if (!globalQueue.length) {
-        if (countEl) countEl.textContent = "0 jobs";
-        if (emptyEl) emptyEl.style.display = "block";
-        return;
-      }
-
-      if (emptyEl) emptyEl.style.display = "none";
-
-      globalQueue.forEach((job) => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>${job.id}</td>
-          <td>${job.part}</td>
-          <td>${job.qtyTotal}</td>
-          <td>${job.due || "-"}</td>
-        `;
-
-        tr.addEventListener("click", () => {
-          [...tbody.children].forEach((row) =>
-            row.classList.remove("queue-row-selected")
-          );
-          tr.classList.add("queue-row-selected");
-          openAssignPrompt(job);
-        });
-
-        tbody.appendChild(tr);
+        const view = chip.getAttribute('data-view');
+        const mainBtn = document.querySelector(`[data-view-main="${view}"]`);
+        mainBtn?.click();
       });
+    });
 
-      if (countEl) {
-        countEl.textContent = `${globalQueue.length} job${
-          globalQueue.length === 1 ? "" : "s"
-        }`;
-      }
-    }
+    // --- Status + line filtering ---
+    function applyFilters() {
+      const activeStatusChip = document.querySelector('.sd-chip[data-status].sd-chip-active');
+      const activeLineChip = document.querySelector('.sd-chip[data-line].sd-chip-active');
+      const statusFilter = activeStatusChip?.getAttribute('data-status') || 'all';
+      const lineFilter = activeLineChip?.getAttribute('data-line') || 'all';
 
-    function parseCSV(text) {
-      const rows = text
-        .split(/\r?\n/)
-        .map((r) => r.trim())
-        .filter(Boolean);
-      if (rows.length <= 1) return;
-
-      const dataRows = rows.slice(1);
-
-      globalQueue = dataRows.map((line) => {
-        const [jobId, part, qty, due] = line.split(",");
-
-        return {
-          id: (jobId || "").trim(),
-          part: (part || "").trim(),
-          qtyTotal: parseInt((qty || "0").trim(), 10) || 0,
-          due: (due || "").trim(),
-          priority: "normal",
-        };
+      document.querySelectorAll('.sd-station-card').forEach(card => {
+        const s = card.getAttribute('data-status');
+        const l = card.getAttribute('data-line');
+        const statusMatch = statusFilter === 'all' || s === statusFilter;
+        const lineMatch = lineFilter === 'all' || l === lineFilter;
+        card.style.display = statusMatch && lineMatch ? '' : 'none';
       });
-
-      renderQueue();
-
-      const sheet = document.getElementById("queue-sheet");
-      if (sheet) sheet.hidden = false;
     }
 
-    function openAssignPrompt(job) {
-      const stationId = prompt(
-        `Assign job ${job.id} (${job.part}) to which station ID?`
-      );
-      if (!stationId) return;
+    document.querySelectorAll('.sd-chip[data-status]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.sd-chip[data-status]').forEach(c => c.classList.remove('sd-chip-active'));
+        chip.classList.add('sd-chip-active');
+        applyFilters();
+      });
+    });
 
-      const qty = prompt(
-        `How many units of ${job.id} to assign to ${stationId}? (Total: ${job.qtyTotal})`
-      );
-      if (!qty) return;
+    document.querySelectorAll('.sd-chip[data-line]').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.sd-chip[data-line]').forEach(c => c.classList.remove('sd-chip-active'));
+        chip.classList.add('sd-chip-active');
+        applyFilters();
+      });
+    });
 
-      alert(
-        `Assigned ${qty} units of ${job.id} to station ${stationId}.\n\n` +
-          "Next step: wire this into Supabase station_assignments."
-      );
+    // Priority strip shortcuts
+    document.querySelectorAll('.sd-priority-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        const status = pill.getAttribute('data-status-filter');
+        if (!status) return;
+        const chip = document.querySelector(`.sd-chip[data-status="${status}"]`);
+        chip?.click();
+      });
+    });
+
+    // --- Action drawer ---
+    const drawerBackdrop = document.getElementById('drawerBackdrop');
+    const drawerClose = document.getElementById('drawerClose');
+    const drawerTitle = document.getElementById('drawerTitle');
+    const drawerSubtitle = document.getElementById('drawerSubtitle');
+    const drawerSnapshot = document.getElementById('drawerSnapshot');
+
+    function openDrawerFromCard(card) {
+      const stationTitle = card.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
+      const stationSub = card.querySelector('.sd-station-sub')?.textContent.trim() || '';
+      const jobId = card.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
+      const progressLabel = card.querySelector('.sd-progress-label span:last-child')?.textContent.trim() || '';
+
+      drawerTitle.textContent = stationTitle;
+      drawerSubtitle.textContent = `${stationSub} · ${jobId}`;
+
+      drawerSnapshot.innerHTML = `
+        <div><strong>Current job:</strong> ${jobId}</div>
+        <div><strong>Progress:</strong> ${progressLabel}</div>
+        <div style="margin-top:6px; font-size:11px; color:#9ca3af;">
+          (Later this will show live metrics from your data source: pace vs standard, 
+          last update timestamp, and any open issues.)
+        </div>
+      `;
+
+      drawerBackdrop.classList.add('open');
     }
 
-    function simulateCompleteJob(stationId) {
-      openCompleteModal(stationId);
+    document.querySelectorAll('.sd-station-card').forEach(card => {
+      card.addEventListener('click', (evt) => {
+        // Avoid treating inline buttons as separate for now – whole card opens drawer
+        openDrawerFromCard(card);
+      });
+    });
+
+    drawerClose.addEventListener('click', () => {
+      drawerBackdrop.classList.remove('open');
+    });
+
+    drawerBackdrop.addEventListener('click', (e) => {
+      if (e.target === drawerBackdrop) {
+        drawerBackdrop.classList.remove('open');
+      }
+    });
+
+  // Close drawer with ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      drawerBackdrop.classList.remove('open');
     }
-
-    async function doCompleteJob(stationId) {
-      const st = stations.find((s) => s.id === stationId);
-
-      if (!st || !st.currentJob) {
-        alert("No active job on " + stationId + " to complete.");
-        return;
-      }
-
-      const jobId = st.currentJob.id;
-      const qtyTotal = st.currentJob.qtyTotal ?? 0;
-
-      try {
-        const { error: jobErr } = await supabase
-          .from("jobs")
-          .update({ status: "completed" })
-          .eq("id", jobId);
-
-        if (jobErr) {
-          console.error("Error updating job status:", jobErr);
-          alert("Could not mark job as completed (cloud error).");
-          return;
-        }
-
-        const { error: assignErr } = await supabase
-          .from("station_assignments")
-          .update({ qty_done: qtyTotal })
-          .eq("station_id", stationId)
-          .eq("job_id", jobId);
-
-        if (assignErr) {
-          console.error("Error updating station assignment:", assignErr);
-          alert("Job completed in UI, but assignment update failed in cloud.");
-        }
-
-        const { error: perfErr } = await supabase
-          .from("performance_logs")
-          .insert({
-            station_id: stationId,
-            job_id: jobId,
-            qty_completed: qtyTotal,
-          });
-
-        if (perfErr) {
-          console.error("Error inserting performance log:", perfErr);
-        }
-
-        const { error: stationErr } = await supabase
-          .from("stations")
-          .update({ status: "idle" })
-          .eq("id", stationId);
-
-        if (stationErr) {
-          console.error("Error updating station status to idle:", stationErr);
-          alert("Could not update station status in cloud.");
-        }
-
-        metrics.completedToday += 1;
-        metrics.completedOnTimeRate = Math.min(
-          100,
-          metrics.completedOnTimeRate + 1
-        );
-
-        const next = st.nextJob || null;
-        st.currentJob = next;
-        st.nextJob = null;
-
-        if (st.currentJob) {
-          st.status = "running";
-        } else {
-          st.status = "idle";
-        }
-
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-      } catch (err) {
-        console.error("Unexpected error completing job:", err);
-        alert("Unexpected error while completing job.");
-      }
-    }
-
-    async function simulateBlocked(stationId) {
-      try {
-        const { error } = await supabase
-          .from("stations")
-          .update({ status: "blocked" })
-          .eq("id", stationId);
-
-        if (error) {
-          console.error("Error updating station status:", error);
-          alert("Could not mark station as blocked (cloud error).");
-          return;
-        }
-
-        const st = stations.find((s) => s.id === stationId);
-        if (st) {
-          st.status = "blocked";
-        }
-
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-      } catch (err) {
-        console.error("Unexpected error in simulateBlocked:", err);
-        alert("Unexpected error marking station blocked.");
-      }
-    }
-
-    async function simulateIdle(stationId) {
-      try {
-        const { error } = await supabase
-          .from("stations")
-          .update({ status: "idle" })
-          .eq("id", stationId);
-
-        if (error) {
-          console.error("Error updating station to idle:", error);
-          alert("Could not set station to idle (cloud error).");
-          return;
-        }
-
-        const st = stations.find((s) => s.id === stationId);
-        if (st) {
-          st.status = "idle";
-        }
-
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-      } catch (err) {
-        console.error("Unexpected error in simulateIdle:", err);
-        alert("Unexpected error setting station idle.");
-      }
-    }
-
-        async function simulateRunning(stationId) {
-      try {
-        const { error } = await supabase
-          .from("stations")
-          .update({ status: "running" })
-          .eq("id", stationId);
-
-        if (error) {
-          console.error("Error updating station to running:", error);
-          alert("Could not set station to running (cloud error).");
-          return;
-        }
-
-        const st = stations.find((s) => s.id === stationId);
-        if (st) {
-          st.status = "running";
-        }
-
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-      } catch (err) {
-        console.error("Unexpected error in simulateRunning:", err);
-        alert("Unexpected error setting station running.");
-      }
-    }
-
-    async function simulateAssignFromQueue(jobId) {
-      const idx = globalQueue.findIndex((j) => j.id === jobId);
-      if (idx === -1) return;
-
-      const job = globalQueue[idx];
-
-      const idleStation = stations.find(
-        (s) => s.status === "idle" && !s.currentJob
-      );
-
-      if (!idleStation) {
-        alert("No idle station available to assign this job.");
-        return;
-      }
-
-      try {
-        const { error: assignErr } = await supabase
-          .from("station_assignments")
-          .insert({
-            station_id: idleStation.id,
-            job_id: job.id,
-            qty_done: 0,
-          });
-
-        if (assignErr) {
-          console.error("Error inserting station assignment:", assignErr);
-          alert("Could not assign job in cloud (assignment failed).");
-          return;
-        }
-
-        const { error: jobErr } = await supabase
-          .from("jobs")
-          .update({ status: "running" })
-          .eq("id", job.id);
-
-        if (jobErr) {
-          console.error("Error updating job status to running:", jobErr);
-          alert("Job assigned locally, but could not update job status in cloud.");
-        }
-
-        idleStation.currentJob = {
-          id: job.id,
-          part: job.part,
-          qtyTotal: job.qtyTotal,
-          qtyDone: 0,
-          due: job.due,
-          priority: job.priority,
-        };
-        idleStation.status = "running";
-
-        globalQueue.splice(idx, 1);
-
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-        renderQueue();
-      } catch (err) {
-        console.error("Unexpected error in simulateAssignFromQueue:", err);
-        alert("Unexpected error while assigning job.");
-      }
-    }
-
-    async function simulateDropFromQueue(jobId) {
-      const idx = globalQueue.findIndex((j) => j.id === jobId);
-      if (idx === -1) return;
-
-      try {
-        const { error: jobErr } = await supabase
-          .from("jobs")
-          .update({ status: "dropped" })
-          .eq("id", jobId);
-
-        if (jobErr) {
-          console.error("Error updating job status to dropped:", jobErr);
-          alert("Could not drop job from queue (cloud error).");
-          return;
-        }
-
-        globalQueue.splice(idx, 1);
-        renderQueue();
-      } catch (err) {
-        console.error("Unexpected error in simulateDropFromQueue:", err);
-        alert("Unexpected error while dropping job from queue.");
-      }
-    }
-
-    function simulateNextHour() {
-      const running = stations.filter((s) => s.status === "running");
-      if (!running.length) {
-        alert(
-          "No running stations to simulate — try assigning or starting a job."
-        );
-        return;
-      }
-      const choice = running[Math.floor(Math.random() * running.length)];
-      simulateCompleteJob(choice.id);
-    }
-
-    async function loadInitialData() {
-      try {
-        const [
-          { data: stationRows, error: stationErr },
-          { data: jobRows, error: jobErr },
-          { data: assignRows, error: assignErr },
-          { data: perfRows, error: perfErr },
-        ] = await Promise.all([
-          supabase.from("stations").select("*").order("id"),
-          supabase.from("jobs").select("*"),
-          supabase.from("station_assignments").select("*"),
-          supabase.from("performance_logs").select("*"),
-        ]);
-
-        if (stationErr) throw stationErr;
-        if (jobErr) throw jobErr;
-        if (assignErr) throw assignErr;
-        if (perfErr) throw perfErr;
-
-        const jobsById = new Map(jobRows.map((j) => [j.id, j]));
-        const assignsByStation = new Map();
-        assignRows.forEach((a) => assignsByStation.set(a.station_id, a));
-
-        stations = stationRows.map((stRow) => {
-          const assignment = assignsByStation.get(stRow.id);
-          let currentJob = null;
-
-          if (assignment) {
-            const job = jobsById.get(assignment.job_id);
-            if (job) {
-              currentJob = {
-                id: job.id,
-                part: job.part_name,
-                qtyTotal: job.qty_total,
-                qtyDone: assignment.qty_done,
-                due: job.due_date,
-                priority: job.priority,
-              };
-            }
-          }
-
-          return {
-            id: stRow.id,
-            name: stRow.name,
-            line: stRow.line,
-            status: stRow.status,
-            currentJob,
-            nextJob: null,
-            localQueue: [],
-            _queueOpen: false,
-          };
-        });
-
-        globalQueue = jobRows
-          .filter((j) => j.status === "waiting")
-          .map((job) => ({
-            id: job.id,
-            part: job.part_name,
-            qtyTotal: job.qty_total,
-            due: job.due_date,
-            priority: job.priority,
-          }));
-
-        const totalCompletedEntries = perfRows?.length ?? 0;
-        metrics.completedToday = totalCompletedEntries;
-        metrics.completedOnTimeRate = 92;
-
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-        renderQueue();
-      } catch (err) {
-        console.error("Error loading initial data from Supabase:", err);
-        alert("Error loading data from cloud — using empty demo state.");
-        stations = [];
-        globalQueue = [];
-        recalcRunning();
-        renderMetrics();
-        renderStations();
-        renderQueue();
-      }
-    }
-
-    function init() {
-      document
-        .getElementById("filter-line")
-        .addEventListener("change", renderStations);
-      document
-        .getElementById("filter-status")
-        .addEventListener("change", renderStations);
-      document
-        .getElementById("filter-sort")
-        .addEventListener("change", renderStations);
-
-      // View mode toggle (Compact / Expanded)
-      const compactBtn = document.querySelector('.vc-btn[data-toggle="compact"]');
-      const expandedBtn = document.querySelector('.vc-btn[data-toggle="expanded"]');
-
-      function setViewMode(mode) {
-        viewMode = mode;
-        if (compactBtn && expandedBtn) {
-          compactBtn.classList.toggle("is-active", mode === "compact");
-          expandedBtn.classList.toggle("is-active", mode === "expanded");
-        }
-        renderStations();
-      }
-
-      if (compactBtn) {
-        compactBtn.addEventListener("click", () => setViewMode("compact"));
-      }
-      if (expandedBtn) {
-        expandedBtn.addEventListener("click", () => setViewMode("expanded"));
-      }
-
-      // Default view mode when page loads
-      setViewMode("expanded");
-
-      const queueSheet = document.getElementById("queue-sheet");
-      const queueSheetClose = document.getElementById("queue-sheet-close");
-      const queueFileInput = document.getElementById("queue-file-input");
-
-      document
-        .getElementById("btn-refresh")
-        .addEventListener("click", () => {
-          loadInitialData();
-        });
-
-      document
-        .getElementById("btn-scroll-queue")
-        .addEventListener("click", () => {
-          if (queueSheet) queueSheet.hidden = false;
-        });
-
-      if (queueSheetClose) {
-        queueSheetClose.addEventListener("click", () => {
-          queueSheet.hidden = true;
-        });
-      }
-
-      document
-        .getElementById("btn-simulate")
-        .addEventListener("click", simulateNextHour);
-
-      document
-        .getElementById("modal-cancel")
-        .addEventListener("click", closeCompleteModal);
-
-      document
-        .getElementById("modal-confirm")
-        .addEventListener("click", async () => {
-          if (pendingCompleteStationId) {
-            const id = pendingCompleteStationId;
-            closeCompleteModal();
-            await doCompleteJob(id);
-          } else {
-            closeCompleteModal();
-          }
-        });
-
-      document
-        .getElementById("report-modal-cancel")
-        .addEventListener("click", closeReportModal);
-
-      document
-        .getElementById("report-modal-submit")
-        .addEventListener("click", submitReportModal);
-
-      document.addEventListener("keydown", (evt) => {
-  if (evt.key === "Escape") {
-    const backdrop = document.getElementById("report-modal-backdrop");
-    if (backdrop && backdrop.style.display === "flex") {
-      closeReportModal();
-    }
-  }
 });
 
-// Close any open station-status menus when clicking outside
-document.addEventListener("click", (evt) => {
-  if (!evt.target.closest(".station-status-wrapper")) {
-    document
-      .querySelectorAll(".station-status-menu.is-open")
-      .forEach((menu) => menu.classList.remove("is-open"));
-    document
-      .querySelectorAll(".station-card.status-menu-open")
-      .forEach((card) => card.classList.remove("status-menu-open"));
-  }
-});
 
-      if (queueFileInput) {
-        queueFileInput.addEventListener("change", async (evt) => {
-          const file = evt.target.files[0];
-          if (!file) return;
-
-          if (file.name.endsWith(".csv")) {
-            const text = await file.text();
-            parseCSV(text);
-          } else {
-            alert(
-              "Support for Excel (.xlsm/.xlsx) coming next. Convert to CSV for now."
-            );
-          }
-        });
-      }
-
-      loadInitialData();
-    }
-
-    document.addEventListener("DOMContentLoaded", init);
+    // TODO: When you’re ready, replace the hard-coded station cards with
+    // data-driven rendering from your Supabase queries. Keep the same
+    // structure & data-* attributes (data-status, data-line, data-station)
+    // so the filters and drawer logic continue to work.
   </script>
 </body>
 </html>
