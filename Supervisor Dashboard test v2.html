@@ -1294,8 +1294,30 @@ body.light .sd-hamburger {
 
     document.querySelectorAll('.sd-station-card').forEach(card => {
       card.addEventListener('click', (evt) => {
-        // Avoid treating inline buttons as separate for now – whole card opens drawer
+        // If the click came from an action chip, do NOT open the drawer
+        if (evt.target.closest('.sd-action-chip')) {
+          return;
+        }
+
+        // Otherwise, treat it as a card click and open the drawer
         openDrawerFromCard(card);
+      });
+    });
+
+    // --- Inline station action chips (mark complete, request material, etc.) ---
+    document.querySelectorAll('.sd-action-chip').forEach(chip => {
+      chip.addEventListener('click', (evt) => {
+        // Prevent the click from bubbling up to the card
+        evt.stopPropagation();
+
+        const actionText = chip.textContent.trim();
+        const card = chip.closest('.sd-station-card');
+        const stationTitle = card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
+        const jobId = card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
+
+        // 🔧 TODO: replace this with real logic (Supabase update, etc.)
+        console.log(`Action clicked: ${actionText} on ${stationTitle} (${jobId})`);
+        alert(`TODO: ${actionText} for ${stationTitle} (${jobId})`);
       });
     });
 
