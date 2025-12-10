@@ -699,6 +699,9 @@ body.light .sd-hamburger {
       background: rgba(15, 23, 42, 0.9);
       color: var(--text-muted);
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition:
         background 0.16s ease,
         border-color 0.16s ease,
@@ -724,6 +727,48 @@ body.light .sd-hamburger {
       background: #f97316;
       border-color: #ea580c;
       color: #111827;
+    }
+
+    /* --- "More actions" dropdown --- */
+    .sd-more-wrapper {
+      position: relative;
+    }
+
+    .sd-more-toggle {
+      min-width: 110px;
+      justify-content: center;
+    }
+
+    .sd-more-menu {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 6px;
+      padding: 6px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 18px 36px rgba(15, 23, 42, 0.9);
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      z-index: 60;
+    }
+
+    .sd-more-wrapper.open .sd-more-menu {
+      display: flex;
+    }
+
+    .sd-more-menu .sd-action-chip {
+      width: 100%;
+      justify-content: flex-start;
+    }
+
+    /* Light mode dropdown look */
+    body.light .sd-more-menu {
+      background: #ffffff;
+      border-color: #e5e7eb;
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
     }
 
     /* Compact view */
@@ -1033,12 +1078,26 @@ body.light .sd-hamburger {
           </div>
 
           <div class="sd-station-actions">
+            <!-- Primary actions (always visible) -->
             <span class="sd-action-chip">✔ Mark complete</span>
             <span class="sd-action-chip">📦 Request material</span>
-            <span class="sd-action-chip">↪ Move to next station</span>
-            <span class="sd-action-chip">⚠ Flag issue</span>
             <span class="sd-action-chip">🔄 Change status</span>
+
+            <!-- More actions dropdown -->
+            <div class="sd-more-wrapper">
+              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+              <div class="sd-more-menu">
+                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+              </div>
+            </div>
           </div>
+
         </article>
 
         <article class="sd-station-card sd-status-waiting"
@@ -1097,11 +1156,25 @@ body.light .sd-hamburger {
           </div>
 
           <div class="sd-station-actions">
+            <!-- Primary actions (always visible) -->
+            <span class="sd-action-chip">✔ Mark complete</span>
             <span class="sd-action-chip">📦 Request material</span>
-            <span class="sd-action-chip">📝 Add note</span>
-            <span class="sd-action-chip">⚠ Escalate</span>
+            <span class="sd-action-chip">🔄 Change status</span>
+
+            <!-- More actions dropdown -->
+            <div class="sd-more-wrapper">
+              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+              <div class="sd-more-menu">
+                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+              </div>
+            </div>
           </div>
-        </article>
 
         <article class="sd-station-card sd-status-blocked"
                  data-status="blocked" data-line="B" data-station="ST-03">
@@ -1159,11 +1232,25 @@ body.light .sd-hamburger {
           </div>
 
           <div class="sd-station-actions">
-            <span class="sd-action-chip">🛠 Open issue</span>
-            <span class="sd-action-chip">👀 Request supervisor</span>
-            <span class="sd-action-chip">↪ Reassign job</span>
+            <!-- Primary actions (always visible) -->
+            <span class="sd-action-chip">✔ Mark complete</span>
+            <span class="sd-action-chip">📦 Request material</span>
+            <span class="sd-action-chip">🔄 Change status</span>
+
+            <!-- More actions dropdown -->
+            <div class="sd-more-wrapper">
+              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+              <div class="sd-more-menu">
+                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+              </div>
+            </div>
           </div>
-        </article>
 
         <!-- Add more demo stations or generate via JS once wired to Supabase -->
       </section>
@@ -1360,26 +1447,53 @@ body.light .sd-hamburger {
 
         const actionText = chip.textContent.trim();
         const card = chip.closest('.sd-station-card');
-        const stationTitle = card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
-        const jobId = card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
+        const stationTitle =
+          card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
+        const jobId =
+          card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
 
-        // If operator clicks "Change status", open drawer directly to status section
+        // 1) "More actions" toggle
+        if (chip.classList.contains('sd-more-toggle')) {
+          const wrapper = chip.closest('.sd-more-wrapper');
+          const isOpen = wrapper.classList.contains('open');
+
+          // Close all menus first
+          document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
+
+          // Re-open this one if it was previously closed
+          if (!isOpen) wrapper.classList.add('open');
+          return;
+        }
+
+        // If this click came from inside a dropdown menu, close that menu
+        const wrapper = chip.closest('.sd-more-wrapper');
+        if (wrapper) {
+          wrapper.classList.remove('open');
+        }
+
+        // 2) "Change status" → open drawer + focus status dropdown
         if (actionText.includes("Change status")) {
           openDrawerFromCard(card);
 
-          // Optional: sync dropdown to current status
           const currentStatus = card.getAttribute('data-status') || 'running';
           const statusSelectEl = document.getElementById('statusSelect');
           statusSelectEl.value = currentStatus;
           statusSelectEl.focus();
 
-          return; // Don't run the generic alert/console below
+          return; // Don't run generic logic
         }
 
-        // 🔧 TODO: replace this with real logic (Supabase update, etc.)
+        // 3) Default placeholder (later this will call Supabase, etc.)
         console.log(`Action clicked: ${actionText} on ${stationTitle} (${jobId})`);
         alert(`TODO: ${actionText} for ${stationTitle} (${jobId})`);
       });
+    });
+
+    // Close any open "More actions" menus when clicking outside them
+    document.addEventListener('click', (evt) => {
+      if (!evt.target.closest('.sd-more-wrapper')) {
+        document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
+      }
     });
 
     drawerClose.addEventListener('click', () => {
