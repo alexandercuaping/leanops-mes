@@ -591,6 +591,7 @@ body.light .sd-hamburger {
     .sd-status-running .sd-status-dot { background: var(--ok); }
     .sd-status-waiting .sd-status-dot { background: var(--warn); }
     .sd-status-blocked .sd-status-dot { background: var(--danger); }
+    .sd-status-idle .sd-status-dot { background: var(--idle); }
 
     body.light .sd-status-pill {
       background: #f9fafb;
@@ -697,11 +698,32 @@ body.light .sd-hamburger {
       padding: 5px 9px;
       background: rgba(15, 23, 42, 0.9);
       color: var(--text-muted);
+      cursor: pointer;
+      transition:
+        background 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        transform 0.12s ease;
+    }
+
+    /* Hover state for action chips (dark mode) */
+    .sd-action-chip:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: #fef3c7;
+      transform: translateY(-1px);
     }
 
     body.light .sd-action-chip {
       background: #ffffff;
       color: #4b5563;
+    }
+
+    /* Hover state for action chips (light mode) */
+    body.light .sd-action-chip:hover {
+      background: #f97316;
+      border-color: #ea580c;
+      color: #111827;
     }
 
     /* Compact view */
@@ -715,6 +737,13 @@ body.light .sd-hamburger {
 
     /* ---------- Action drawer ---------- */
 
+    /* Light-mode styling for the status dropdown */
+    body.light #statusSelect {
+      background: #ffffff !important;
+      color: #111827 !important;
+      border-color: #d1d5db !important;
+    }
+    
     .sd-drawer-backdrop {
       position: fixed;
       inset: 0;
@@ -1008,6 +1037,7 @@ body.light .sd-hamburger {
             <span class="sd-action-chip">📦 Request material</span>
             <span class="sd-action-chip">↪ Move to next station</span>
             <span class="sd-action-chip">⚠ Flag issue</span>
+            <span class="sd-action-chip">🔄 Change status</span>
           </div>
         </article>
 
@@ -1156,6 +1186,24 @@ body.light .sd-hamburger {
         <div class="sd-drawer-box" id="drawerSnapshot">
           Select a station to see live details.
         </div>
+
+        <div class="sd-drawer-section-label">Status</div>
+        <div class="sd-drawer-box">
+          <select id="statusSelect" style="
+              width: 100%;
+              padding: 6px;
+              border-radius: 8px;
+              background: #0f172a;
+              color: #e5e7eb;
+              border: 1px solid rgba(148,163,184,0.6);
+            ">
+            <option value="running">Running</option>
+            <option value="waiting">Waiting</option>
+            <option value="blocked">Blocked</option>
+            <option value="idle">Idle</option>
+          </select>
+        </div>
+
 
         <div class="sd-drawer-section-label">Quick actions</div>
         <div class="sd-drawer-actions">
@@ -1315,6 +1363,19 @@ body.light .sd-hamburger {
         const stationTitle = card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
         const jobId = card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
 
+        // If operator clicks "Change status", open drawer directly to status section
+        if (actionText.includes("Change status")) {
+          openDrawerFromCard(card);
+
+          // Optional: sync dropdown to current status
+          const currentStatus = card.getAttribute('data-status') || 'running';
+          const statusSelectEl = document.getElementById('statusSelect');
+          statusSelectEl.value = currentStatus;
+          statusSelectEl.focus();
+
+          return; // Don't run the generic alert/console below
+        }
+
         // 🔧 TODO: replace this with real logic (Supabase update, etc.)
         console.log(`Action clicked: ${actionText} on ${stationTitle} (${jobId})`);
         alert(`TODO: ${actionText} for ${stationTitle} (${jobId})`);
@@ -1337,6 +1398,53 @@ body.light .sd-hamburger {
       drawerBackdrop.classList.remove('open');
     }
 });
+
+    // --- Status dropdown -> update card status ---
+    const statusSelectEl = document.getElementById('statusSelect');
+
+    statusSelectEl.addEventListener('change', function () {
+      const newStatus = this.value;
+
+      // Find the card currently shown in the drawer
+      const title = drawerTitle.textContent.trim();
+      const matchingCard = [...document.querySelectorAll('.sd-station-card')]
+        .find(c => c.querySelector('.sd-station-title')?.textContent.trim() === title);
+
+      if (!matchingCard) return;
+
+      // Update data-status (so filters & logic use the new value)
+      matchingCard.setAttribute('data-status', newStatus);
+
+      // Remove old status classes
+      matchingCard.classList.remove(
+        'sd-status-running',
+        'sd-status-waiting',
+        'sd-status-blocked',
+        'sd-status-idle'
+      );
+
+      // Add the new one
+      matchingCard.classList.add(`sd-status-${newStatus}`);
+
+      // Update pill label & dot color
+      const pillLabel = matchingCard.querySelector('.sd-status-pill span:last-child');
+      const dot = matchingCard.querySelector('.sd-status-dot');
+
+      if (pillLabel) {
+        pillLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
+      }
+
+      if (dot) {
+        if (newStatus === 'running') dot.style.background = 'var(--ok)';
+        else if (newStatus === 'waiting') dot.style.background = 'var(--warn)';
+        else if (newStatus === 'blocked') dot.style.background = 'var(--danger)';
+        else dot.style.background = 'var(--idle)';
+      }
+
+      // Re-apply filters so this card may hide/show correctly based on new status
+      applyFilters();
+    });
+
 
 
     // TODO: When you’re ready, replace the hard-coded station cards with
