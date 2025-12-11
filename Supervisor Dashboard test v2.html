@@ -521,6 +521,7 @@ body.light .sd-hamburger {
 
     .sd-station-card {
       position: relative;
+      z-index: 0; /* baseline, so active card can sit above others */
       border-radius: var(--radius-lg);
       background: linear-gradient(145deg, #020617, #020617 35%, #020617 100%);
       border: 1px solid rgba(15, 23, 42, 0.9);
@@ -534,6 +535,12 @@ body.light .sd-hamburger {
       cursor: pointer;
       transition: transform 0.16s ease, box-shadow 0.18s ease, border-color 0.18s ease;
     }
+
+    /* When a card's More-actions menu is open, float it above neighbors */
+    .sd-station-card.sd-card-active {
+      z-index: 100;
+    }
+
 
     .sd-station-card:hover {
       transform: translateY(-3px);
@@ -796,12 +803,80 @@ body.light .sd-hamburger {
       border: 1px solid rgba(148, 163, 184, 0.6);
       background: rgba(15, 23, 42, 0.85);
       color: var(--text-muted);
+      cursor: pointer;
+      transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
+    }
+
+    .sd-queue-pill:hover {
+      border-color: var(--accent);
+      color: #fef3c7;
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .sd-queue-pill.sd-queue-pill-active {
+      border-color: var(--accent);
+      color: #fef3c7;
+      background: var(--accent-soft);
     }
 
     body.light .sd-queue-pill {
       background: #f9fafb;
       color: #4b5563;
       border-color: #e5e7eb;
+    }
+
+    body.light .sd-queue-pill:hover,
+    body.light .sd-queue-pill.sd-queue-pill-active {
+      background: #f97316;
+      border-color: #ea580c;
+      color: #111827;
+    }
+
+    /* --- Job move mini-menu inside each card --- */
+    .sd-job-move-menu {
+      position: absolute;
+      right: 16px;
+      bottom: 14px;
+      display: none;
+      flex-direction: column;
+      gap: 4px;
+      padding: 8px 10px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.98);
+      border: 1px solid rgba(148, 163, 184, 0.85);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.9);
+      z-index: 5;
+      font-size: 11px;
+    }
+
+    .sd-job-move-menu button {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      text-align: left;
+      padding: 4px 6px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .sd-job-move-menu button:hover {
+      background: rgba(15, 23, 42, 0.9);
+      color: #fef3c7;
+    }
+
+    body.light .sd-job-move-menu {
+      background: #ffffff;
+      border-color: #e5e7eb;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
+    }
+
+    body.light .sd-job-move-menu button:hover {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .sd-station-card.sd-job-move-open .sd-job-move-menu {
+      display: flex;
     }
 
     /* --- "More actions" dropdown --- */
@@ -1189,7 +1264,15 @@ body.light .sd-hamburger {
               <span class="sd-queue-pill">JOB-1020 · 10 pcs · Tomorrow</span>
             </div>
           </div>
+
+          <!-- Job move menu -->
+          <div class="sd-job-move-menu">
+            <button type="button" data-move-target="current">Move job to current</button>
+            <button type="button" data-move-target="next">Move job to next</button>
+            <button type="button" data-move-target="queue">Move job to queue</button>
+          </div>
         </article>
+
 
         <article class="sd-station-card sd-status-waiting"
                  data-status="waiting" data-line="A" data-station="ST-02">
@@ -1283,7 +1366,15 @@ body.light .sd-hamburger {
               <span class="sd-queue-pill">JOB-1027 · 12 pcs · Tomorrow</span>
             </div>
           </div>
+
+          <!-- Job move menu -->
+          <div class="sd-job-move-menu">
+            <button type="button" data-move-target="current">Move job to current</button>
+            <button type="button" data-move-target="next">Move job to next</button>
+            <button type="button" data-move-target="queue">Move job to queue</button>
+          </div>
         </article>
+
 
         <article class="sd-station-card sd-status-blocked"
                  data-status="blocked" data-line="B" data-station="ST-03">
@@ -1376,6 +1467,13 @@ body.light .sd-hamburger {
               <span class="sd-queue-pill">JOB-1030 · 8 pcs · Today</span>
               <span class="sd-queue-pill">JOB-1034 · 18 pcs · Tomorrow</span>
             </div>
+          </div>
+
+          <!-- Job move menu -->
+          <div class="sd-job-move-menu">
+            <button type="button" data-move-target="current">Move job to current</button>
+            <button type="button" data-move-target="next">Move job to next</button>
+            <button type="button" data-move-target="queue">Move job to queue</button>
           </div>
         </article>
 
@@ -1585,13 +1683,22 @@ body.light .sd-hamburger {
           const wrapper = chip.closest('.sd-more-wrapper');
           const isOpen = wrapper.classList.contains('open');
 
-          // Close all menus first
-          document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
+          // Close all menus first + drop any elevated cards
+          document
+            .querySelectorAll('.sd-more-wrapper')
+            .forEach(w => w.classList.remove('open'));
+          document
+            .querySelectorAll('.sd-station-card')
+            .forEach(c => c.classList.remove('sd-card-active'));
 
-          // Re-open this one if it was previously closed
-          if (!isOpen) wrapper.classList.add('open');
+          if (!isOpen) {
+            wrapper.classList.add('open');
+            // lift this card above others so its menu isn't overlapped
+            card.classList.add('sd-card-active');
+          }
           return;
         }
+
 
         // If this click came from inside a dropdown menu, close that menu
         const wrapper = chip.closest('.sd-more-wrapper');
@@ -1617,12 +1724,29 @@ body.light .sd-hamburger {
       });
     });
 
-    // Close any open "More actions" menus when clicking outside them
-    document.addEventListener('click', (evt) => {
-      if (!evt.target.closest('.sd-more-wrapper')) {
-        document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
-      }
-    });
+   // Close menus when clicking outside them
+  document.addEventListener('click', (evt) => {
+    const target = evt.target;
+
+    // 1) Close "More actions" menus if click is outside them
+    if (!target.closest('.sd-more-wrapper')) {
+      document
+        .querySelectorAll('.sd-more-wrapper.open')
+        .forEach(w => w.classList.remove('open'));
+
+      // also drop any elevated cards
+      document
+        .querySelectorAll('.sd-station-card.sd-card-active')
+        .forEach(c => c.classList.remove('sd-card-active'));
+    }
+
+    // 2) Close job-move menu if click is outside ALL station cards
+    if (!target.closest('.sd-station-card')) {
+      document
+        .querySelectorAll('.sd-station-card.sd-job-move-open')
+        .forEach(card => closeJobMoveForCard(card));
+    }
+  });
 
     drawerClose.addEventListener('click', () => {
       drawerBackdrop.classList.remove('open');
@@ -1634,12 +1758,28 @@ body.light .sd-hamburger {
       }
     });
 
-  // Close drawer with ESC key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' || e.key === 'Esc') {
-      drawerBackdrop.classList.remove('open');
-    }
-});
+    // Close drawer + menus with ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        // 1) Close the right-hand drawer
+        drawerBackdrop.classList.remove('open');
+
+        // 2) Close any open job-move menus
+        document
+          .querySelectorAll('.sd-station-card.sd-job-move-open')
+          .forEach(card => closeJobMoveForCard(card));
+
+        // 3) Close any open "More actions" menus
+        document
+          .querySelectorAll('.sd-more-wrapper.open')
+          .forEach(w => w.classList.remove('open'));
+
+        // 4) Remove elevation from any active cards
+        document
+          .querySelectorAll('.sd-station-card.sd-card-active')
+          .forEach(card => card.classList.remove('sd-card-active'));
+      }
+    });
 
     // --- Status dropdown -> update card status ---
     const statusSelectEl = document.getElementById('statusSelect');
@@ -1688,6 +1828,144 @@ body.light .sd-hamburger {
     });
 
 
+    // --- Job move interactions (current / next / queue) ---
+
+    function closeJobMoveForCard(card) {
+      card.classList.remove('sd-job-move-open');
+      delete card.dataset.pendingJobLabel;
+      delete card.dataset.pendingJobSource;
+      card.querySelectorAll('.sd-queue-pill-active').forEach(p => p.classList.remove('sd-queue-pill-active'));
+    }
+
+    function startJobMove(card, source, label) {
+      if (!card || !label) return;
+      card.dataset.pendingJobLabel = label;
+      card.dataset.pendingJobSource = source;
+
+      card.querySelectorAll('.sd-queue-pill-active').forEach(p => p.classList.remove('sd-queue-pill-active'));
+      card.classList.add('sd-job-move-open');
+    }
+
+    function handleQueuePillClick(evt) {
+      evt.stopPropagation();
+      const pill = evt.currentTarget;
+      const card = pill.closest('.sd-station-card');
+      if (!card) return;
+
+      card.querySelectorAll('.sd-queue-pill-active').forEach(p => p.classList.remove('sd-queue-pill-active'));
+      pill.classList.add('sd-queue-pill-active');
+
+      const label = pill.textContent.trim();
+      startJobMove(card, 'queue', label);
+    }
+
+    function handleCurrentJobClick(evt) {
+      evt.stopPropagation();
+      const el = evt.currentTarget;
+      const card = el.closest('.sd-station-card');
+      if (!card) return;
+
+      const jobId = el.textContent.trim();
+      if (!jobId) return;
+
+      startJobMove(card, 'current', jobId);
+    }
+
+    function handleNextJobClick(evt) {
+      evt.stopPropagation();
+      const el = evt.currentTarget;
+      const card = el.closest('.sd-station-card');
+      if (!card) return;
+
+      const id = el.textContent.trim();
+      const metaEl = card.querySelector('.sd-next-meta');
+      const meta = metaEl ? metaEl.textContent.trim() : '';
+      const label = meta ? `${id} · ${meta}` : id;
+
+      startJobMove(card, 'next', label);
+    }
+
+    function handleMoveTargetClick(evt) {
+      evt.stopPropagation();
+      const btn = evt.currentTarget;
+      const card = btn.closest('.sd-station-card');
+      if (!card) return;
+
+      const target = btn.getAttribute('data-move-target'); // current | next | queue
+      const rawLabel = card.dataset.pendingJobLabel || '';
+      const label = rawLabel.trim();
+      if (!label) {
+        closeJobMoveForCard(card);
+        return;
+      }
+
+      const source = card.dataset.pendingJobSource || 'queue';
+
+      // Split "JOB-XXXX · meta" into ID + meta
+      const parts = label.split('·');
+      const jobId = parts[0].trim();
+      const meta = parts.slice(1).join('·').trim();
+
+      const currentJobEl = card.querySelector('.sd-job-meta-row .sd-job-value'); // first job row
+      const nextIdEl = card.querySelector('.sd-next-id');
+      const nextMetaEl = card.querySelector('.sd-next-meta');
+      const queueListEl = card.querySelector('.sd-queue-list');
+
+      // If source was queue and we're promoting to current/next, remove that pill
+      if (source === 'queue' && target !== 'queue') {
+        const activePill = card.querySelector('.sd-queue-pill-active');
+        if (activePill) activePill.remove();
+      }
+
+      if (target === 'current' && currentJobEl) {
+        currentJobEl.textContent = jobId;
+      } else if (target === 'next' && nextIdEl) {
+        nextIdEl.textContent = jobId;
+        if (nextMetaEl && meta) {
+          nextMetaEl.textContent = meta;
+        }
+      } else if (target === 'queue' && queueListEl) {
+        const pill = document.createElement('span');
+        pill.className = 'sd-queue-pill';
+        pill.textContent = label;
+        pill.addEventListener('click', handleQueuePillClick);
+        queueListEl.appendChild(pill);
+      }
+
+      closeJobMoveForCard(card);
+    }
+
+    // Attach listeners once on load
+    document.querySelectorAll('.sd-queue-pill').forEach(pill => {
+      pill.addEventListener('click', handleQueuePillClick);
+    });
+
+    // Make current job row clickable (first job row in each card)
+    document.querySelectorAll('.sd-station-card').forEach(card => {
+      const currentJobEl = card.querySelector('.sd-job-meta-row .sd-job-value');
+      if (currentJobEl) {
+        currentJobEl.style.cursor = 'pointer';
+        currentJobEl.addEventListener('click', handleCurrentJobClick);
+      }
+    });
+
+    // Make next job ID clickable
+    document.querySelectorAll('.sd-next-id').forEach(el => {
+      el.style.cursor = 'pointer';
+      el.addEventListener('click', handleNextJobClick);
+    });
+
+    // Menu buttons
+    document.querySelectorAll('.sd-job-move-menu [data-move-target]').forEach(btn => {
+      btn.addEventListener('click', handleMoveTargetClick);
+    });
+
+    // Clicking on card background closes the move menu
+    document.querySelectorAll('.sd-station-card').forEach(card => {
+      card.addEventListener('click', () => {
+        closeJobMoveForCard(card);
+      });
+    });
 
     // TODO: When you’re ready, replace the hard-coded station cards with
     // data-driven rendering from your Supabase queries. Keep the same
