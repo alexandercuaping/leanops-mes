@@ -659,6 +659,45 @@ body.light .sd-hamburger {
       background: #e5e7eb;
     }
 
+    /* --- Next job preview inside station card --- */
+    .sd-next-job {
+      margin-top: 6px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px dashed rgba(148, 163, 184, 0.6);
+    }
+
+    body.light .sd-next-job {
+      background: #f3f4f6;
+      border-style: solid;
+    }
+
+    .sd-next-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .sd-next-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .sd-next-id {
+      font-weight: 600;
+    }
+
+    .sd-next-meta {
+      color: var(--text-muted);
+      text-align: right;
+      white-space: nowrap;
+    }
+
     .sd-metrics {
       background: rgba(15, 23, 42, 0.8);
       border-radius: 14px;
@@ -727,6 +766,42 @@ body.light .sd-hamburger {
       background: #f97316;
       border-color: #ea580c;
       color: #111827;
+    }
+
+        /* --- Per-station queue summary --- */
+    .sd-queue {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(148, 163, 184, 0.4);
+      font-size: 11px;
+    }
+
+    .sd-queue-title {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .sd-queue-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .sd-queue-pill {
+      border-radius: 999px;
+      padding: 4px 8px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.85);
+      color: var(--text-muted);
+    }
+
+    body.light .sd-queue-pill {
+      background: #f9fafb;
+      color: #4b5563;
+      border-color: #e5e7eb;
     }
 
     /* --- "More actions" dropdown --- */
@@ -1059,9 +1134,18 @@ body.light .sd-hamburger {
                   <div class="sd-progress-fill" style="width:80%"></div>
                 </div>
               </div>
+
+              <div class="sd-next-job">
+                <div class="sd-next-label">Next job</div>
+                <div class="sd-next-main">
+                  <span class="sd-next-id">JOB-1008</span>
+                  <span class="sd-next-meta">20 pcs · Due Dec 1</span>
+                </div>
+              </div>
             </div>
 
             <div class="sd-metrics">
+
               <div>
                 <div class="sd-metric-label">Pace vs std</div>
                 <div class="sd-metric-value">104%</div>
@@ -1098,6 +1182,13 @@ body.light .sd-hamburger {
             </div>
           </div>
 
+          <div class="sd-queue">
+            <div class="sd-queue-title">Queue</div>
+            <div class="sd-queue-list">
+              <span class="sd-queue-pill">JOB-1015 · 30 pcs · Today</span>
+              <span class="sd-queue-pill">JOB-1020 · 10 pcs · Tomorrow</span>
+            </div>
+          </div>
         </article>
 
         <article class="sd-station-card sd-status-waiting"
@@ -1137,9 +1228,18 @@ body.light .sd-hamburger {
                   <div class="sd-progress-fill" style="width:45%"></div>
                 </div>
               </div>
+
+              <div class="sd-next-job">
+                <div class="sd-next-label">Next job</div>
+                <div class="sd-next-main">
+                  <span class="sd-next-id">JOB-1010</span>
+                  <span class="sd-next-meta">22 pcs · Due Dec 2</span>
+                </div>
+              </div>
             </div>
 
             <div class="sd-metrics">
+
               <div>
                 <div class="sd-metric-label">Pace vs std</div>
                 <div class="sd-metric-value">88%</div>
@@ -1175,6 +1275,15 @@ body.light .sd-hamburger {
               </div>
             </div>
           </div>
+
+          <div class="sd-queue">
+            <div class="sd-queue-title">Queue</div>
+            <div class="sd-queue-list">
+              <span class="sd-queue-pill">JOB-1022 · 16 pcs · Today</span>
+              <span class="sd-queue-pill">JOB-1027 · 12 pcs · Tomorrow</span>
+            </div>
+          </div>
+        </article>
 
         <article class="sd-station-card sd-status-blocked"
                  data-status="blocked" data-line="B" data-station="ST-03">
@@ -1213,9 +1322,18 @@ body.light .sd-hamburger {
                   <div class="sd-progress-fill" style="width:30%"></div>
                 </div>
               </div>
+
+              <div class="sd-next-job">
+                <div class="sd-next-label">Next job</div>
+                <div class="sd-next-main">
+                  <span class="sd-next-id">JOB-1018</span>
+                  <span class="sd-next-meta">15 pcs · Due Dec 1</span>
+                </div>
+              </div>
             </div>
 
             <div class="sd-metrics">
+
               <div>
                 <div class="sd-metric-label">Issue</div>
                 <div class="sd-metric-value">Rework</div>
@@ -1251,6 +1369,16 @@ body.light .sd-hamburger {
               </div>
             </div>
           </div>
+
+          <div class="sd-queue">
+            <div class="sd-queue-title">Queue</div>
+            <div class="sd-queue-list">
+              <span class="sd-queue-pill">JOB-1030 · 8 pcs · Today</span>
+              <span class="sd-queue-pill">JOB-1034 · 18 pcs · Tomorrow</span>
+            </div>
+          </div>
+        </article>
+
 
         <!-- Add more demo stations or generate via JS once wired to Supabase -->
       </section>
