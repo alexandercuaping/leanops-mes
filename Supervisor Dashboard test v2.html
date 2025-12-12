@@ -63,7 +63,6 @@
       grid-template-columns: 0 minmax(0, 1fr);
     }
 
-
     @media (max-width: 920px) {
       .sd-shell {
         grid-template-columns: minmax(0, 1fr);
@@ -121,9 +120,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding-left: 48px; /* <-- add this */
+      padding-left: 48px;
     }
-
 
     .sd-logo-mark {
       font-size: 15px;
@@ -138,18 +136,9 @@
       color: var(--text-muted);
     }
 
-    body.light .sd-logo-mark {
-      color: #020617;
-    }
+    body.light .sd-logo-mark { color: #020617; }
 
-    body.light .sd-sidebar-toggle {
-      background: #f9fafb;
-      color: #0f172a;
-    }
-
-    .sd-sidebar-main {
-      margin-top: 6px;
-    }
+    .sd-sidebar-main { margin-top: 6px; }
 
     .sd-nav {
       display: flex;
@@ -179,11 +168,10 @@
       color: #f9fafb;
     }
 
-    /* ---------- Page tabs (main content switching) ---------- */
+    /* ---------- Page tabs ---------- */
     .sd-page { display: none; }
     .sd-page.sd-page-active { display: block; }
 
-    /* Optional: make disabled nav items look more disabled */
     .sd-nav button[disabled] {
       opacity: 0.45;
       cursor: not-allowed;
@@ -195,13 +183,9 @@
       border-top: 1px solid rgba(30, 64, 175, 0.6);
     }
 
-    body.light .sd-sidebar-filters {
-      border-top: 1px solid #e5e7eb;
-    }
+    body.light .sd-sidebar-filters { border-top: 1px solid #e5e7eb; }
 
-    .sd-filter-group {
-      margin-bottom: 12px;
-    }
+    .sd-filter-group { margin-bottom: 12px; }
 
     .sd-filter-label {
       font-size: 11px;
@@ -254,28 +238,28 @@
       color: var(--text-muted);
     }
 
-.sd-hamburger {
-  position: fixed;
-  top: 18px;  /* was 14px */
-  left: 14px;
-  z-index: 50;
-  width: 34px;
-  height: 28px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: var(--radius-pill);
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  background: rgba(15, 23, 42, 0.85);
-  color: #e5e7eb;
-  cursor: pointer;
-  font-size: 16px;
-}
+    .sd-hamburger {
+      position: fixed;
+      top: 18px;
+      left: 14px;
+      z-index: 50;
+      width: 34px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: var(--radius-pill);
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.85);
+      color: #e5e7eb;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-body.light .sd-hamburger {
-  background: #f9fafb;
-  color: #0f172a;
-}
+    body.light .sd-hamburger {
+      background: #f9fafb;
+      color: #0f172a;
+    }
 
     .sd-switch {
       width: 42px;
@@ -298,13 +282,8 @@ body.light .sd-hamburger {
       transition: transform 0.2s ease;
     }
 
-    body.light .sd-switch {
-      background: #e5e7eb;
-    }
-
-    body.light .sd-switch-thumb {
-      transform: translateX(18px);
-    }
+    body.light .sd-switch { background: #e5e7eb; }
+    body.light .sd-switch-thumb { transform: translateX(18px); }
 
     /* ---------- Main area ---------- */
 
@@ -315,9 +294,7 @@ body.light .sd-hamburger {
     }
 
     @media (max-width: 720px) {
-      .sd-main {
-        padding-inline: 14px;
-      }
+      .sd-main { padding-inline: 14px; }
     }
 
     .sd-top-row {
@@ -340,36 +317,6 @@ body.light .sd-hamburger {
       color: var(--text-muted);
     }
 
-    .sd-top-meta-wrap {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .sd-main-filter-toggle {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.75);
-      background: rgba(15, 23, 42, 0.9);
-      color: var(--text-muted);
-      padding: 5px 10px;
-      font-size: 11px;
-      cursor: pointer;
-    }
-
-    body.light .sd-main-filter-toggle {
-      background: #ffffff;
-      color: #4b5563;
-    }
-
-    /* Hide desktop toggle on small screens (we already have the mobile Filters button) */
-    @media (max-width: 920px) {
-      .sd-main-filter-toggle {
-        display: none;
-      }
-    }
-
     .sd-today-summary {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -378,15 +325,11 @@ body.light .sd-hamburger {
     }
 
     @media (max-width: 920px) {
-      .sd-today-summary {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .sd-today-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 580px) {
-      .sd-today-summary {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .sd-today-summary { grid-template-columns: minmax(0, 1fr); }
     }
 
     .sd-summary-card {
@@ -411,15 +354,8 @@ body.light .sd-hamburger {
       margin-bottom: 4px;
     }
 
-    .sd-summary-value {
-      font-size: 18px;
-      font-weight: 600;
-    }
-
-    .sd-summary-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .sd-summary-value { font-size: 18px; font-weight: 600; }
+    .sd-summary-sub { font-size: 11px; color: var(--text-muted); }
 
     .sd-priority-strip {
       display: flex;
@@ -490,9 +426,7 @@ body.light .sd-hamburger {
       font-weight: 600;
     }
 
-    body.light .sd-view-toggle {
-      background: #f3f4f6;
-    }
+    body.light .sd-view-toggle { background: #f3f4f6; }
 
     .sd-inline-actions {
       display: flex;
@@ -521,17 +455,16 @@ body.light .sd-hamburger {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
+      overflow: visible; /* key */
     }
 
     @media (max-width: 1000px) {
-      .sd-stations {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .sd-stations { grid-template-columns: minmax(0, 1fr); }
     }
 
     .sd-station-card {
       position: relative;
-      z-index: 0; /* baseline, so active card can sit above others */
+      z-index: 0;
       border-radius: var(--radius-lg);
       background: linear-gradient(145deg, #020617, #020617 35%, #020617 100%);
       border: 1px solid rgba(15, 23, 42, 0.9);
@@ -544,13 +477,10 @@ body.light .sd-hamburger {
       gap: 10px;
       cursor: pointer;
       transition: transform 0.16s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+      overflow: visible; /* key */
     }
 
-    /* When a card's More-actions menu is open, float it above neighbors */
-    .sd-station-card.sd-card-active {
-      z-index: 100;
-    }
-
+    .sd-station-card.sd-card-active { z-index: 100; }
 
     .sd-station-card:hover {
       transform: translateY(-3px);
@@ -579,10 +509,7 @@ body.light .sd-hamburger {
       letter-spacing: 0.02em;
     }
 
-    .sd-station-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
+    .sd-station-sub { font-size: 11px; color: var(--text-muted); }
 
     .sd-status-pill {
       border-radius: 999px;
@@ -623,9 +550,7 @@ body.light .sd-hamburger {
     }
 
     @media (max-width: 680px) {
-      .sd-station-main {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .sd-station-main { grid-template-columns: minmax(0, 1fr); }
     }
 
     .sd-job-meta-row {
@@ -635,17 +560,10 @@ body.light .sd-hamburger {
       margin-bottom: 3px;
     }
 
-    .sd-job-label {
-      color: var(--text-muted);
-    }
+    .sd-job-label { color: var(--text-muted); }
+    .sd-job-value { font-weight: 500; }
 
-    .sd-job-value {
-      font-weight: 500;
-    }
-
-    .sd-progress-wrap {
-      margin-top: 4px;
-    }
+    .sd-progress-wrap { margin-top: 4px; }
 
     .sd-progress-label {
       display: flex;
@@ -672,11 +590,8 @@ body.light .sd-hamburger {
       transition: width 0.25s ease;
     }
 
-    body.light .sd-progress-bar {
-      background: #e5e7eb;
-    }
+    body.light .sd-progress-bar { background: #e5e7eb; }
 
-    /* --- Next job preview inside station card --- */
     .sd-next-job {
       margin-top: 6px;
       padding: 6px 8px;
@@ -705,15 +620,8 @@ body.light .sd-hamburger {
       font-size: 11px;
     }
 
-    .sd-next-id {
-      font-weight: 600;
-    }
-
-    .sd-next-meta {
-      color: var(--text-muted);
-      text-align: right;
-      white-space: nowrap;
-    }
+    .sd-next-id { font-weight: 600; }
+    .sd-next-meta { color: var(--text-muted); text-align: right; white-space: nowrap; }
 
     .sd-metrics {
       background: rgba(15, 23, 42, 0.8);
@@ -731,14 +639,8 @@ body.light .sd-hamburger {
       border-color: #e5e7eb;
     }
 
-    .sd-metric-label {
-      color: var(--text-muted);
-    }
-
-    .sd-metric-value {
-      font-weight: 600;
-      font-size: 12px;
-    }
+    .sd-metric-label { color: var(--text-muted); }
+    .sd-metric-value { font-weight: 600; font-size: 12px; }
 
     .sd-station-actions {
       margin-top: 4px;
@@ -758,14 +660,9 @@ body.light .sd-hamburger {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      transition:
-        background 0.16s ease,
-        border-color 0.16s ease,
-        color 0.16s ease,
-        transform 0.12s ease;
+      transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.12s ease;
     }
 
-    /* Hover state for action chips (dark mode) */
     .sd-action-chip:hover {
       background: var(--accent-soft);
       border-color: var(--accent);
@@ -778,14 +675,12 @@ body.light .sd-hamburger {
       color: #4b5563;
     }
 
-    /* Hover state for action chips (light mode) */
     body.light .sd-action-chip:hover {
       background: #f97316;
       border-color: #ea580c;
       color: #111827;
     }
 
-        /* --- Per-station queue summary --- */
     .sd-queue {
       margin-top: 8px;
       padding-top: 6px;
@@ -801,11 +696,7 @@ body.light .sd-hamburger {
       margin-bottom: 4px;
     }
 
-    .sd-queue-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .sd-queue-list { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .sd-queue-pill {
       border-radius: 999px;
@@ -842,7 +733,6 @@ body.light .sd-hamburger {
       color: #111827;
     }
 
-    /* --- Job move mini-menu inside each card --- */
     .sd-job-move-menu {
       position: absolute;
       right: 16px;
@@ -885,19 +775,10 @@ body.light .sd-hamburger {
       color: #111827;
     }
 
-    .sd-station-card.sd-job-move-open .sd-job-move-menu {
-      display: flex;
-    }
+    .sd-station-card.sd-job-move-open .sd-job-move-menu { display: flex; }
 
-    /* --- "More actions" dropdown --- */
-    .sd-more-wrapper {
-      position: relative;
-    }
-
-    .sd-more-toggle {
-      min-width: 110px;
-      justify-content: center;
-    }
+    .sd-more-wrapper { position: relative; }
+    .sd-more-toggle { min-width: 110px; justify-content: center; }
 
     .sd-more-menu {
       position: absolute;
@@ -915,16 +796,9 @@ body.light .sd-hamburger {
       z-index: 60;
     }
 
-    .sd-more-wrapper.open .sd-more-menu {
-      display: flex;
-    }
+    .sd-more-wrapper.open .sd-more-menu { display: flex; }
+    .sd-more-menu .sd-action-chip { width: 100%; justify-content: flex-start; }
 
-    .sd-more-menu .sd-action-chip {
-      width: 100%;
-      justify-content: flex-start;
-    }
-
-    /* Light mode dropdown look */
     body.light .sd-more-menu {
       background: #ffffff;
       border-color: #e5e7eb;
@@ -932,23 +806,17 @@ body.light .sd-hamburger {
     }
 
     /* Compact view */
-    .view-compact .sd-station-main {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    .view-compact .sd-metrics {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .view-compact .sd-station-main { grid-template-columns: minmax(0, 1fr); }
+    .view-compact .sd-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 
     /* ---------- Action drawer ---------- */
 
-    /* Light-mode styling for the status dropdown */
     body.light #statusSelect {
       background: #ffffff !important;
       color: #111827 !important;
       border-color: #d1d5db !important;
     }
-    
+
     .sd-drawer-backdrop {
       position: fixed;
       inset: 0;
@@ -959,9 +827,7 @@ body.light .sd-hamburger {
       z-index: 40;
     }
 
-    .sd-drawer-backdrop.open {
-      display: flex;
-    }
+    .sd-drawer-backdrop.open { display: flex; }
 
     .sd-drawer {
       width: 360px;
@@ -986,10 +852,7 @@ body.light .sd-hamburger {
       margin-bottom: 10px;
     }
 
-    .sd-drawer-title {
-      font-family: var(--font-display);
-      font-size: 18px;
-    }
+    .sd-drawer-title { font-family: var(--font-display); font-size: 18px; }
 
     .sd-drawer-close {
       border-radius: 999px;
@@ -1047,29 +910,23 @@ body.light .sd-hamburger {
       font-weight: 600;
     }
 
-    body.light .sd-drawer-btn {
-      background: #111827;
-      color: #f9fafb;
-    }
-
-    body.light .sd-drawer-btn.sd-primary {
-      background: linear-gradient(135deg, #f97316, #ea580c);
-    }
-
+    body.light .sd-drawer-btn { background: #111827; color: #f9fafb; }
+    body.light .sd-drawer-btn.sd-primary { background: linear-gradient(135deg, #f97316, #ea580c); }
   </style>
 </head>
 
 <body class="dark">
   <button class="sd-hamburger" id="toggleSidebarGlobal">☰</button>
+
   <div class="sd-shell">
     <!-- SIDEBAR -->
     <aside class="sd-sidebar">
       <div class="sd-logo">
-  <div>
-    <div class="sd-logo-mark">LEANOPS</div>
-    <div class="sd-logo-sub">Supervisor — Live Stations</div>
-  </div>
-</div>
+        <div>
+          <div class="sd-logo-mark">LEANOPS</div>
+          <div class="sd-logo-sub">Supervisor — Live Stations</div>
+        </div>
+      </div>
 
       <div class="sd-sidebar-main">
         <nav class="sd-nav">
@@ -1079,7 +936,7 @@ body.light .sd-hamburger {
 
           <button disabled title="Coming soon">Job queue (coming soon)</button>
           <button disabled title="Coming soon">Analytics (coming soon)</button>
-        </nav>  
+        </nav>
       </div>
 
       <div class="sd-sidebar-filters">
@@ -1121,460 +978,445 @@ body.light .sd-hamburger {
 
     <!-- MAIN AREA -->
     <main class="sd-main">
-      <section id="page-live" class="sd-page sd-page-active"></section>
-      <div class="sd-top-row">
-        <div>
-          <div class="sd-top-title">Today’s flow</div>
-          <div class="sd-top-meta">Lightweight MES view for jobs, stations, and flow.</div>
-        </div>
-        <div class="sd-top-meta" id="sd-date"></div>
-      </div>
+      <!-- LIVE STATIONS PAGE -->
+      <section id="page-live" class="sd-page sd-page-active">
 
-      <!-- TODAY SUMMARY -->
-      <section class="sd-today-summary">
+        <div class="sd-top-row">
+          <div>
+            <div class="sd-top-title">Today’s flow</div>
+            <div class="sd-top-meta">Lightweight MES view for jobs, stations, and flow.</div>
+          </div>
+          <div class="sd-top-meta" id="sd-date"></div>
+        </div>
+
+        <!-- TODAY SUMMARY -->
+        <section class="sd-today-summary">
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Jobs completed</div>
+            <div class="sd-summary-value" id="summaryCompleted">7</div>
+            <div class="sd-summary-sub">Batches logged today (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">On-time completion</div>
+            <div class="sd-summary-value" id="summaryOnTime">92%</div>
+            <div class="sd-summary-sub">Based on current schedule</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Stations running</div>
+            <div class="sd-summary-value" id="summaryRunning">3 / 8</div>
+            <div class="sd-summary-sub">Actively marked as running</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Material flags</div>
+            <div class="sd-summary-value" id="summaryMaterial">2</div>
+            <div class="sd-summary-sub">Stations waiting on material</div>
+          </article>
+        </section>
+
+        <!-- PRIORITY STRIP -->
+        <div class="sd-priority-strip">
+          <button class="sd-priority-pill" data-status-filter="blocked">
+            <span class="sd-dot"></span>
+            <span>1 station blocked</span>
+          </button>
+          <button class="sd-priority-pill sd-pill-warn" data-status-filter="waiting">
+            <span class="sd-dot"></span>
+            <span>2 waiting on material</span>
+          </button>
+          <button class="sd-priority-pill sd-pill-ok" data-status-filter="running">
+            <span class="sd-dot"></span>
+            <span>3 running at or above pace</span>
+          </button>
+        </div>
+
+        <!-- VIEW CONTROLS -->
+        <div class="sd-view-row">
+          <div class="sd-view-toggle">
+            <button class="sd-view-active" data-view-main="expanded">Expanded</button>
+            <button data-view-main="compact">Compact</button>
+          </div>
+          <div class="sd-inline-actions">
+            <button class="sd-inline-btn">Quick refresh</button>
+            <button class="sd-inline-btn">Global job queue</button>
+            <button class="sd-inline-btn">Simulate next hour</button>
+          </div>
+        </div>
+
+        <!-- STATION GRID (FIXED TAG) -->
+        <section id="stationsGrid" class="sd-stations">
+          <!-- Station 1 -->
+          <article class="sd-station-card sd-status-running"
+                   data-status="running" data-line="A" data-station="ST-01">
+            <div class="sd-station-header">
+              <div>
+                <div class="sd-station-title">Station 1 — Panel Assembly</div>
+                <div class="sd-station-sub">Line A · ST-01</div>
+              </div>
+              <div class="sd-status-pill">
+                <span class="sd-status-dot"></span>
+                <span>Running</span>
+              </div>
+            </div>
+
+            <div class="sd-station-main">
+              <div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Current job</div>
+                  <div class="sd-job-value">JOB-1001</div>
+                </div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Description</div>
+                  <div class="sd-job-value">Panel Assembly</div>
+                </div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Due</div>
+                  <div class="sd-job-value">Nov 30</div>
+                </div>
+
+                <div class="sd-progress-wrap">
+                  <div class="sd-progress-label">
+                    <span>Progress</span>
+                    <span>40 / 50 pcs</span>
+                  </div>
+                  <div class="sd-progress-bar">
+                    <div class="sd-progress-fill" style="width:80%"></div>
+                  </div>
+                </div>
+
+                <div class="sd-next-job">
+                  <div class="sd-next-label">Next job</div>
+                  <div class="sd-next-main">
+                    <span class="sd-next-id">JOB-1008</span>
+                    <span class="sd-next-meta">20 pcs · Due Dec 1</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sd-metrics">
+                <div>
+                  <div class="sd-metric-label">Pace vs std</div>
+                  <div class="sd-metric-value">104%</div>
+                </div>
+                <div>
+                  <div class="sd-metric-label">Units this hour</div>
+                  <div class="sd-metric-value">12</div>
+                </div>
+                <div>
+                  <div class="sd-metric-label">Material OK</div>
+                  <div class="sd-metric-value">Yes</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-station-actions">
+              <span class="sd-action-chip">✔ Mark complete</span>
+              <span class="sd-action-chip">📦 Request material</span>
+              <span class="sd-action-chip">🔄 Change status</span>
+
+              <div class="sd-more-wrapper">
+                <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+                <div class="sd-more-menu">
+                  <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                  <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                  <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                  <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                  <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                  <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                  <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-queue">
+              <div class="sd-queue-title">Queue</div>
+              <div class="sd-queue-list">
+                <span class="sd-queue-pill">JOB-1015 · 30 pcs · Today</span>
+                <span class="sd-queue-pill">JOB-1020 · 10 pcs · Tomorrow</span>
+              </div>
+            </div>
+
+            <div class="sd-job-move-menu">
+              <button type="button" data-move-target="current">Move job to current</button>
+              <button type="button" data-move-target="next">Move job to next</button>
+              <button type="button" data-move-target="queue">Move job to queue</button>
+            </div>
+          </article>
+
+          <!-- Station 2 -->
+          <article class="sd-station-card sd-status-waiting"
+                   data-status="waiting" data-line="A" data-station="ST-02">
+            <div class="sd-station-header">
+              <div>
+                <div class="sd-station-title">Station 2 — Frame Assembly</div>
+                <div class="sd-station-sub">Line A · ST-02</div>
+              </div>
+              <div class="sd-status-pill">
+                <span class="sd-status-dot"></span>
+                <span>Waiting material</span>
+              </div>
+            </div>
+
+            <div class="sd-station-main">
+              <div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Current job</div>
+                  <div class="sd-job-value">JOB-1005</div>
+                </div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Description</div>
+                  <div class="sd-job-value">Frame Assembly</div>
+                </div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Due</div>
+                  <div class="sd-job-value">Nov 29</div>
+                </div>
+
+                <div class="sd-progress-wrap">
+                  <div class="sd-progress-label">
+                    <span>Progress</span>
+                    <span>18 / 40 pcs</span>
+                  </div>
+                  <div class="sd-progress-bar">
+                    <div class="sd-progress-fill" style="width:45%"></div>
+                  </div>
+                </div>
+
+                <div class="sd-next-job">
+                  <div class="sd-next-label">Next job</div>
+                  <div class="sd-next-main">
+                    <span class="sd-next-id">JOB-1010</span>
+                    <span class="sd-next-meta">22 pcs · Due Dec 2</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sd-metrics">
+                <div>
+                  <div class="sd-metric-label">Pace vs std</div>
+                  <div class="sd-metric-value">88%</div>
+                </div>
+                <div>
+                  <div class="sd-metric-label">Units this hour</div>
+                  <div class="sd-metric-value">4</div>
+                </div>
+                <div>
+                  <div class="sd-metric-label">Material OK</div>
+                  <div class="sd-metric-value">No</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-station-actions">
+              <span class="sd-action-chip">✔ Mark complete</span>
+              <span class="sd-action-chip">📦 Request material</span>
+              <span class="sd-action-chip">🔄 Change status</span>
+
+              <div class="sd-more-wrapper">
+                <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+                <div class="sd-more-menu">
+                  <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                  <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                  <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                  <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                  <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                  <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                  <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-queue">
+              <div class="sd-queue-title">Queue</div>
+              <div class="sd-queue-list">
+                <span class="sd-queue-pill">JOB-1022 · 16 pcs · Today</span>
+                <span class="sd-queue-pill">JOB-1027 · 12 pcs · Tomorrow</span>
+              </div>
+            </div>
+
+            <div class="sd-job-move-menu">
+              <button type="button" data-move-target="current">Move job to current</button>
+              <button type="button" data-move-target="next">Move job to next</button>
+              <button type="button" data-move-target="queue">Move job to queue</button>
+            </div>
+          </article>
+
+          <!-- Station 3 -->
+          <article class="sd-station-card sd-status-blocked"
+                   data-status="blocked" data-line="B" data-station="ST-03">
+            <div class="sd-station-header">
+              <div>
+                <div class="sd-station-title">Station 3 — Final Inspection</div>
+                <div class="sd-station-sub">Line B · ST-03</div>
+              </div>
+              <div class="sd-status-pill">
+                <span class="sd-status-dot"></span>
+                <span>Blocked</span>
+              </div>
+            </div>
+
+            <div class="sd-station-main">
+              <div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Current job</div>
+                  <div class="sd-job-value">JOB-1012</div>
+                </div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Description</div>
+                  <div class="sd-job-value">QC & Pack</div>
+                </div>
+                <div class="sd-job-meta-row">
+                  <div class="sd-job-label">Due</div>
+                  <div class="sd-job-value">Today</div>
+                </div>
+
+                <div class="sd-progress-wrap">
+                  <div class="sd-progress-label">
+                    <span>Progress</span>
+                    <span>6 / 20 pcs</span>
+                  </div>
+                  <div class="sd-progress-bar">
+                    <div class="sd-progress-fill" style="width:30%"></div>
+                  </div>
+                </div>
+
+                <div class="sd-next-job">
+                  <div class="sd-next-label">Next job</div>
+                  <div class="sd-next-main">
+                    <span class="sd-next-id">JOB-1018</span>
+                    <span class="sd-next-meta">15 pcs · Due Dec 1</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="sd-metrics">
+                <div>
+                  <div class="sd-metric-label">Issue</div>
+                  <div class="sd-metric-value">Rework</div>
+                </div>
+                <div>
+                  <div class="sd-metric-label">Time blocked</div>
+                  <div class="sd-metric-value">32 min</div>
+                </div>
+                <div>
+                  <div class="sd-metric-label">Support</div>
+                  <div class="sd-metric-value">Requested</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-station-actions">
+              <span class="sd-action-chip">✔ Mark complete</span>
+              <span class="sd-action-chip">📦 Request material</span>
+              <span class="sd-action-chip">🔄 Change status</span>
+
+              <div class="sd-more-wrapper">
+                <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+                <div class="sd-more-menu">
+                  <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                  <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                  <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                  <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                  <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                  <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                  <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-queue">
+              <div class="sd-queue-title">Queue</div>
+              <div class="sd-queue-list">
+                <span class="sd-queue-pill">JOB-1030 · 8 pcs · Today</span>
+                <span class="sd-queue-pill">JOB-1034 · 18 pcs · Tomorrow</span>
+              </div>
+            </div>
+
+            <div class="sd-job-move-menu">
+              <button type="button" data-move-target="current">Move job to current</button>
+              <button type="button" data-move-target="next">Move job to next</button>
+              <button type="button" data-move-target="queue">Move job to queue</button>
+            </div>
+          </article>
+        </section>
+      </section>
+
+      <!-- WORKER EFFICIENCY PAGE -->
+      <section id="page-worker" class="sd-page">
+        <div class="sd-top-row">
+          <div>
+            <div class="sd-top-title">Worker efficiency</div>
+            <div class="sd-top-meta">Per-worker pace vs standard, today & trends (placeholder).</div>
+          </div>
+          <div class="sd-top-meta">Coming next: Worker table + filters</div>
+        </div>
+
+        <section class="sd-today-summary">
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Top performer</div>
+            <div class="sd-summary-value">A. Smith</div>
+            <div class="sd-summary-sub">112% vs std (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Needs support</div>
+            <div class="sd-summary-value">2 workers</div>
+            <div class="sd-summary-sub">&lt; 80% vs std (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Avg efficiency</div>
+            <div class="sd-summary-value">91%</div>
+            <div class="sd-summary-sub">Today (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Open issues</div>
+            <div class="sd-summary-value">3</div>
+            <div class="sd-summary-sub">Across stations (demo)</div>
+          </article>
+        </section>
+
         <article class="sd-summary-card">
-          <div class="sd-summary-label">Jobs completed</div>
-          <div class="sd-summary-value" id="summaryCompleted">7</div>
-          <div class="sd-summary-sub">Batches logged today (demo)</div>
-        </article>
-        <article class="sd-summary-card">
-          <div class="sd-summary-label">On-time completion</div>
-          <div class="sd-summary-value" id="summaryOnTime">92%</div>
-          <div class="sd-summary-sub">Based on current schedule</div>
-        </article>
-        <article class="sd-summary-card">
-          <div class="sd-summary-label">Stations running</div>
-          <div class="sd-summary-value" id="summaryRunning">3 / 8</div>
-          <div class="sd-summary-sub">Actively marked as running</div>
-        </article>
-        <article class="sd-summary-card">
-          <div class="sd-summary-label">Material flags</div>
-          <div class="sd-summary-value" id="summaryMaterial">2</div>
-          <div class="sd-summary-sub">Stations waiting on material</div>
+          <div class="sd-summary-label">Next build</div>
+          <div class="sd-summary-sub">We’ll drop in: sortable worker table, station assignment, efficiency bars.</div>
         </article>
       </section>
 
-      <!-- PRIORITY STRIP -->
-      <div class="sd-priority-strip">
-        <button class="sd-priority-pill" data-status-filter="blocked">
-          <span class="sd-dot"></span>
-          <span>1 station blocked</span>
-        </button>
-        <button class="sd-priority-pill sd-pill-warn" data-status-filter="waiting">
-          <span class="sd-dot"></span>
-          <span>2 waiting on material</span>
-        </button>
-        <button class="sd-priority-pill sd-pill-ok" data-status-filter="running">
-          <span class="sd-dot"></span>
-          <span>3 running at or above pace</span>
-        </button>
-      </div>
-
-      <!-- VIEW CONTROLS -->
-      <div class="sd-view-row">
-        <div class="sd-view-toggle">
-          <button class="sd-view-active" data-view-main="expanded">Expanded</button>
-          <button data-view-main="compact">Compact</button>
+      <!-- DEPARTMENT EFFICIENCY PAGE -->
+      <section id="page-dept" class="sd-page">
+        <div class="sd-top-row">
+          <div>
+            <div class="sd-top-title">Department efficiency</div>
+            <div class="sd-top-meta">Overall throughput, WIP, bottlenecks, and pacing (placeholder).</div>
+          </div>
+          <div class="sd-top-meta">Coming next: KPI tiles + charts</div>
         </div>
-        <div class="sd-inline-actions">
-          <button class="sd-inline-btn">Quick refresh</button>
-          <button class="sd-inline-btn">Global job queue</button>
-          <button class="sd-inline-btn">Simulate next hour</button>
-        </div>
-      </div>
 
-      <!-- STATION GRID -->
-      <section id="stationsGrid" class="sd-stations view-expanded">
-        <!-- Example station cards (these will later be driven by data) -->
-        <article class="sd-station-card sd-status-running"
-                 data-status="running" data-line="A" data-station="ST-01">
-          <div class="sd-station-header">
-            <div>
-              <div class="sd-station-title">Station 1 — Panel Assembly</div>
-              <div class="sd-station-sub">Line A · ST-01</div>
-            </div>
-            <div class="sd-status-pill">
-              <span class="sd-status-dot"></span>
-              <span>Running</span>
-            </div>
-          </div>
+        <section class="sd-today-summary">
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Dept efficiency</div>
+            <div class="sd-summary-value">89%</div>
+            <div class="sd-summary-sub">Today (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">Bottleneck</div>
+            <div class="sd-summary-value">ST-02</div>
+            <div class="sd-summary-sub">Waiting material (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">WIP</div>
+            <div class="sd-summary-value">14 jobs</div>
+            <div class="sd-summary-sub">In process (demo)</div>
+          </article>
+          <article class="sd-summary-card">
+            <div class="sd-summary-label">On-time risk</div>
+            <div class="sd-summary-value">3 jobs</div>
+            <div class="sd-summary-sub">Due ≤ 24h (demo)</div>
+          </article>
+        </section>
 
-          <div class="sd-station-main">
-            <div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Current job</div>
-                <div class="sd-job-value">JOB-1001</div>
-              </div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Description</div>
-                <div class="sd-job-value">Panel Assembly</div>
-              </div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Due</div>
-                <div class="sd-job-value">Nov 30</div>
-              </div>
-
-              <div class="sd-progress-wrap">
-                <div class="sd-progress-label">
-                  <span>Progress</span>
-                  <span>40 / 50 pcs</span>
-                </div>
-                <div class="sd-progress-bar">
-                  <div class="sd-progress-fill" style="width:80%"></div>
-                </div>
-              </div>
-
-              <div class="sd-next-job">
-                <div class="sd-next-label">Next job</div>
-                <div class="sd-next-main">
-                  <span class="sd-next-id">JOB-1008</span>
-                  <span class="sd-next-meta">20 pcs · Due Dec 1</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-metrics">
-
-              <div>
-                <div class="sd-metric-label">Pace vs std</div>
-                <div class="sd-metric-value">104%</div>
-              </div>
-              <div>
-                <div class="sd-metric-label">Units this hour</div>
-                <div class="sd-metric-value">12</div>
-              </div>
-              <div>
-                <div class="sd-metric-label">Material OK</div>
-                <div class="sd-metric-value">Yes</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sd-station-actions">
-            <!-- Primary actions (always visible) -->
-            <span class="sd-action-chip">✔ Mark complete</span>
-            <span class="sd-action-chip">📦 Request material</span>
-            <span class="sd-action-chip">🔄 Change status</span>
-
-            <!-- More actions dropdown -->
-            <div class="sd-more-wrapper">
-              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
-              <div class="sd-more-menu">
-                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
-                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
-                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
-                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
-                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
-                <button class="sd-action-chip sd-more-item">📝 Add note</button>
-                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="sd-queue">
-            <div class="sd-queue-title">Queue</div>
-            <div class="sd-queue-list">
-              <span class="sd-queue-pill">JOB-1015 · 30 pcs · Today</span>
-              <span class="sd-queue-pill">JOB-1020 · 10 pcs · Tomorrow</span>
-            </div>
-          </div>
-
-          <!-- Job move menu -->
-          <div class="sd-job-move-menu">
-            <button type="button" data-move-target="current">Move job to current</button>
-            <button type="button" data-move-target="next">Move job to next</button>
-            <button type="button" data-move-target="queue">Move job to queue</button>
-          </div>
+        <article class="sd-summary-card">
+          <div class="sd-summary-label">Next build</div>
+          <div class="sd-summary-sub">We’ll add: trend chart, station stacked bars, and “what-if” simulation hooks.</div>
         </article>
-
-
-        <article class="sd-station-card sd-status-waiting"
-                 data-status="waiting" data-line="A" data-station="ST-02">
-          <div class="sd-station-header">
-            <div>
-              <div class="sd-station-title">Station 2 — Frame Assembly</div>
-              <div class="sd-station-sub">Line A · ST-02</div>
-            </div>
-            <div class="sd-status-pill">
-              <span class="sd-status-dot"></span>
-              <span>Waiting material</span>
-            </div>
-          </div>
-
-          <div class="sd-station-main">
-            <div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Current job</div>
-                <div class="sd-job-value">JOB-1005</div>
-              </div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Description</div>
-                <div class="sd-job-value">Frame Assembly</div>
-              </div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Due</div>
-                <div class="sd-job-value">Nov 29</div>
-              </div>
-
-              <div class="sd-progress-wrap">
-                <div class="sd-progress-label">
-                  <span>Progress</span>
-                  <span>18 / 40 pcs</span>
-                </div>
-                <div class="sd-progress-bar">
-                  <div class="sd-progress-fill" style="width:45%"></div>
-                </div>
-              </div>
-
-              <div class="sd-next-job">
-                <div class="sd-next-label">Next job</div>
-                <div class="sd-next-main">
-                  <span class="sd-next-id">JOB-1010</span>
-                  <span class="sd-next-meta">22 pcs · Due Dec 2</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-metrics">
-
-              <div>
-                <div class="sd-metric-label">Pace vs std</div>
-                <div class="sd-metric-value">88%</div>
-              </div>
-              <div>
-                <div class="sd-metric-label">Units this hour</div>
-                <div class="sd-metric-value">4</div>
-              </div>
-              <div>
-                <div class="sd-metric-label">Material OK</div>
-                <div class="sd-metric-value">No</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sd-station-actions">
-            <!-- Primary actions (always visible) -->
-            <span class="sd-action-chip">✔ Mark complete</span>
-            <span class="sd-action-chip">📦 Request material</span>
-            <span class="sd-action-chip">🔄 Change status</span>
-
-            <!-- More actions dropdown -->
-            <div class="sd-more-wrapper">
-              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
-              <div class="sd-more-menu">
-                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
-                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
-                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
-                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
-                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
-                <button class="sd-action-chip sd-more-item">📝 Add note</button>
-                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="sd-queue">
-            <div class="sd-queue-title">Queue</div>
-            <div class="sd-queue-list">
-              <span class="sd-queue-pill">JOB-1022 · 16 pcs · Today</span>
-              <span class="sd-queue-pill">JOB-1027 · 12 pcs · Tomorrow</span>
-            </div>
-          </div>
-
-          <!-- Job move menu -->
-          <div class="sd-job-move-menu">
-            <button type="button" data-move-target="current">Move job to current</button>
-            <button type="button" data-move-target="next">Move job to next</button>
-            <button type="button" data-move-target="queue">Move job to queue</button>
-          </div>
-        </article>
-
-
-        <article class="sd-station-card sd-status-blocked"
-                 data-status="blocked" data-line="B" data-station="ST-03">
-          <div class="sd-station-header">
-            <div>
-              <div class="sd-station-title">Station 3 — Final Inspection</div>
-              <div class="sd-station-sub">Line B · ST-03</div>
-            </div>
-            <div class="sd-status-pill">
-              <span class="sd-status-dot"></span>
-              <span>Blocked</span>
-            </div>
-          </div>
-
-          <div class="sd-station-main">
-            <div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Current job</div>
-                <div class="sd-job-value">JOB-1012</div>
-              </div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Description</div>
-                <div class="sd-job-value">QC & Pack</div>
-              </div>
-              <div class="sd-job-meta-row">
-                <div class="sd-job-label">Due</div>
-                <div class="sd-job-value">Today</div>
-              </div>
-
-              <div class="sd-progress-wrap">
-                <div class="sd-progress-label">
-                  <span>Progress</span>
-                  <span>6 / 20 pcs</span>
-                </div>
-                <div class="sd-progress-bar">
-                  <div class="sd-progress-fill" style="width:30%"></div>
-                </div>
-              </div>
-
-              <div class="sd-next-job">
-                <div class="sd-next-label">Next job</div>
-                <div class="sd-next-main">
-                  <span class="sd-next-id">JOB-1018</span>
-                  <span class="sd-next-meta">15 pcs · Due Dec 1</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-metrics">
-
-              <div>
-                <div class="sd-metric-label">Issue</div>
-                <div class="sd-metric-value">Rework</div>
-              </div>
-              <div>
-                <div class="sd-metric-label">Time blocked</div>
-                <div class="sd-metric-value">32 min</div>
-              </div>
-              <div>
-                <div class="sd-metric-label">Support</div>
-                <div class="sd-metric-value">Requested</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="sd-station-actions">
-            <!-- Primary actions (always visible) -->
-            <span class="sd-action-chip">✔ Mark complete</span>
-            <span class="sd-action-chip">📦 Request material</span>
-            <span class="sd-action-chip">🔄 Change status</span>
-
-            <!-- More actions dropdown -->
-            <div class="sd-more-wrapper">
-              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
-              <div class="sd-more-menu">
-                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
-                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
-                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
-                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
-                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
-                <button class="sd-action-chip sd-more-item">📝 Add note</button>
-                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="sd-queue">
-            <div class="sd-queue-title">Queue</div>
-            <div class="sd-queue-list">
-              <span class="sd-queue-pill">JOB-1030 · 8 pcs · Today</span>
-              <span class="sd-queue-pill">JOB-1034 · 18 pcs · Tomorrow</span>
-            </div>
-          </div>
-
-          <!-- Job move menu -->
-          <div class="sd-job-move-menu">
-            <button type="button" data-move-target="current">Move job to current</button>
-            <button type="button" data-move-target="next">Move job to next</button>
-            <button type="button" data-move-target="queue">Move job to queue</button>
-          </div>
-        </article>
-
-
-        <!-- Add more demo stations or generate via JS once wired to Supabase -->
       </section>
-    </section> <!-- end stationsGrid -->
-  </section> <!-- end page-live -->
-
-  <!-- WORKER EFFICIENCY PAGE -->
-<section id="page-worker" class="sd-page">
-  <div class="sd-top-row">
-    <div>
-      <div class="sd-top-title">Worker efficiency</div>
-      <div class="sd-top-meta">Per-worker pace vs standard, today & trends (placeholder).</div>
-    </div>
-    <div class="sd-top-meta">Coming next: Worker table + filters</div>
-  </div>
-
-  <section class="sd-today-summary">
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">Top performer</div>
-      <div class="sd-summary-value">A. Smith</div>
-      <div class="sd-summary-sub">112% vs std (demo)</div>
-    </article>
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">Needs support</div>
-      <div class="sd-summary-value">2 workers</div>
-      <div class="sd-summary-sub">&lt; 80% vs std (demo)</div>
-    </article>
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">Avg efficiency</div>
-      <div class="sd-summary-value">91%</div>
-      <div class="sd-summary-sub">Today (demo)</div>
-    </article>
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">Open issues</div>
-      <div class="sd-summary-value">3</div>
-      <div class="sd-summary-sub">Across stations (demo)</div>
-    </article>
-  </section>
-
-  <article class="sd-summary-card">
-    <div class="sd-summary-label">Next build</div>
-    <div class="sd-summary-sub">We’ll drop in: sortable worker table, station assignment, efficiency bars.</div>
-  </article>
-</section>
-
-<!-- DEPARTMENT EFFICIENCY PAGE -->
-<section id="page-dept" class="sd-page">
-  <div class="sd-top-row">
-    <div>
-      <div class="sd-top-title">Department efficiency</div>
-      <div class="sd-top-meta">Overall throughput, WIP, bottlenecks, and pacing (placeholder).</div>
-    </div>
-    <div class="sd-top-meta">Coming next: KPI tiles + charts</div>
-  </div>
-
-  <section class="sd-today-summary">
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">Dept efficiency</div>
-      <div class="sd-summary-value">89%</div>
-      <div class="sd-summary-sub">Today (demo)</div>
-    </article>
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">Bottleneck</div>
-      <div class="sd-summary-value">ST-02</div>
-      <div class="sd-summary-sub">Waiting material (demo)</div>
-    </article>
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">WIP</div>
-      <div class="sd-summary-value">14 jobs</div>
-      <div class="sd-summary-sub">In process (demo)</div>
-    </article>
-    <article class="sd-summary-card">
-      <div class="sd-summary-label">On-time risk</div>
-      <div class="sd-summary-value">3 jobs</div>
-      <div class="sd-summary-sub">Due ≤ 24h (demo)</div>
-    </article>
-  </section>
-
-  <article class="sd-summary-card">
-    <div class="sd-summary-label">Next build</div>
-    <div class="sd-summary-sub">We’ll add: trend chart, station stacked bars, and “what-if” simulation hooks.</div>
-  </article>
-</section>
-
     </main>
   </div>
 
@@ -1611,7 +1453,6 @@ body.light .sd-hamburger {
             <option value="idle">Idle</option>
           </select>
         </div>
-
 
         <div class="sd-drawer-section-label">Quick actions</div>
         <div class="sd-drawer-actions">
@@ -1653,7 +1494,7 @@ body.light .sd-hamburger {
       }
     });
 
-  // --- Sidebar nav -> page switching (tabs) ---
+    // --- Sidebar nav -> page switching (tabs) ---
     const pages = document.querySelectorAll('.sd-page');
     const navButtons = document.querySelectorAll('.sd-nav button[data-page]');
 
@@ -1664,7 +1505,6 @@ body.light .sd-hamburger {
       navButtons.forEach(b => b.classList.remove('sd-nav-active'));
       document.querySelector(`.sd-nav button[data-page="${pageId}"]`)?.classList.add('sd-nav-active');
 
-    // On mobile: collapse the sidebar after selecting a page
       if (window.innerWidth <= 920) {
         sidebar.classList.remove('open');
       }
@@ -1676,7 +1516,6 @@ body.light .sd-hamburger {
         if (pageId) setActivePage(pageId);
       });
     });
-
 
     // --- View toggle (compact / expanded) ---
     const stationsGrid = document.getElementById('stationsGrid');
@@ -1764,7 +1603,7 @@ body.light .sd-hamburger {
         <div><strong>Current job:</strong> ${jobId}</div>
         <div><strong>Progress:</strong> ${progressLabel}</div>
         <div style="margin-top:6px; font-size:11px; color:#9ca3af;">
-          (Later this will show live metrics from your data source: pace vs standard, 
+          (Later this will show live metrics from your data source: pace vs standard,
           last update timestamp, and any open issues.)
         </div>
       `;
@@ -1774,58 +1613,38 @@ body.light .sd-hamburger {
 
     document.querySelectorAll('.sd-station-card').forEach(card => {
       card.addEventListener('click', (evt) => {
-        // If the click came from an action chip, do NOT open the drawer
-        if (evt.target.closest('.sd-action-chip')) {
-          return;
-        }
-
-        // Otherwise, treat it as a card click and open the drawer
+        if (evt.target.closest('.sd-action-chip')) return;
         openDrawerFromCard(card);
       });
     });
 
-    // --- Inline station action chips (mark complete, request material, etc.) ---
+    // --- Inline station action chips ---
     document.querySelectorAll('.sd-action-chip').forEach(chip => {
       chip.addEventListener('click', (evt) => {
-        // Prevent the click from bubbling up to the card
         evt.stopPropagation();
 
         const actionText = chip.textContent.trim();
         const card = chip.closest('.sd-station-card');
-        const stationTitle =
-          card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
-        const jobId =
-          card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
+        const stationTitle = card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
+        const jobId = card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
 
-        // 1) "More actions" toggle
         if (chip.classList.contains('sd-more-toggle')) {
           const wrapper = chip.closest('.sd-more-wrapper');
           const isOpen = wrapper.classList.contains('open');
 
-          // Close all menus first + drop any elevated cards
-          document
-            .querySelectorAll('.sd-more-wrapper')
-            .forEach(w => w.classList.remove('open'));
-          document
-            .querySelectorAll('.sd-station-card')
-            .forEach(c => c.classList.remove('sd-card-active'));
+          document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
+          document.querySelectorAll('.sd-station-card').forEach(c => c.classList.remove('sd-card-active'));
 
           if (!isOpen) {
             wrapper.classList.add('open');
-            // lift this card above others so its menu isn't overlapped
             card.classList.add('sd-card-active');
           }
           return;
         }
 
-
-        // If this click came from inside a dropdown menu, close that menu
         const wrapper = chip.closest('.sd-more-wrapper');
-        if (wrapper) {
-          wrapper.classList.remove('open');
-        }
+        if (wrapper) wrapper.classList.remove('open');
 
-        // 2) "Change status" → open drawer + focus status dropdown
         if (actionText.includes("Change status")) {
           openDrawerFromCard(card);
 
@@ -1833,70 +1652,42 @@ body.light .sd-hamburger {
           const statusSelectEl = document.getElementById('statusSelect');
           statusSelectEl.value = currentStatus;
           statusSelectEl.focus();
-
-          return; // Don't run generic logic
+          return;
         }
 
-        // 3) Default placeholder (later this will call Supabase, etc.)
         console.log(`Action clicked: ${actionText} on ${stationTitle} (${jobId})`);
         alert(`TODO: ${actionText} for ${stationTitle} (${jobId})`);
       });
     });
 
-   // Close menus when clicking outside them
-  document.addEventListener('click', (evt) => {
-    const target = evt.target;
+    // Close menus when clicking outside them
+    document.addEventListener('click', (evt) => {
+      const target = evt.target;
 
-    // 1) Close "More actions" menus if click is outside them
-    if (!target.closest('.sd-more-wrapper')) {
-      document
-        .querySelectorAll('.sd-more-wrapper.open')
-        .forEach(w => w.classList.remove('open'));
+      if (!target.closest('.sd-more-wrapper')) {
+        document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.sd-station-card.sd-card-active').forEach(c => c.classList.remove('sd-card-active'));
+      }
 
-      // also drop any elevated cards
-      document
-        .querySelectorAll('.sd-station-card.sd-card-active')
-        .forEach(c => c.classList.remove('sd-card-active'));
-    }
-
-    // 2) Close job-move menu if click is outside ALL station cards
-    if (!target.closest('.sd-station-card')) {
-      document
-        .querySelectorAll('.sd-station-card.sd-job-move-open')
-        .forEach(card => closeJobMoveForCard(card));
-    }
-  });
+      if (!target.closest('.sd-station-card')) {
+        document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
+      }
+    });
 
     drawerClose.addEventListener('click', () => {
       drawerBackdrop.classList.remove('open');
     });
 
     drawerBackdrop.addEventListener('click', (e) => {
-      if (e.target === drawerBackdrop) {
-        drawerBackdrop.classList.remove('open');
-      }
+      if (e.target === drawerBackdrop) drawerBackdrop.classList.remove('open');
     });
 
-    // Close drawer + menus with ESC key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' || e.key === 'Esc') {
-        // 1) Close the right-hand drawer
         drawerBackdrop.classList.remove('open');
-
-        // 2) Close any open job-move menus
-        document
-          .querySelectorAll('.sd-station-card.sd-job-move-open')
-          .forEach(card => closeJobMoveForCard(card));
-
-        // 3) Close any open "More actions" menus
-        document
-          .querySelectorAll('.sd-more-wrapper.open')
-          .forEach(w => w.classList.remove('open'));
-
-        // 4) Remove elevation from any active cards
-        document
-          .querySelectorAll('.sd-station-card.sd-card-active')
-          .forEach(card => card.classList.remove('sd-card-active'));
+        document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
+        document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.sd-station-card.sd-card-active').forEach(card => card.classList.remove('sd-card-active'));
       }
     });
 
@@ -1906,34 +1697,21 @@ body.light .sd-hamburger {
     statusSelectEl.addEventListener('change', function () {
       const newStatus = this.value;
 
-      // Find the card currently shown in the drawer
       const title = drawerTitle.textContent.trim();
       const matchingCard = [...document.querySelectorAll('.sd-station-card')]
         .find(c => c.querySelector('.sd-station-title')?.textContent.trim() === title);
 
       if (!matchingCard) return;
 
-      // Update data-status (so filters & logic use the new value)
       matchingCard.setAttribute('data-status', newStatus);
 
-      // Remove old status classes
-      matchingCard.classList.remove(
-        'sd-status-running',
-        'sd-status-waiting',
-        'sd-status-blocked',
-        'sd-status-idle'
-      );
-
-      // Add the new one
+      matchingCard.classList.remove('sd-status-running','sd-status-waiting','sd-status-blocked','sd-status-idle');
       matchingCard.classList.add(`sd-status-${newStatus}`);
 
-      // Update pill label & dot color
       const pillLabel = matchingCard.querySelector('.sd-status-pill span:last-child');
       const dot = matchingCard.querySelector('.sd-status-dot');
 
-      if (pillLabel) {
-        pillLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-      }
+      if (pillLabel) pillLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
 
       if (dot) {
         if (newStatus === 'running') dot.style.background = 'var(--ok)';
@@ -1942,13 +1720,10 @@ body.light .sd-hamburger {
         else dot.style.background = 'var(--idle)';
       }
 
-      // Re-apply filters so this card may hide/show correctly based on new status
       applyFilters();
     });
 
-
-    // --- Job move interactions (current / next / queue) ---
-
+    // --- Job move interactions ---
     function closeJobMoveForCard(card) {
       card.classList.remove('sd-job-move-open');
       delete card.dataset.pendingJobLabel;
@@ -2010,27 +1785,22 @@ body.light .sd-hamburger {
       const card = btn.closest('.sd-station-card');
       if (!card) return;
 
-      const target = btn.getAttribute('data-move-target'); // current | next | queue
+      const target = btn.getAttribute('data-move-target');
       const rawLabel = card.dataset.pendingJobLabel || '';
       const label = rawLabel.trim();
-      if (!label) {
-        closeJobMoveForCard(card);
-        return;
-      }
+      if (!label) { closeJobMoveForCard(card); return; }
 
       const source = card.dataset.pendingJobSource || 'queue';
 
-      // Split "JOB-XXXX · meta" into ID + meta
       const parts = label.split('·');
       const jobId = parts[0].trim();
       const meta = parts.slice(1).join('·').trim();
 
-      const currentJobEl = card.querySelector('.sd-job-meta-row .sd-job-value'); // first job row
+      const currentJobEl = card.querySelector('.sd-job-meta-row .sd-job-value');
       const nextIdEl = card.querySelector('.sd-next-id');
       const nextMetaEl = card.querySelector('.sd-next-meta');
       const queueListEl = card.querySelector('.sd-queue-list');
 
-      // If source was queue and we're promoting to current/next, remove that pill
       if (source === 'queue' && target !== 'queue') {
         const activePill = card.querySelector('.sd-queue-pill-active');
         if (activePill) activePill.remove();
@@ -2040,9 +1810,7 @@ body.light .sd-hamburger {
         currentJobEl.textContent = jobId;
       } else if (target === 'next' && nextIdEl) {
         nextIdEl.textContent = jobId;
-        if (nextMetaEl && meta) {
-          nextMetaEl.textContent = meta;
-        }
+        if (nextMetaEl && meta) nextMetaEl.textContent = meta;
       } else if (target === 'queue' && queueListEl) {
         const pill = document.createElement('span');
         pill.className = 'sd-queue-pill';
@@ -2054,12 +1822,8 @@ body.light .sd-hamburger {
       closeJobMoveForCard(card);
     }
 
-    // Attach listeners once on load
-    document.querySelectorAll('.sd-queue-pill').forEach(pill => {
-      pill.addEventListener('click', handleQueuePillClick);
-    });
+    document.querySelectorAll('.sd-queue-pill').forEach(pill => pill.addEventListener('click', handleQueuePillClick));
 
-    // Make current job row clickable (first job row in each card)
     document.querySelectorAll('.sd-station-card').forEach(card => {
       const currentJobEl = card.querySelector('.sd-job-meta-row .sd-job-value');
       if (currentJobEl) {
@@ -2068,28 +1832,18 @@ body.light .sd-hamburger {
       }
     });
 
-    // Make next job ID clickable
     document.querySelectorAll('.sd-next-id').forEach(el => {
       el.style.cursor = 'pointer';
       el.addEventListener('click', handleNextJobClick);
     });
 
-    // Menu buttons
     document.querySelectorAll('.sd-job-move-menu [data-move-target]').forEach(btn => {
       btn.addEventListener('click', handleMoveTargetClick);
     });
 
-    // Clicking on card background closes the move menu
     document.querySelectorAll('.sd-station-card').forEach(card => {
-      card.addEventListener('click', () => {
-        closeJobMoveForCard(card);
-      });
+      card.addEventListener('click', () => { closeJobMoveForCard(card); });
     });
-
-    // TODO: When you’re ready, replace the hard-coded station cards with
-    // data-driven rendering from your Supabase queries. Keep the same
-    // structure & data-* attributes (data-status, data-line, data-station)
-    // so the filters and drawer logic continue to work.
   </script>
 </body>
 </html>
