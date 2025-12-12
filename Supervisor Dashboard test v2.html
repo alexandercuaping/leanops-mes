@@ -179,6 +179,16 @@
       color: #f9fafb;
     }
 
+    /* ---------- Page tabs (main content switching) ---------- */
+    .sd-page { display: none; }
+    .sd-page.sd-page-active { display: block; }
+
+    /* Optional: make disabled nav items look more disabled */
+    .sd-nav button[disabled] {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
     .sd-sidebar-filters {
       margin-top: 18px;
       padding-top: 14px;
@@ -1063,10 +1073,13 @@ body.light .sd-hamburger {
 
       <div class="sd-sidebar-main">
         <nav class="sd-nav">
-          <button class="sd-nav-active">Live stations</button>
+          <button class="sd-nav-active" data-page="page-live">Live stations</button>
+          <button data-page="page-worker">Worker efficiency</button>
+          <button data-page="page-dept">Department efficiency</button>
+
           <button disabled title="Coming soon">Job queue (coming soon)</button>
           <button disabled title="Coming soon">Analytics (coming soon)</button>
-        </nav>
+        </nav>  
       </div>
 
       <div class="sd-sidebar-filters">
@@ -1108,6 +1121,7 @@ body.light .sd-hamburger {
 
     <!-- MAIN AREA -->
     <main class="sd-main">
+      <section id="page-live" class="sd-page sd-page-active"></section>
       <div class="sd-top-row">
         <div>
           <div class="sd-top-title">Today’s flow</div>
@@ -1480,6 +1494,87 @@ body.light .sd-hamburger {
 
         <!-- Add more demo stations or generate via JS once wired to Supabase -->
       </section>
+    </section> <!-- end stationsGrid -->
+  </section> <!-- end page-live -->
+
+  <!-- WORKER EFFICIENCY PAGE -->
+<section id="page-worker" class="sd-page">
+  <div class="sd-top-row">
+    <div>
+      <div class="sd-top-title">Worker efficiency</div>
+      <div class="sd-top-meta">Per-worker pace vs standard, today & trends (placeholder).</div>
+    </div>
+    <div class="sd-top-meta">Coming next: Worker table + filters</div>
+  </div>
+
+  <section class="sd-today-summary">
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">Top performer</div>
+      <div class="sd-summary-value">A. Smith</div>
+      <div class="sd-summary-sub">112% vs std (demo)</div>
+    </article>
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">Needs support</div>
+      <div class="sd-summary-value">2 workers</div>
+      <div class="sd-summary-sub">&lt; 80% vs std (demo)</div>
+    </article>
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">Avg efficiency</div>
+      <div class="sd-summary-value">91%</div>
+      <div class="sd-summary-sub">Today (demo)</div>
+    </article>
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">Open issues</div>
+      <div class="sd-summary-value">3</div>
+      <div class="sd-summary-sub">Across stations (demo)</div>
+    </article>
+  </section>
+
+  <article class="sd-summary-card">
+    <div class="sd-summary-label">Next build</div>
+    <div class="sd-summary-sub">We’ll drop in: sortable worker table, station assignment, efficiency bars.</div>
+  </article>
+</section>
+
+<!-- DEPARTMENT EFFICIENCY PAGE -->
+<section id="page-dept" class="sd-page">
+  <div class="sd-top-row">
+    <div>
+      <div class="sd-top-title">Department efficiency</div>
+      <div class="sd-top-meta">Overall throughput, WIP, bottlenecks, and pacing (placeholder).</div>
+    </div>
+    <div class="sd-top-meta">Coming next: KPI tiles + charts</div>
+  </div>
+
+  <section class="sd-today-summary">
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">Dept efficiency</div>
+      <div class="sd-summary-value">89%</div>
+      <div class="sd-summary-sub">Today (demo)</div>
+    </article>
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">Bottleneck</div>
+      <div class="sd-summary-value">ST-02</div>
+      <div class="sd-summary-sub">Waiting material (demo)</div>
+    </article>
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">WIP</div>
+      <div class="sd-summary-value">14 jobs</div>
+      <div class="sd-summary-sub">In process (demo)</div>
+    </article>
+    <article class="sd-summary-card">
+      <div class="sd-summary-label">On-time risk</div>
+      <div class="sd-summary-value">3 jobs</div>
+      <div class="sd-summary-sub">Due ≤ 24h (demo)</div>
+    </article>
+  </section>
+
+  <article class="sd-summary-card">
+    <div class="sd-summary-label">Next build</div>
+    <div class="sd-summary-sub">We’ll add: trend chart, station stacked bars, and “what-if” simulation hooks.</div>
+  </article>
+</section>
+
     </main>
   </div>
 
@@ -1556,6 +1651,30 @@ body.light .sd-hamburger {
       } else {
         shell.classList.toggle('sidebar-collapsed');
       }
+    });
+
+  // --- Sidebar nav -> page switching (tabs) ---
+    const pages = document.querySelectorAll('.sd-page');
+    const navButtons = document.querySelectorAll('.sd-nav button[data-page]');
+
+    function setActivePage(pageId) {
+      pages.forEach(p => p.classList.remove('sd-page-active'));
+      document.getElementById(pageId)?.classList.add('sd-page-active');
+
+      navButtons.forEach(b => b.classList.remove('sd-nav-active'));
+      document.querySelector(`.sd-nav button[data-page="${pageId}"]`)?.classList.add('sd-nav-active');
+
+    // On mobile: collapse the sidebar after selecting a page
+      if (window.innerWidth <= 920) {
+        sidebar.classList.remove('open');
+      }
+    }
+
+    navButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const pageId = btn.getAttribute('data-page');
+        if (pageId) setActivePage(pageId);
+      });
     });
 
 
