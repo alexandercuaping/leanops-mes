@@ -50,23 +50,18 @@
       color: #0f172a;
     }
 
-    /* ---------- Layout shell ---------- */
-
     .sd-shell {
       display: grid;
       grid-template-columns: 260px minmax(0, 1fr);
       min-height: 100vh;
     }
 
-    /* Collapsed sidebar (desktop) */
     .sd-shell.sidebar-collapsed {
       grid-template-columns: 0 minmax(0, 1fr);
     }
 
     @media (max-width: 920px) {
-      .sd-shell {
-        grid-template-columns: minmax(0, 1fr);
-      }
+      .sd-shell { grid-template-columns: minmax(0, 1fr); }
       .sd-sidebar {
         position: sticky;
         top: 0;
@@ -77,21 +72,14 @@
         padding: 12px 16px;
         gap: 14px;
       }
-      .sd-sidebar-main,
-      .sd-sidebar-filters {
-        display: none;
-      }
+      .sd-sidebar-main, .sd-sidebar-filters { display: none; }
       .sd-sidebar.open .sd-sidebar-main,
-      .sd-sidebar.open .sd-sidebar-filters {
-        display: block;
-      }
+      .sd-sidebar.open .sd-sidebar-filters { display: block; }
       .sd-sidebar.open {
         align-items: flex-start;
         flex-direction: column;
       }
     }
-
-    /* ---------- Sidebar ---------- */
 
     .sd-sidebar {
       background: radial-gradient(circle at top left, #020617, #020617 55%);
@@ -103,7 +91,6 @@
       transition: transform 0.25s ease, opacity 0.2s ease;
     }
 
-    /* When shell is collapsed, slide sidebar out and disable pointer events */
     .sd-shell.sidebar-collapsed .sd-sidebar {
       opacity: 0;
       transform: translateX(-24px);
@@ -131,11 +118,7 @@
       color: #f9fafb;
     }
 
-    .sd-logo-sub {
-      font-size: 11px;
-      color: var(--text-muted);
-    }
-
+    .sd-logo-sub { font-size: 11px; color: var(--text-muted); }
     body.light .sd-logo-mark { color: #020617; }
 
     .sd-sidebar-main { margin-top: 6px; }
@@ -168,7 +151,6 @@
       color: #f9fafb;
     }
 
-    /* ---------- Page tabs ---------- */
     .sd-page { display: none; }
     .sd-page.sd-page-active { display: block; }
 
@@ -182,11 +164,9 @@
       padding-top: 14px;
       border-top: 1px solid rgba(30, 64, 175, 0.6);
     }
-
     body.light .sd-sidebar-filters { border-top: 1px solid #e5e7eb; }
 
     .sd-filter-group { margin-bottom: 12px; }
-
     .sd-filter-label {
       font-size: 11px;
       text-transform: uppercase;
@@ -195,11 +175,7 @@
       margin-bottom: 6px;
     }
 
-    .sd-chip-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
+    .sd-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .sd-chip {
       border-radius: var(--radius-pill);
@@ -217,11 +193,7 @@
       color: #fed7aa;
     }
 
-    body.light .sd-chip {
-      background: #f3f4f6;
-      color: #4b5563;
-    }
-
+    body.light .sd-chip { background: #f3f4f6; color: #4b5563; }
     body.light .sd-chip.sd-chip-active {
       background: #f97316;
       color: #111827;
@@ -255,11 +227,7 @@
       cursor: pointer;
       font-size: 16px;
     }
-
-    body.light .sd-hamburger {
-      background: #f9fafb;
-      color: #0f172a;
-    }
+    body.light .sd-hamburger { background: #f9fafb; color: #0f172a; }
 
     .sd-switch {
       width: 42px;
@@ -272,7 +240,6 @@
       cursor: pointer;
       background: rgba(15, 23, 42, 0.9);
     }
-
     .sd-switch-thumb {
       width: 16px;
       height: 16px;
@@ -281,21 +248,15 @@
       transform: translateX(0);
       transition: transform 0.2s ease;
     }
-
     body.light .sd-switch { background: #e5e7eb; }
     body.light .sd-switch-thumb { transform: translateX(18px); }
-
-    /* ---------- Main area ---------- */
 
     .sd-main {
       padding: 18px 22px 32px;
       max-width: 1200px;
       margin: 0 auto;
     }
-
-    @media (max-width: 720px) {
-      .sd-main { padding-inline: 14px; }
-    }
+    @media (max-width: 720px) { .sd-main { padding-inline: 14px; } }
 
     .sd-top-row {
       display: flex;
@@ -312,10 +273,7 @@
       letter-spacing: 0.02em;
     }
 
-    .sd-top-meta {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
+    .sd-top-meta { font-size: 12px; color: var(--text-muted); }
 
     .sd-today-summary {
       display: grid;
@@ -324,13 +282,8 @@
       margin-bottom: 16px;
     }
 
-    @media (max-width: 920px) {
-      .sd-today-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-
-    @media (max-width: 580px) {
-      .sd-today-summary { grid-template-columns: minmax(0, 1fr); }
-    }
+    @media (max-width: 920px) { .sd-today-summary { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 580px) { .sd-today-summary { grid-template-columns: minmax(0, 1fr); } }
 
     .sd-summary-card {
       border-radius: 16px;
@@ -340,7 +293,6 @@
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.6);
       font-size: 12px;
     }
-
     body.light .sd-summary-card {
       background: #ffffff;
       box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
@@ -353,16 +305,10 @@
       color: var(--text-muted);
       margin-bottom: 4px;
     }
-
     .sd-summary-value { font-size: 18px; font-weight: 600; }
     .sd-summary-sub { font-size: 11px; color: var(--text-muted); }
 
-    .sd-priority-strip {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 10px 0 18px;
-    }
+    .sd-priority-strip { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 18px; }
 
     .sd-priority-pill {
       display: inline-flex;
@@ -376,22 +322,16 @@
       color: var(--text-muted);
       cursor: pointer;
     }
-
     .sd-priority-pill span.sd-dot {
       width: 7px;
       height: 7px;
       border-radius: 999px;
       background: var(--danger);
     }
-
     .sd-priority-pill.sd-pill-warn span.sd-dot { background: var(--warn); }
     .sd-priority-pill.sd-pill-ok span.sd-dot { background: var(--ok); }
 
-    body.light .sd-priority-pill {
-      background: #ffffff;
-      border-color: #e5e7eb;
-      color: #4b5563;
-    }
+    body.light .sd-priority-pill { background: #ffffff; border-color: #e5e7eb; color: #4b5563; }
 
     .sd-view-row {
       display: flex;
@@ -409,7 +349,6 @@
       border: 1px solid rgba(148, 163, 184, 0.7);
       background: rgba(15, 23, 42, 0.85);
     }
-
     .sd-view-toggle button {
       border: none;
       background: transparent;
@@ -419,20 +358,14 @@
       color: var(--text-muted);
       cursor: pointer;
     }
-
     .sd-view-toggle button.sd-view-active {
       background: #f97316;
       color: #111827;
       font-weight: 600;
     }
-
     body.light .sd-view-toggle { background: #f3f4f6; }
 
-    .sd-inline-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
+    .sd-inline-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
     .sd-inline-btn {
       border-radius: 999px;
@@ -443,24 +376,15 @@
       font-size: 11px;
       cursor: pointer;
     }
-
-    body.light .sd-inline-btn {
-      background: #ffffff;
-      color: #4b5563;
-    }
-
-    /* ---------- Station grid & cards ---------- */
+    body.light .sd-inline-btn { background: #ffffff; color: #4b5563; }
 
     .sd-stations {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
-      overflow: visible; /* key */
+      overflow: visible;
     }
-
-    @media (max-width: 1000px) {
-      .sd-stations { grid-template-columns: minmax(0, 1fr); }
-    }
+    @media (max-width: 1000px) { .sd-stations { grid-template-columns: minmax(0, 1fr); } }
 
     .sd-station-card {
       position: relative;
@@ -468,47 +392,31 @@
       border-radius: var(--radius-lg);
       background: linear-gradient(145deg, #020617, #020617 35%, #020617 100%);
       border: 1px solid rgba(15, 23, 42, 0.9);
-      box-shadow:
-        0 16px 36px rgba(15, 23, 42, 0.8),
-        0 0 0 1px rgba(148, 163, 184, 0.22);
+      box-shadow: 0 16px 36px rgba(15, 23, 42, 0.8),
+                  0 0 0 1px rgba(148, 163, 184, 0.22);
       padding: 12px 14px 12px;
       display: flex;
       flex-direction: column;
       gap: 10px;
       cursor: pointer;
       transition: transform 0.16s ease, box-shadow 0.18s ease, border-color 0.18s ease;
-      overflow: visible; /* key */
+      overflow: visible;
     }
-
     .sd-station-card.sd-card-active { z-index: 100; }
-
     .sd-station-card:hover {
       transform: translateY(-3px);
-      box-shadow:
-        0 22px 46px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(248, 250, 252, 0.08);
+      box-shadow: 0 22px 46px rgba(15, 23, 42, 0.95),
+                  0 0 0 1px rgba(248, 250, 252, 0.08);
       border-color: rgba(248, 250, 252, 0.12);
     }
-
     body.light .sd-station-card {
       background: #ffffff;
       border-color: #e5e7eb;
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
     }
 
-    .sd-station-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sd-station-title {
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-    }
-
+    .sd-station-header { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+    .sd-station-title { font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
     .sd-station-sub { font-size: 11px; color: var(--text-muted); }
 
     .sd-status-pill {
@@ -524,23 +432,12 @@
       background: rgba(15, 23, 42, 0.85);
       color: var(--text-muted);
     }
-
-    .sd-status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: var(--idle);
-    }
-
+    .sd-status-dot { width: 7px; height: 7px; border-radius: 999px; background: var(--idle); }
     .sd-status-running .sd-status-dot { background: var(--ok); }
     .sd-status-waiting .sd-status-dot { background: var(--warn); }
     .sd-status-blocked .sd-status-dot { background: var(--danger); }
     .sd-status-idle .sd-status-dot { background: var(--idle); }
-
-    body.light .sd-status-pill {
-      background: #f9fafb;
-      color: #4b5563;
-    }
+    body.light .sd-status-pill { background: #f9fafb; color: #4b5563; }
 
     .sd-station-main {
       display: grid;
@@ -548,48 +445,16 @@
       gap: 10px;
       font-size: 12px;
     }
+    @media (max-width: 680px) { .sd-station-main { grid-template-columns: minmax(0, 1fr); } }
 
-    @media (max-width: 680px) {
-      .sd-station-main { grid-template-columns: minmax(0, 1fr); }
-    }
-
-    .sd-job-meta-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      margin-bottom: 3px;
-    }
-
+    .sd-job-meta-row { display: flex; justify-content: space-between; gap: 8px; margin-bottom: 3px; }
     .sd-job-label { color: var(--text-muted); }
     .sd-job-value { font-weight: 500; }
 
     .sd-progress-wrap { margin-top: 4px; }
-
-    .sd-progress-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 3px;
-    }
-
-    .sd-progress-bar {
-      position: relative;
-      height: 7px;
-      border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      overflow: hidden;
-    }
-
-    .sd-progress-fill {
-      position: absolute;
-      inset: 0;
-      width: 40%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, #22c55e, #a3e635);
-      transition: width 0.25s ease;
-    }
-
+    .sd-progress-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text-muted); margin-bottom: 3px; }
+    .sd-progress-bar { position: relative; height: 7px; border-radius: 999px; background: rgba(15, 23, 42, 0.9); overflow: hidden; }
+    .sd-progress-fill { position: absolute; inset: 0; width: 40%; border-radius: inherit; background: linear-gradient(90deg, #22c55e, #a3e635); transition: width 0.25s ease; }
     body.light .sd-progress-bar { background: #e5e7eb; }
 
     .sd-next-job {
@@ -599,27 +464,10 @@
       background: rgba(15, 23, 42, 0.8);
       border: 1px dashed rgba(148, 163, 184, 0.6);
     }
+    body.light .sd-next-job { background: #f3f4f6; border-style: solid; }
 
-    body.light .sd-next-job {
-      background: #f3f4f6;
-      border-style: solid;
-    }
-
-    .sd-next-label {
-      font-size: 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 2px;
-    }
-
-    .sd-next-main {
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      font-size: 11px;
-    }
-
+    .sd-next-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-muted); margin-bottom: 2px; }
+    .sd-next-main { display: flex; justify-content: space-between; gap: 8px; font-size: 11px; }
     .sd-next-id { font-weight: 600; }
     .sd-next-meta { color: var(--text-muted); text-align: right; white-space: nowrap; }
 
@@ -633,12 +481,7 @@
       gap: 4px;
       font-size: 11px;
     }
-
-    body.light .sd-metrics {
-      background: #f9fafb;
-      border-color: #e5e7eb;
-    }
-
+    body.light .sd-metrics { background: #f9fafb; border-color: #e5e7eb; }
     .sd-metric-label { color: var(--text-muted); }
     .sd-metric-value { font-weight: 600; font-size: 12px; }
 
@@ -662,19 +505,13 @@
       gap: 6px;
       transition: background 0.16s ease, border-color 0.16s ease, color 0.16s ease, transform 0.12s ease;
     }
-
     .sd-action-chip:hover {
       background: var(--accent-soft);
       border-color: var(--accent);
       color: #fef3c7;
       transform: translateY(-1px);
     }
-
-    body.light .sd-action-chip {
-      background: #ffffff;
-      color: #4b5563;
-    }
-
+    body.light .sd-action-chip { background: #ffffff; color: #4b5563; }
     body.light .sd-action-chip:hover {
       background: #f97316;
       border-color: #ea580c;
@@ -687,7 +524,6 @@
       border-top: 1px dashed rgba(148, 163, 184, 0.4);
       font-size: 11px;
     }
-
     .sd-queue-title {
       text-transform: uppercase;
       letter-spacing: 0.12em;
@@ -695,7 +531,6 @@
       color: var(--text-muted);
       margin-bottom: 4px;
     }
-
     .sd-queue-list { display: flex; flex-wrap: wrap; gap: 6px; }
 
     .sd-queue-pill {
@@ -707,25 +542,17 @@
       cursor: pointer;
       transition: border-color 0.16s ease, color 0.16s ease, background 0.16s ease;
     }
-
     .sd-queue-pill:hover {
       border-color: var(--accent);
       color: #fef3c7;
       background: rgba(15, 23, 42, 0.95);
     }
-
     .sd-queue-pill.sd-queue-pill-active {
       border-color: var(--accent);
       color: #fef3c7;
       background: var(--accent-soft);
     }
-
-    body.light .sd-queue-pill {
-      background: #f9fafb;
-      color: #4b5563;
-      border-color: #e5e7eb;
-    }
-
+    body.light .sd-queue-pill { background: #f9fafb; color: #4b5563; border-color: #e5e7eb; }
     body.light .sd-queue-pill:hover,
     body.light .sd-queue-pill.sd-queue-pill-active {
       background: #f97316;
@@ -748,7 +575,6 @@
       z-index: 5;
       font-size: 11px;
     }
-
     .sd-job-move-menu button {
       border: none;
       background: transparent;
@@ -758,22 +584,16 @@
       border-radius: 8px;
       cursor: pointer;
     }
-
     .sd-job-move-menu button:hover {
       background: rgba(15, 23, 42, 0.9);
       color: #fef3c7;
     }
-
     body.light .sd-job-move-menu {
       background: #ffffff;
       border-color: #e5e7eb;
       box-shadow: 0 10px 28px rgba(15, 23, 42, 0.18);
     }
-
-    body.light .sd-job-move-menu button:hover {
-      background: #f3f4f6;
-      color: #111827;
-    }
+    body.light .sd-job-move-menu button:hover { background: #f3f4f6; color: #111827; }
 
     .sd-station-card.sd-job-move-open .sd-job-move-menu { display: flex; }
 
@@ -795,27 +615,152 @@
       gap: 4px;
       z-index: 60;
     }
-
     .sd-more-wrapper.open .sd-more-menu { display: flex; }
     .sd-more-menu .sd-action-chip { width: 100%; justify-content: flex-start; }
-
     body.light .sd-more-menu {
       background: #ffffff;
       border-color: #e5e7eb;
       box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
     }
 
-    /* Compact view */
     .view-compact .sd-station-main { grid-template-columns: minmax(0, 1fr); }
     .view-compact .sd-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-    /* ---------- Action drawer ---------- */
 
     body.light #statusSelect {
       background: #ffffff !important;
       color: #111827 !important;
       border-color: #d1d5db !important;
     }
+
+    /* ---------- Add Station Modal ---------- */
+    .sd-modal-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 70;
+      padding: 16px;
+    }
+    .sd-modal-backdrop.open{ display:flex; }
+
+    .sd-modal{
+      width: 520px;
+      max-width: 100%;
+      border-radius: 18px;
+      background: radial-gradient(circle at top left, #020617, #020617 75%);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.92);
+      padding: 16px 16px 14px;
+    }
+
+    body.light .sd-modal{
+      background: #ffffff;
+      border-color: #e5e7eb;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+    }
+
+    .sd-modal-header{
+      display:flex;
+      align-items:flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .sd-modal-title{
+      font-family: var(--font-display);
+      font-size: 18px;
+      letter-spacing: 0.02em;
+    }
+
+    .sd-modal-sub{
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .sd-modal-close{
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      padding: 4px 9px;
+      font-size: 12px;
+      background: transparent;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .sd-form-grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 560px){
+      .sd-form-grid{ grid-template-columns: 1fr; }
+    }
+
+    .sd-field{
+      display:flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sd-field label{
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-muted);
+    }
+
+    .sd-input, .sd-select{
+      width:100%;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .sd-input::placeholder{ color: rgba(156, 163, 175, 0.65); }
+
+    body.light .sd-input,
+    body.light .sd-select{
+      background: #f9fafb;
+      color: #111827;
+      border-color: #d1d5db;
+    }
+
+    .sd-modal-footer{
+      display:flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .sd-btn{
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-main);
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .sd-btn.primary{
+      border-color: transparent;
+      background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+      color: #111827;
+      font-weight: 700;
+    }
+
+    body.light .sd-btn{ background:#111827; color:#f9fafb; }
+    body.light .sd-btn.primary{ background: linear-gradient(135deg, #f97316, #ea580c); }
+
 
     .sd-drawer-backdrop {
       position: fixed;
@@ -826,7 +771,6 @@
       justify-content: flex-end;
       z-index: 40;
     }
-
     .sd-drawer-backdrop.open { display: flex; }
 
     .sd-drawer {
@@ -837,7 +781,6 @@
       box-shadow: -18px 0 38px rgba(15, 23, 42, 0.9);
       padding: 18px 18px 22px;
     }
-
     body.light .sd-drawer {
       background: #ffffff;
       border-left: 1px solid #e5e7eb;
@@ -851,9 +794,7 @@
       gap: 10px;
       margin-bottom: 10px;
     }
-
     .sd-drawer-title { font-family: var(--font-display); font-size: 18px; }
-
     .sd-drawer-close {
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.8);
@@ -880,18 +821,9 @@
       font-size: 12px;
       background: rgba(15, 23, 42, 0.9);
     }
+    body.light .sd-drawer-box { background: #f9fafb; border-color: #e5e7eb; }
 
-    body.light .sd-drawer-box {
-      background: #f9fafb;
-      border-color: #e5e7eb;
-    }
-
-    .sd-drawer-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
-    }
+    .sd-drawer-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 
     .sd-drawer-btn {
       border-radius: 999px;
@@ -902,14 +834,12 @@
       font-size: 12px;
       cursor: pointer;
     }
-
     .sd-drawer-btn.sd-primary {
       border-color: transparent;
       background: linear-gradient(135deg, var(--accent), var(--accent-strong));
       color: #111827;
       font-weight: 600;
     }
-
     body.light .sd-drawer-btn { background: #111827; color: #f9fafb; }
     body.light .sd-drawer-btn.sd-primary { background: linear-gradient(135deg, #f97316, #ea580c); }
   </style>
@@ -919,7 +849,6 @@
   <button class="sd-hamburger" id="toggleSidebarGlobal">☰</button>
 
   <div class="sd-shell">
-    <!-- SIDEBAR -->
     <aside class="sd-sidebar">
       <div class="sd-logo">
         <div>
@@ -933,7 +862,6 @@
           <button class="sd-nav-active" data-page="page-live">Live stations</button>
           <button data-page="page-worker">Worker efficiency</button>
           <button data-page="page-dept">Department efficiency</button>
-
           <button disabled title="Coming soon">Job queue (coming soon)</button>
           <button disabled title="Coming soon">Analytics (coming soon)</button>
         </nav>
@@ -976,11 +904,8 @@
       </div>
     </aside>
 
-    <!-- MAIN AREA -->
     <main class="sd-main">
-      <!-- LIVE STATIONS PAGE -->
       <section id="page-live" class="sd-page sd-page-active">
-
         <div class="sd-top-row">
           <div>
             <div class="sd-top-title">Today’s flow</div>
@@ -989,7 +914,6 @@
           <div class="sd-top-meta" id="sd-date"></div>
         </div>
 
-        <!-- TODAY SUMMARY -->
         <section class="sd-today-summary">
           <article class="sd-summary-card">
             <div class="sd-summary-label">Jobs completed</div>
@@ -1013,334 +937,35 @@
           </article>
         </section>
 
-        <!-- PRIORITY STRIP -->
         <div class="sd-priority-strip">
           <button class="sd-priority-pill" data-status-filter="blocked">
-            <span class="sd-dot"></span>
-            <span>1 station blocked</span>
+            <span class="sd-dot"></span><span>1 station blocked</span>
           </button>
           <button class="sd-priority-pill sd-pill-warn" data-status-filter="waiting">
-            <span class="sd-dot"></span>
-            <span>2 waiting on material</span>
+            <span class="sd-dot"></span><span>2 waiting on material</span>
           </button>
           <button class="sd-priority-pill sd-pill-ok" data-status-filter="running">
-            <span class="sd-dot"></span>
-            <span>3 running at or above pace</span>
+            <span class="sd-dot"></span><span>3 running at or above pace</span>
           </button>
         </div>
 
-        <!-- VIEW CONTROLS -->
         <div class="sd-view-row">
           <div class="sd-view-toggle">
             <button class="sd-view-active" data-view-main="expanded">Expanded</button>
             <button data-view-main="compact">Compact</button>
           </div>
           <div class="sd-inline-actions">
-            <button class="sd-inline-btn">Quick refresh</button>
-            <button class="sd-inline-btn">Global job queue</button>
-            <button class="sd-inline-btn">Simulate next hour</button>
+            <button class="sd-inline-btn" id="btnQuickRefresh" type="button">Quick refresh</button>
+            <button class="sd-inline-btn" id="btnGlobalQueue" type="button">Global job queue</button>
+            <button class="sd-inline-btn" id="btnSimNextHour" type="button">Simulate next hour</button>
+            <button class="sd-inline-btn" id="btnAddStation" type="button">➕ Add station</button>
           </div>
         </div>
 
-        <!-- STATION GRID (FIXED TAG) -->
-        <section id="stationsGrid" class="sd-stations">
-          <!-- Station 1 -->
-          <article class="sd-station-card sd-status-running"
-                   data-status="running" data-line="A" data-station="ST-01">
-            <div class="sd-station-header">
-              <div>
-                <div class="sd-station-title">Station 1 — Panel Assembly</div>
-                <div class="sd-station-sub">Line A · ST-01</div>
-              </div>
-              <div class="sd-status-pill">
-                <span class="sd-status-dot"></span>
-                <span>Running</span>
-              </div>
-            </div>
-
-            <div class="sd-station-main">
-              <div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Current job</div>
-                  <div class="sd-job-value">JOB-1001</div>
-                </div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Description</div>
-                  <div class="sd-job-value">Panel Assembly</div>
-                </div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Due</div>
-                  <div class="sd-job-value">Nov 30</div>
-                </div>
-
-                <div class="sd-progress-wrap">
-                  <div class="sd-progress-label">
-                    <span>Progress</span>
-                    <span>40 / 50 pcs</span>
-                  </div>
-                  <div class="sd-progress-bar">
-                    <div class="sd-progress-fill" style="width:80%"></div>
-                  </div>
-                </div>
-
-                <div class="sd-next-job">
-                  <div class="sd-next-label">Next job</div>
-                  <div class="sd-next-main">
-                    <span class="sd-next-id">JOB-1008</span>
-                    <span class="sd-next-meta">20 pcs · Due Dec 1</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sd-metrics">
-                <div>
-                  <div class="sd-metric-label">Pace vs std</div>
-                  <div class="sd-metric-value">104%</div>
-                </div>
-                <div>
-                  <div class="sd-metric-label">Units this hour</div>
-                  <div class="sd-metric-value">12</div>
-                </div>
-                <div>
-                  <div class="sd-metric-label">Material OK</div>
-                  <div class="sd-metric-value">Yes</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-station-actions">
-              <span class="sd-action-chip">✔ Mark complete</span>
-              <span class="sd-action-chip">📦 Request material</span>
-              <span class="sd-action-chip">🔄 Change status</span>
-
-              <div class="sd-more-wrapper">
-                <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
-                <div class="sd-more-menu">
-                  <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
-                  <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
-                  <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
-                  <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
-                  <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
-                  <button class="sd-action-chip sd-more-item">📝 Add note</button>
-                  <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-queue">
-              <div class="sd-queue-title">Queue</div>
-              <div class="sd-queue-list">
-                <span class="sd-queue-pill">JOB-1015 · 30 pcs · Today</span>
-                <span class="sd-queue-pill">JOB-1020 · 10 pcs · Tomorrow</span>
-              </div>
-            </div>
-
-            <div class="sd-job-move-menu">
-              <button type="button" data-move-target="current">Move job to current</button>
-              <button type="button" data-move-target="next">Move job to next</button>
-              <button type="button" data-move-target="queue">Move job to queue</button>
-            </div>
-          </article>
-
-          <!-- Station 2 -->
-          <article class="sd-station-card sd-status-waiting"
-                   data-status="waiting" data-line="A" data-station="ST-02">
-            <div class="sd-station-header">
-              <div>
-                <div class="sd-station-title">Station 2 — Frame Assembly</div>
-                <div class="sd-station-sub">Line A · ST-02</div>
-              </div>
-              <div class="sd-status-pill">
-                <span class="sd-status-dot"></span>
-                <span>Waiting material</span>
-              </div>
-            </div>
-
-            <div class="sd-station-main">
-              <div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Current job</div>
-                  <div class="sd-job-value">JOB-1005</div>
-                </div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Description</div>
-                  <div class="sd-job-value">Frame Assembly</div>
-                </div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Due</div>
-                  <div class="sd-job-value">Nov 29</div>
-                </div>
-
-                <div class="sd-progress-wrap">
-                  <div class="sd-progress-label">
-                    <span>Progress</span>
-                    <span>18 / 40 pcs</span>
-                  </div>
-                  <div class="sd-progress-bar">
-                    <div class="sd-progress-fill" style="width:45%"></div>
-                  </div>
-                </div>
-
-                <div class="sd-next-job">
-                  <div class="sd-next-label">Next job</div>
-                  <div class="sd-next-main">
-                    <span class="sd-next-id">JOB-1010</span>
-                    <span class="sd-next-meta">22 pcs · Due Dec 2</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sd-metrics">
-                <div>
-                  <div class="sd-metric-label">Pace vs std</div>
-                  <div class="sd-metric-value">88%</div>
-                </div>
-                <div>
-                  <div class="sd-metric-label">Units this hour</div>
-                  <div class="sd-metric-value">4</div>
-                </div>
-                <div>
-                  <div class="sd-metric-label">Material OK</div>
-                  <div class="sd-metric-value">No</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-station-actions">
-              <span class="sd-action-chip">✔ Mark complete</span>
-              <span class="sd-action-chip">📦 Request material</span>
-              <span class="sd-action-chip">🔄 Change status</span>
-
-              <div class="sd-more-wrapper">
-                <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
-                <div class="sd-more-menu">
-                  <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
-                  <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
-                  <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
-                  <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
-                  <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
-                  <button class="sd-action-chip sd-more-item">📝 Add note</button>
-                  <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-queue">
-              <div class="sd-queue-title">Queue</div>
-              <div class="sd-queue-list">
-                <span class="sd-queue-pill">JOB-1022 · 16 pcs · Today</span>
-                <span class="sd-queue-pill">JOB-1027 · 12 pcs · Tomorrow</span>
-              </div>
-            </div>
-
-            <div class="sd-job-move-menu">
-              <button type="button" data-move-target="current">Move job to current</button>
-              <button type="button" data-move-target="next">Move job to next</button>
-              <button type="button" data-move-target="queue">Move job to queue</button>
-            </div>
-          </article>
-
-          <!-- Station 3 -->
-          <article class="sd-station-card sd-status-blocked"
-                   data-status="blocked" data-line="B" data-station="ST-03">
-            <div class="sd-station-header">
-              <div>
-                <div class="sd-station-title">Station 3 — Final Inspection</div>
-                <div class="sd-station-sub">Line B · ST-03</div>
-              </div>
-              <div class="sd-status-pill">
-                <span class="sd-status-dot"></span>
-                <span>Blocked</span>
-              </div>
-            </div>
-
-            <div class="sd-station-main">
-              <div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Current job</div>
-                  <div class="sd-job-value">JOB-1012</div>
-                </div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Description</div>
-                  <div class="sd-job-value">QC & Pack</div>
-                </div>
-                <div class="sd-job-meta-row">
-                  <div class="sd-job-label">Due</div>
-                  <div class="sd-job-value">Today</div>
-                </div>
-
-                <div class="sd-progress-wrap">
-                  <div class="sd-progress-label">
-                    <span>Progress</span>
-                    <span>6 / 20 pcs</span>
-                  </div>
-                  <div class="sd-progress-bar">
-                    <div class="sd-progress-fill" style="width:30%"></div>
-                  </div>
-                </div>
-
-                <div class="sd-next-job">
-                  <div class="sd-next-label">Next job</div>
-                  <div class="sd-next-main">
-                    <span class="sd-next-id">JOB-1018</span>
-                    <span class="sd-next-meta">15 pcs · Due Dec 1</span>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sd-metrics">
-                <div>
-                  <div class="sd-metric-label">Issue</div>
-                  <div class="sd-metric-value">Rework</div>
-                </div>
-                <div>
-                  <div class="sd-metric-label">Time blocked</div>
-                  <div class="sd-metric-value">32 min</div>
-                </div>
-                <div>
-                  <div class="sd-metric-label">Support</div>
-                  <div class="sd-metric-value">Requested</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-station-actions">
-              <span class="sd-action-chip">✔ Mark complete</span>
-              <span class="sd-action-chip">📦 Request material</span>
-              <span class="sd-action-chip">🔄 Change status</span>
-
-              <div class="sd-more-wrapper">
-                <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
-                <div class="sd-more-menu">
-                  <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
-                  <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
-                  <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
-                  <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
-                  <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
-                  <button class="sd-action-chip sd-more-item">📝 Add note</button>
-                  <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
-                </div>
-              </div>
-            </div>
-
-            <div class="sd-queue">
-              <div class="sd-queue-title">Queue</div>
-              <div class="sd-queue-list">
-                <span class="sd-queue-pill">JOB-1030 · 8 pcs · Today</span>
-                <span class="sd-queue-pill">JOB-1034 · 18 pcs · Tomorrow</span>
-              </div>
-            </div>
-
-            <div class="sd-job-move-menu">
-              <button type="button" data-move-target="current">Move job to current</button>
-              <button type="button" data-move-target="next">Move job to next</button>
-              <button type="button" data-move-target="queue">Move job to queue</button>
-            </div>
-          </article>
-        </section>
+        <!-- ✅ Option B: empty container, filled by JS -->
+        <section id="stationsGrid" class="sd-stations"></section>
       </section>
 
-      <!-- WORKER EFFICIENCY PAGE -->
       <section id="page-worker" class="sd-page">
         <div class="sd-top-row">
           <div>
@@ -1379,7 +1004,6 @@
         </article>
       </section>
 
-      <!-- DEPARTMENT EFFICIENCY PAGE -->
       <section id="page-dept" class="sd-page">
         <div class="sd-top-row">
           <div>
@@ -1420,6 +1044,72 @@
     </main>
   </div>
 
+  <!-- ADD STATION MODAL -->
+  <div class="sd-modal-backdrop" id="addStationBackdrop" aria-hidden="true">
+    <div class="sd-modal" role="dialog" aria-modal="true" aria-labelledby="addStationTitle">
+      <div class="sd-modal-header">
+        <div>
+          <div class="sd-modal-title" id="addStationTitle">Add station</div>
+          <div class="sd-modal-sub">Creates a new station card (no hard-coding).</div>
+        </div>
+        <button class="sd-modal-close" id="addStationClose" type="button">Close</button>
+      </div>
+
+      <div class="sd-form-grid">
+        <div class="sd-field" style="grid-column: 1 / -1;">
+          <label for="addStationName">Station name</label>
+          <input class="sd-input" id="addStationName" type="text" placeholder="e.g., Station 4 — Crating" />
+        </div>
+
+        <div class="sd-field">
+          <label for="addStationLine">Line</label>
+          <select class="sd-select" id="addStationLine">
+            <option value="A">Line A</option>
+            <option value="B">Line B</option>
+            <option value="C">Line C</option>
+          </select>
+        </div>
+
+        <div class="sd-field">
+          <label for="addStationStatus">Starting status</label>
+          <select class="sd-select" id="addStationStatus">
+            <option value="idle">Idle</option>
+            <option value="running">Running</option>
+            <option value="waiting">Waiting</option>
+            <option value="blocked">Blocked</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="sd-modal-footer">
+        <button class="sd-btn" id="addStationCancel" type="button">Cancel</button>
+        <button class="sd-btn primary" id="addStationCreate" type="button">Create station</button>
+      </div>
+    </div>
+  </div>
+    
+
+  <!-- GLOBAL JOB QUEUE DRAWER -->
+  <div class="sd-drawer-backdrop" id="queueBackdrop" aria-hidden="true">
+    <div class="sd-drawer">
+      <div class="sd-drawer-header">
+        <div>
+          <div class="sd-drawer-title">Global job queue</div>
+          <div class="sd-top-meta">All visible station queues combined (demo)</div>
+        </div>
+        <button class="sd-drawer-close" id="queueClose" type="button">Close</button>
+      </div>
+
+      <div class="sd-drawer-section-label">Queue list</div>
+      <div class="sd-drawer-box" id="queueListBox">Loading…</div>
+
+      <div class="sd-drawer-section-label">Notes</div>
+      <div class="sd-drawer-box" style="color: var(--text-muted); font-size: 12px;">
+        Next step: convert this to live data + add priority sorting (due date, blocked, material).
+      </div>
+    </div>
+  </div>
+
   <!-- ACTION DRAWER -->
   <div class="sd-drawer-backdrop" id="drawerBackdrop">
     <div class="sd-drawer">
@@ -1433,9 +1123,7 @@
 
       <div>
         <div class="sd-drawer-section-label">Snapshot</div>
-        <div class="sd-drawer-box" id="drawerSnapshot">
-          Select a station to see live details.
-        </div>
+        <div class="sd-drawer-box" id="drawerSnapshot">Select a station to see live details.</div>
 
         <div class="sd-drawer-section-label">Status</div>
         <div class="sd-drawer-box">
@@ -1466,20 +1154,196 @@
   </div>
 
   <script>
+    // =========================
+    // OPTION B: STATION CONFIG
+    // =========================
+    const stationsConfig = [
+      {
+        stationId: "ST-01",
+        line: "A",
+        title: "Station 1 — Panel Assembly",
+        status: "running",
+        current: { jobId: "JOB-1001", desc: "Panel Assembly", due: "Nov 30", done: 40, total: 50 },
+        next:    { jobId: "JOB-1008", meta: "20 pcs · Due Dec 1" },
+        metrics: [
+          { label: "Pace vs std", value: "104%" },
+          { label: "Units this hour", value: "12" },
+          { label: "Material OK", value: "Yes" }
+        ],
+        queue: ["JOB-1015 · 30 pcs · Today", "JOB-1020 · 10 pcs · Tomorrow"]
+      },
+      {
+        stationId: "ST-02",
+        line: "A",
+        title: "Station 2 — Frame Assembly",
+        status: "waiting",
+        current: { jobId: "JOB-1005", desc: "Frame Assembly", due: "Nov 29", done: 18, total: 40 },
+        next:    { jobId: "JOB-1010", meta: "22 pcs · Due Dec 2" },
+        metrics: [
+          { label: "Pace vs std", value: "88%" },
+          { label: "Units this hour", value: "4" },
+          { label: "Material OK", value: "No" }
+        ],
+        queue: ["JOB-1022 · 16 pcs · Today", "JOB-1027 · 12 pcs · Tomorrow"]
+      },
+      {
+        stationId: "ST-03",
+        line: "B",
+        title: "Station 3 — Final Inspection",
+        status: "blocked",
+        current: { jobId: "JOB-1012", desc: "QC & Pack", due: "Today", done: 6, total: 20 },
+        next:    { jobId: "JOB-1018", meta: "15 pcs · Due Dec 1" },
+        metrics: [
+          { label: "Issue", value: "Rework" },
+          { label: "Time blocked", value: "32 min" },
+          { label: "Support", value: "Requested" }
+        ],
+        queue: ["JOB-1030 · 8 pcs · Today", "JOB-1034 · 18 pcs · Tomorrow"]
+      }
+    ];
+
+    function escapeHtml(s) {
+      return String(s ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function statusLabel(status) {
+      if (status === "running") return "Running";
+      if (status === "waiting") return "Waiting material";
+      if (status === "blocked") return "Blocked";
+      if (status === "idle") return "Idle";
+      return String(status || "Status");
+    }
+
+    function progressPct(done, total) {
+      const d = Number(done || 0);
+      const t = Number(total || 0);
+      if (!t) return 0;
+      return Math.max(0, Math.min(100, Math.round((d / t) * 100)));
+    }
+
+    function renderStationCard(st) {
+      const pct = progressPct(st.current?.done, st.current?.total);
+      const metricsHtml = (st.metrics || []).slice(0, 3).map(m => `
+        <div>
+          <div class="sd-metric-label">${escapeHtml(m.label)}</div>
+          <div class="sd-metric-value">${escapeHtml(m.value)}</div>
+        </div>
+      `).join("");
+
+      const queueHtml = (st.queue || []).map(item => `
+        <span class="sd-queue-pill">${escapeHtml(item)}</span>
+      `).join("");
+
+      return `
+        <article class="sd-station-card sd-status-${escapeHtml(st.status)}"
+          data-status="${escapeHtml(st.status)}"
+          data-line="${escapeHtml(st.line)}"
+          data-station="${escapeHtml(st.stationId)}">
+
+          <div class="sd-station-header">
+            <div>
+              <div class="sd-station-title">${escapeHtml(st.title)}</div>
+              <div class="sd-station-sub">Line ${escapeHtml(st.line)} · ${escapeHtml(st.stationId)}</div>
+            </div>
+            <div class="sd-status-pill">
+              <span class="sd-status-dot"></span>
+              <span>${escapeHtml(statusLabel(st.status))}</span>
+            </div>
+          </div>
+
+          <div class="sd-station-main">
+            <div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Current job</div>
+                <div class="sd-job-value">${escapeHtml(st.current?.jobId || "—")}</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Description</div>
+                <div class="sd-job-value">${escapeHtml(st.current?.desc || "—")}</div>
+              </div>
+              <div class="sd-job-meta-row">
+                <div class="sd-job-label">Due</div>
+                <div class="sd-job-value">${escapeHtml(st.current?.due || "—")}</div>
+              </div>
+
+              <div class="sd-progress-wrap">
+                <div class="sd-progress-label">
+                  <span>Progress</span>
+                  <span>${escapeHtml(st.current?.done ?? 0)} / ${escapeHtml(st.current?.total ?? 0)} pcs</span>
+                </div>
+                <div class="sd-progress-bar">
+                  <div class="sd-progress-fill" style="width:${pct}%"></div>
+                </div>
+              </div>
+
+              <div class="sd-next-job">
+                <div class="sd-next-label">Next job</div>
+                <div class="sd-next-main">
+                  <span class="sd-next-id">${escapeHtml(st.next?.jobId || "—")}</span>
+                  <span class="sd-next-meta">${escapeHtml(st.next?.meta || "")}</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="sd-metrics">
+              ${metricsHtml}
+            </div>
+          </div>
+
+          <div class="sd-station-actions">
+            <span class="sd-action-chip">✔ Mark complete</span>
+            <span class="sd-action-chip">📦 Request material</span>
+            <span class="sd-action-chip">🔄 Change status</span>
+
+            <div class="sd-more-wrapper">
+              <span class="sd-action-chip sd-more-toggle">⋯ More actions</span>
+              <div class="sd-more-menu">
+                <button class="sd-action-chip sd-more-item">↪ Move to next station</button>
+                <button class="sd-action-chip sd-more-item">⚠ Flag issue</button>
+                <button class="sd-action-chip sd-more-item">🛠 Open issue</button>
+                <button class="sd-action-chip sd-more-item">👀 Request supervisor</button>
+                <button class="sd-action-chip sd-more-item">↪ Reassign job</button>
+                <button class="sd-action-chip sd-more-item">📝 Add note</button>
+                <button class="sd-action-chip sd-more-item">⚠ Escalate</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="sd-queue">
+            <div class="sd-queue-title">Queue</div>
+            <div class="sd-queue-list">
+              ${queueHtml}
+            </div>
+          </div>
+
+          <div class="sd-job-move-menu">
+            <button type="button" data-move-target="current">Move job to current</button>
+            <button type="button" data-move-target="next">Move job to next</button>
+            <button type="button" data-move-target="queue">Move job to queue</button>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderStations() {
+      const grid = document.getElementById("stationsGrid");
+      grid.innerHTML = stationsConfig.map(renderStationCard).join("");
+      applyFilters(); // keep filters consistent after render
+    }
+
     // --- Date label ---
     const dateEl = document.getElementById('sd-date');
     const now = new Date();
-    dateEl.textContent = now.toLocaleDateString(undefined, {
-      weekday: 'short',
-      month: 'short',
-      day: 'numeric'
-    });
+    dateEl.textContent = now.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
 
     // --- Theme toggle ---
     const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
-      document.body.classList.toggle('light');
-    });
+    themeToggle.addEventListener('click', () => document.body.classList.toggle('light'));
 
     // --- Sidebar toggle (hamburger) ---
     const shell = document.querySelector('.sd-shell');
@@ -1487,11 +1351,8 @@
     const toggleSidebarGlobal = document.getElementById('toggleSidebarGlobal');
 
     toggleSidebarGlobal.addEventListener('click', () => {
-      if (window.innerWidth <= 920) {
-        sidebar.classList.toggle('open');
-      } else {
-        shell.classList.toggle('sidebar-collapsed');
-      }
+      if (window.innerWidth <= 920) sidebar.classList.toggle('open');
+      else shell.classList.toggle('sidebar-collapsed');
     });
 
     // --- Sidebar nav -> page switching (tabs) ---
@@ -1505,9 +1366,7 @@
       navButtons.forEach(b => b.classList.remove('sd-nav-active'));
       document.querySelector(`.sd-nav button[data-page="${pageId}"]`)?.classList.add('sd-nav-active');
 
-      if (window.innerWidth <= 920) {
-        sidebar.classList.remove('open');
-      }
+      if (window.innerWidth <= 920) sidebar.classList.remove('open');
     }
 
     navButtons.forEach(btn => {
@@ -1523,7 +1382,6 @@
       btn.addEventListener('click', () => {
         document.querySelectorAll('[data-view-main]').forEach(b => b.classList.remove('sd-view-active'));
         btn.classList.add('sd-view-active');
-
         const view = btn.getAttribute('data-view-main');
         stationsGrid.classList.toggle('view-compact', view === 'compact');
       });
@@ -1534,7 +1392,6 @@
       chip.addEventListener('click', () => {
         document.querySelectorAll('.sd-chip[data-view]').forEach(c => c.classList.remove('sd-chip-active'));
         chip.classList.add('sd-chip-active');
-
         const view = chip.getAttribute('data-view');
         const mainBtn = document.querySelector(`[data-view-main="${view}"]`);
         mainBtn?.click();
@@ -1578,8 +1435,7 @@
       pill.addEventListener('click', () => {
         const status = pill.getAttribute('data-status-filter');
         if (!status) return;
-        const chip = document.querySelector(`.sd-chip[data-status="${status}"]`);
-        chip?.click();
+        document.querySelector(`.sd-chip[data-status="${status}"]`)?.click();
       });
     });
 
@@ -1593,15 +1449,18 @@
     function openDrawerFromCard(card) {
       const stationTitle = card.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
       const stationSub = card.querySelector('.sd-station-sub')?.textContent.trim() || '';
-      const jobId = card.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
+      const jobId = card.querySelector('.sd-job-meta-row .sd-job-value')?.textContent.trim() || 'N/A';
       const progressLabel = card.querySelector('.sd-progress-label span:last-child')?.textContent.trim() || '';
 
       drawerTitle.textContent = stationTitle;
       drawerSubtitle.textContent = `${stationSub} · ${jobId}`;
 
+      // store station id for status updates (much safer than matching by title)
+      drawerBackdrop.dataset.stationId = card.getAttribute("data-station") || "";
+
       drawerSnapshot.innerHTML = `
-        <div><strong>Current job:</strong> ${jobId}</div>
-        <div><strong>Progress:</strong> ${progressLabel}</div>
+        <div><strong>Current job:</strong> ${escapeHtml(jobId)}</div>
+        <div><strong>Progress:</strong> ${escapeHtml(progressLabel)}</div>
         <div style="margin-top:6px; font-size:11px; color:#9ca3af;">
           (Later this will show live metrics from your data source: pace vs standard,
           last update timestamp, and any open issues.)
@@ -1611,117 +1470,8 @@
       drawerBackdrop.classList.add('open');
     }
 
-    document.querySelectorAll('.sd-station-card').forEach(card => {
-      card.addEventListener('click', (evt) => {
-        if (evt.target.closest('.sd-action-chip')) return;
-        openDrawerFromCard(card);
-      });
-    });
-
-    // --- Inline station action chips ---
-    document.querySelectorAll('.sd-action-chip').forEach(chip => {
-      chip.addEventListener('click', (evt) => {
-        evt.stopPropagation();
-
-        const actionText = chip.textContent.trim();
-        const card = chip.closest('.sd-station-card');
-        const stationTitle = card?.querySelector('.sd-station-title')?.textContent.trim() || 'Station';
-        const jobId = card?.querySelector('.sd-job-value')?.textContent.trim() || 'N/A';
-
-        if (chip.classList.contains('sd-more-toggle')) {
-          const wrapper = chip.closest('.sd-more-wrapper');
-          const isOpen = wrapper.classList.contains('open');
-
-          document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
-          document.querySelectorAll('.sd-station-card').forEach(c => c.classList.remove('sd-card-active'));
-
-          if (!isOpen) {
-            wrapper.classList.add('open');
-            card.classList.add('sd-card-active');
-          }
-          return;
-        }
-
-        const wrapper = chip.closest('.sd-more-wrapper');
-        if (wrapper) wrapper.classList.remove('open');
-
-        if (actionText.includes("Change status")) {
-          openDrawerFromCard(card);
-
-          const currentStatus = card.getAttribute('data-status') || 'running';
-          const statusSelectEl = document.getElementById('statusSelect');
-          statusSelectEl.value = currentStatus;
-          statusSelectEl.focus();
-          return;
-        }
-
-        console.log(`Action clicked: ${actionText} on ${stationTitle} (${jobId})`);
-        alert(`TODO: ${actionText} for ${stationTitle} (${jobId})`);
-      });
-    });
-
-    // Close menus when clicking outside them
-    document.addEventListener('click', (evt) => {
-      const target = evt.target;
-
-      if (!target.closest('.sd-more-wrapper')) {
-        document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
-        document.querySelectorAll('.sd-station-card.sd-card-active').forEach(c => c.classList.remove('sd-card-active'));
-      }
-
-      if (!target.closest('.sd-station-card')) {
-        document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
-      }
-    });
-
-    drawerClose.addEventListener('click', () => {
-      drawerBackdrop.classList.remove('open');
-    });
-
-    drawerBackdrop.addEventListener('click', (e) => {
-      if (e.target === drawerBackdrop) drawerBackdrop.classList.remove('open');
-    });
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' || e.key === 'Esc') {
-        drawerBackdrop.classList.remove('open');
-        document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
-        document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
-        document.querySelectorAll('.sd-station-card.sd-card-active').forEach(card => card.classList.remove('sd-card-active'));
-      }
-    });
-
-    // --- Status dropdown -> update card status ---
-    const statusSelectEl = document.getElementById('statusSelect');
-
-    statusSelectEl.addEventListener('change', function () {
-      const newStatus = this.value;
-
-      const title = drawerTitle.textContent.trim();
-      const matchingCard = [...document.querySelectorAll('.sd-station-card')]
-        .find(c => c.querySelector('.sd-station-title')?.textContent.trim() === title);
-
-      if (!matchingCard) return;
-
-      matchingCard.setAttribute('data-status', newStatus);
-
-      matchingCard.classList.remove('sd-status-running','sd-status-waiting','sd-status-blocked','sd-status-idle');
-      matchingCard.classList.add(`sd-status-${newStatus}`);
-
-      const pillLabel = matchingCard.querySelector('.sd-status-pill span:last-child');
-      const dot = matchingCard.querySelector('.sd-status-dot');
-
-      if (pillLabel) pillLabel.textContent = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-
-      if (dot) {
-        if (newStatus === 'running') dot.style.background = 'var(--ok)';
-        else if (newStatus === 'waiting') dot.style.background = 'var(--warn)';
-        else if (newStatus === 'blocked') dot.style.background = 'var(--danger)';
-        else dot.style.background = 'var(--idle)';
-      }
-
-      applyFilters();
-    });
+    drawerClose.addEventListener('click', () => drawerBackdrop.classList.remove('open'));
+    drawerBackdrop.addEventListener('click', (e) => { if (e.target === drawerBackdrop) drawerBackdrop.classList.remove('open'); });
 
     // --- Job move interactions ---
     function closeJobMoveForCard(card) {
@@ -1740,58 +1490,13 @@
       card.classList.add('sd-job-move-open');
     }
 
-    function handleQueuePillClick(evt) {
-      evt.stopPropagation();
-      const pill = evt.currentTarget;
-      const card = pill.closest('.sd-station-card');
-      if (!card) return;
-
-      card.querySelectorAll('.sd-queue-pill-active').forEach(p => p.classList.remove('sd-queue-pill-active'));
-      pill.classList.add('sd-queue-pill-active');
-
-      const label = pill.textContent.trim();
-      startJobMove(card, 'queue', label);
-    }
-
-    function handleCurrentJobClick(evt) {
-      evt.stopPropagation();
-      const el = evt.currentTarget;
-      const card = el.closest('.sd-station-card');
-      if (!card) return;
-
-      const jobId = el.textContent.trim();
-      if (!jobId) return;
-
-      startJobMove(card, 'current', jobId);
-    }
-
-    function handleNextJobClick(evt) {
-      evt.stopPropagation();
-      const el = evt.currentTarget;
-      const card = el.closest('.sd-station-card');
-      if (!card) return;
-
-      const id = el.textContent.trim();
-      const metaEl = card.querySelector('.sd-next-meta');
-      const meta = metaEl ? metaEl.textContent.trim() : '';
-      const label = meta ? `${id} · ${meta}` : id;
-
-      startJobMove(card, 'next', label);
-    }
-
-    function handleMoveTargetClick(evt) {
-      evt.stopPropagation();
-      const btn = evt.currentTarget;
-      const card = btn.closest('.sd-station-card');
-      if (!card) return;
-
+    function handleMoveTargetClick(btn, card) {
       const target = btn.getAttribute('data-move-target');
       const rawLabel = card.dataset.pendingJobLabel || '';
       const label = rawLabel.trim();
       if (!label) { closeJobMoveForCard(card); return; }
 
       const source = card.dataset.pendingJobSource || 'queue';
-
       const parts = label.split('·');
       const jobId = parts[0].trim();
       const meta = parts.slice(1).join('·').trim();
@@ -1815,35 +1520,438 @@
         const pill = document.createElement('span');
         pill.className = 'sd-queue-pill';
         pill.textContent = label;
-        pill.addEventListener('click', handleQueuePillClick);
         queueListEl.appendChild(pill);
       }
 
       closeJobMoveForCard(card);
     }
 
-    document.querySelectorAll('.sd-queue-pill').forEach(pill => pill.addEventListener('click', handleQueuePillClick));
+    // ✅ Option B: ONE event handler for all station cards (works for any new station)
+    stationsGrid.addEventListener("click", (evt) => {
+      const target = evt.target;
 
-    document.querySelectorAll('.sd-station-card').forEach(card => {
-      const currentJobEl = card.querySelector('.sd-job-meta-row .sd-job-value');
-      if (currentJobEl) {
-        currentJobEl.style.cursor = 'pointer';
-        currentJobEl.addEventListener('click', handleCurrentJobClick);
+      const card = target.closest(".sd-station-card");
+      if (!card) return;
+
+      // Prevent background click from nuking popups when clicking inside them
+      const clickedJobMoveMenu = target.closest(".sd-job-move-menu");
+      if (clickedJobMoveMenu) return;
+
+      // 1) Move menu buttons
+      const moveBtn = target.closest('.sd-job-move-menu [data-move-target]');
+      if (moveBtn) {
+        evt.stopPropagation();
+        handleMoveTargetClick(moveBtn, card);
+        return;
+      }
+
+      // 2) Queue pill click -> open move menu (queue source)
+      const queuePill = target.closest(".sd-queue-pill");
+      if (queuePill) {
+        evt.stopPropagation();
+        card.querySelectorAll('.sd-queue-pill-active').forEach(p => p.classList.remove('sd-queue-pill-active'));
+        queuePill.classList.add('sd-queue-pill-active');
+        startJobMove(card, "queue", queuePill.textContent.trim());
+        return;
+      }
+
+      // 3) Current job click -> open move menu (current source)
+      const currentJobVal = target.closest(".sd-job-meta-row .sd-job-value");
+      if (currentJobVal) {
+        evt.stopPropagation();
+        const jobId = currentJobVal.textContent.trim();
+        if (jobId && jobId !== "—") startJobMove(card, "current", jobId);
+        return;
+      }
+
+      // 4) Next job click -> open move menu (next source) ✅ (your request)
+      const nextBlock = target.closest(".sd-next-job") || target.closest(".sd-next-id");
+      if (nextBlock) {
+        evt.stopPropagation();
+        const id = card.querySelector(".sd-next-id")?.textContent.trim() || "";
+        const meta = card.querySelector(".sd-next-meta")?.textContent.trim() || "";
+        if (id && id !== "—") {
+          const label = meta ? `${id} · ${meta}` : id;
+          startJobMove(card, "next", label);
+        }
+        return;
+      }
+
+      // 5) Action chip click
+      const chip = target.closest(".sd-action-chip");
+      if (chip) {
+        evt.stopPropagation();
+        const actionText = chip.textContent.trim();
+
+        // More toggle behavior
+        if (chip.classList.contains('sd-more-toggle')) {
+          const wrapper = chip.closest('.sd-more-wrapper');
+          const isOpen = wrapper.classList.contains('open');
+
+          document.querySelectorAll('.sd-more-wrapper').forEach(w => w.classList.remove('open'));
+          document.querySelectorAll('.sd-station-card').forEach(c => c.classList.remove('sd-card-active'));
+
+          if (!isOpen) {
+            wrapper.classList.add('open');
+            card.classList.add('sd-card-active');
+          }
+          return;
+        }
+
+        // Close any open More menu
+        chip.closest('.sd-more-wrapper')?.classList.remove('open');
+
+        // Change status opens drawer + focuses dropdown
+        if (actionText.includes("Change status")) {
+          openDrawerFromCard(card);
+          const currentStatus = card.getAttribute('data-status') || 'running';
+          const statusSelectEl = document.getElementById('statusSelect');
+          statusSelectEl.value = currentStatus;
+          statusSelectEl.focus();
+          return;
+        }
+
+        console.log(`Action clicked: ${actionText} on ${card.getAttribute("data-station")}`);
+        alert(`TODO: ${actionText}`);
+        return;
+      }
+
+      // 6) Card background click:
+      // - close job move if open
+      // - open drawer
+      if (card.classList.contains("sd-job-move-open")) closeJobMoveForCard(card);
+      openDrawerFromCard(card);
+    });
+
+    // Close menus when clicking outside
+    document.addEventListener('click', (evt) => {
+      const target = evt.target;
+
+      if (!target.closest('.sd-more-wrapper')) {
+        document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.sd-station-card.sd-card-active').forEach(c => c.classList.remove('sd-card-active'));
+      }
+
+      if (!target.closest('.sd-station-card')) {
+        document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
       }
     });
 
-    document.querySelectorAll('.sd-next-id').forEach(el => {
-      el.style.cursor = 'pointer';
-      el.addEventListener('click', handleNextJobClick);
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        drawerBackdrop.classList.remove('open');
+        closeQueueDrawer?.();
+        document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
+        document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
+        document.querySelectorAll('.sd-station-card.sd-card-active').forEach(card => card.classList.remove('sd-card-active'));
+      }
     });
 
-    document.querySelectorAll('.sd-job-move-menu [data-move-target]').forEach(btn => {
-      btn.addEventListener('click', handleMoveTargetClick);
+    // --- Status dropdown -> update card status ---
+    const statusSelectEl = document.getElementById('statusSelect');
+    statusSelectEl.addEventListener('change', function () {
+      const newStatus = this.value;
+      const stationId = drawerBackdrop.dataset.stationId || "";
+
+      const matchingCard = stationId
+        ? document.querySelector(`.sd-station-card[data-station="${CSS.escape(stationId)}"]`)
+        : null;
+
+      if (!matchingCard) return;
+
+      matchingCard.setAttribute('data-status', newStatus);
+      matchingCard.classList.remove('sd-status-running','sd-status-waiting','sd-status-blocked','sd-status-idle');
+      matchingCard.classList.add(`sd-status-${newStatus}`);
+
+      const pillLabel = matchingCard.querySelector('.sd-status-pill span:last-child');
+      if (pillLabel) pillLabel.textContent = statusLabel(newStatus);
+
+      applyFilters();
     });
 
-    document.querySelectorAll('.sd-station-card').forEach(card => {
-      card.addEventListener('click', () => { closeJobMoveForCard(card); });
+    // ===============================
+    // TOP-RIGHT BUTTONS (DEMO ACTIONS)
+    // ===============================
+    const btnQuickRefresh = document.getElementById('btnQuickRefresh');
+    const btnGlobalQueue  = document.getElementById('btnGlobalQueue');
+    const btnSimNextHour  = document.getElementById('btnSimNextHour');
+
+    const queueBackdrop = document.getElementById('queueBackdrop');
+    const queueClose    = document.getElementById('queueClose');
+    const queueListBox  = document.getElementById('queueListBox');
+
+    function openQueueDrawer() {
+      const visibleCards = [...document.querySelectorAll('.sd-station-card')]
+        .filter(card => card.style.display !== 'none');
+
+      const items = [];
+      visibleCards.forEach(card => {
+        const station = card.querySelector('.sd-station-sub')?.textContent.trim() || 'Station';
+        card.querySelectorAll('.sd-queue-pill').forEach(p => items.push({ station, label: p.textContent.trim() }));
+      });
+
+      queueListBox.innerHTML = !items.length
+        ? `No queue items found for current filters.`
+        : items.map((it, idx) => `
+          <div style="padding:8px 0; border-bottom:1px solid rgba(148,163,184,0.25);">
+            <div style="font-weight:600;">${idx + 1}. ${escapeHtml(it.label)}</div>
+            <div style="font-size:11px; color: var(--text-muted); margin-top:2px;">${escapeHtml(it.station)}</div>
+          </div>
+        `).join('');
+
+      queueBackdrop.classList.add('open');
+      queueBackdrop.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeQueueDrawer() {
+      queueBackdrop.classList.remove('open');
+      queueBackdrop.setAttribute('aria-hidden', 'true');
+    }
+
+    btnQuickRefresh?.addEventListener('click', (e) => {
+      e.preventDefault();
+      const n = new Date();
+      dateEl.textContent = n.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' });
+
+      drawerBackdrop.classList.remove('open');
+      document.querySelectorAll('.sd-more-wrapper.open').forEach(w => w.classList.remove('open'));
+      document.querySelectorAll('.sd-station-card.sd-card-active').forEach(c => c.classList.remove('sd-card-active'));
+      document.querySelectorAll('.sd-station-card.sd-job-move-open').forEach(card => closeJobMoveForCard(card));
+      closeQueueDrawer();
+
+      applyFilters();
+      console.log('Quick refresh applied.');
     });
+
+    btnGlobalQueue?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openQueueDrawer();
+    });
+
+    queueClose?.addEventListener('click', closeQueueDrawer);
+    queueBackdrop?.addEventListener('click', (e) => { if (e.target === queueBackdrop) closeQueueDrawer(); });
+
+    btnSimNextHour?.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      document.querySelectorAll('.sd-station-card').forEach(card => {
+        if (card.style.display === 'none') return;
+
+        const metricVals = card.querySelectorAll('.sd-metric-value');
+        const unitsEl = metricVals?.[1];
+        if (unitsEl) {
+          const current = parseInt(unitsEl.textContent.trim(), 10);
+          if (!Number.isNaN(current)) unitsEl.textContent = String(current + 3);
+        }
+
+        const fill = card.querySelector('.sd-progress-fill');
+        const label = card.querySelector('.sd-progress-label span:last-child');
+        if (fill && label) {
+          const m = label.textContent.match(/(\d+)\s*\/\s*(\d+)/);
+          if (m) {
+            let done = parseInt(m[1], 10);
+            const total = parseInt(m[2], 10);
+            done = Math.min(total, done + 3);
+            label.textContent = `${done} / ${total} pcs`;
+            fill.style.width = `${Math.round((done / total) * 100)}%`;
+          }
+        }
+      });
+
+      console.log('Simulated next hour (demo).');
+    });
+
+    // ✅ Render stations on load
+    renderStations();
+  
+  // ===============================
+// ADD STATION (DYNAMIC)
+// ===============================
+const btnAddStation = document.getElementById('btnAddStation');
+
+function getNextStationNumber() {
+  const nums = [...document.querySelectorAll('.sd-station-card')]
+    .map(c => c.getAttribute('data-station'))
+    .map(id => parseInt(id?.replace('ST-', ''), 10))
+    .filter(n => !isNaN(n));
+  return nums.length ? Math.max(...nums) + 1 : 1;
+}
+
+function createStationCard({ name, line }) {
+  const n = getNextStationNumber();
+  const stationId = `ST-${String(n).padStart(2, '0')}`;
+
+  const article = document.createElement('article');
+  article.className = 'sd-station-card sd-status-idle';
+  article.setAttribute('data-status', 'idle');
+  article.setAttribute('data-line', line);
+  article.setAttribute('data-station', stationId);
+
+  article.innerHTML = `
+    <div class="sd-station-header">
+      <div>
+        <div class="sd-station-title">${name}</div>
+        <div class="sd-station-sub">Line ${line} · ${stationId}</div>
+      </div>
+      <div class="sd-status-pill">
+        <span class="sd-status-dot"></span>
+        <span>Idle</span>
+      </div>
+    </div>
+
+    <div class="sd-station-main">
+      <div>
+        <div class="sd-job-meta-row">
+          <div class="sd-job-label">Current job</div>
+          <div class="sd-job-value">—</div>
+        </div>
+        <div class="sd-job-meta-row">
+          <div class="sd-job-label">Description</div>
+          <div class="sd-job-value">—</div>
+        </div>
+        <div class="sd-job-meta-row">
+          <div class="sd-job-label">Due</div>
+          <div class="sd-job-value">—</div>
+        </div>
+
+        <div class="sd-progress-wrap">
+          <div class="sd-progress-label">
+            <span>Progress</span>
+            <span>0 / 0 pcs</span>
+          </div>
+          <div class="sd-progress-bar">
+            <div class="sd-progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div class="sd-next-job">
+          <div class="sd-next-label">Next job</div>
+          <div class="sd-next-main">
+            <span class="sd-next-id">—</span>
+            <span class="sd-next-meta">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sd-metrics">
+        <div><div class="sd-metric-label">Pace vs std</div><div class="sd-metric-value">—</div></div>
+        <div><div class="sd-metric-label">Units this hour</div><div class="sd-metric-value">0</div></div>
+        <div><div class="sd-metric-label">Material OK</div><div class="sd-metric-value">—</div></div>
+      </div>
+    </div>
+
+    <div class="sd-station-actions">
+      <span class="sd-action-chip">✔ Mark complete</span>
+      <span class="sd-action-chip">📦 Request material</span>
+      <span class="sd-action-chip">🔄 Change status</span>
+    </div>
+
+    <div class="sd-queue">
+      <div class="sd-queue-title">Queue</div>
+      <div class="sd-queue-list"></div>
+    </div>
+
+    <div class="sd-job-move-menu">
+      <button type="button" data-move-target="current">Move job to current</button>
+      <button type="button" data-move-target="next">Move job to next</button>
+      <button type="button" data-move-target="queue">Move job to queue</button>
+    </div>
+  `;
+
+  return article;
+}
+
+// ===============================
+// ADD STATION MODAL (REAL UI)
+// ===============================
+const addStationBackdrop = document.getElementById('addStationBackdrop');
+const addStationClose    = document.getElementById('addStationClose');
+const addStationCancel   = document.getElementById('addStationCancel');
+const addStationCreate   = document.getElementById('addStationCreate');
+
+const addStationNameEl   = document.getElementById('addStationName');
+const addStationLineEl   = document.getElementById('addStationLine');
+const addStationStatusEl = document.getElementById('addStationStatus');
+
+let lastFocusedEl = null;
+
+function openAddStationModal(){
+  lastFocusedEl = document.activeElement;
+  addStationBackdrop.classList.add('open');
+  addStationBackdrop.setAttribute('aria-hidden', 'false');
+
+  // defaults
+  addStationNameEl.value = `Station ${getNextStationNumber()} — `;
+  addStationLineEl.value = 'A';
+  addStationStatusEl.value = 'idle';
+
+  // focus
+  setTimeout(() => addStationNameEl.focus(), 0);
+}
+
+function closeAddStationModal(){
+  addStationBackdrop.classList.remove('open');
+  addStationBackdrop.setAttribute('aria-hidden', 'true');
+  if (lastFocusedEl && typeof lastFocusedEl.focus === 'function') lastFocusedEl.focus();
+}
+
+btnAddStation?.addEventListener('click', (e) => {
+  e.preventDefault();
+  openAddStationModal();
+});
+
+addStationClose?.addEventListener('click', closeAddStationModal);
+addStationCancel?.addEventListener('click', closeAddStationModal);
+
+addStationBackdrop?.addEventListener('click', (e) => {
+  if (e.target === addStationBackdrop) closeAddStationModal();
+});
+
+addStationCreate?.addEventListener('click', () => {
+  const rawName = addStationNameEl.value.trim();
+  const line = (addStationLineEl.value || 'A').toUpperCase();
+  const status = (addStationStatusEl.value || 'idle').toLowerCase();
+
+  if (!rawName) {
+    addStationNameEl.focus();
+    return;
+  }
+
+  const card = createStationCard({ name: rawName, line });
+  // set starting status
+  card.setAttribute('data-status', status);
+  card.classList.remove('sd-status-running','sd-status-waiting','sd-status-blocked','sd-status-idle');
+  card.classList.add(`sd-status-${status}`);
+
+  // update pill label + dot color immediately
+  const pillText = card.querySelector('.sd-status-pill span:last-child');
+  const dot = card.querySelector('.sd-status-dot');
+  if (pillText) pillText.textContent = status.charAt(0).toUpperCase() + status.slice(1);
+  if (dot) {
+    if (status === 'running') dot.style.background = 'var(--ok)';
+    else if (status === 'waiting') dot.style.background = 'var(--warn)';
+    else if (status === 'blocked') dot.style.background = 'var(--danger)';
+    else dot.style.background = 'var(--idle)';
+  }
+
+  stationsGrid.appendChild(card);
+
+  // IMPORTANT: apply filters so it shows/hides correctly based on current chips
+  applyFilters();
+
+  closeAddStationModal();
+});
+
+// allow Enter to create (when focused in inputs)
+addStationBackdrop?.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeAddStationModal();
+  if (e.key === 'Enter') {
+    // prevent Enter from inserting newline/doing weird stuff
+    e.preventDefault();
+    addStationCreate?.click();
+  }
+});
+  
   </script>
 </body>
 </html>
