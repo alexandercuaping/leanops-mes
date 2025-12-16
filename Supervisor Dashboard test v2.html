@@ -643,6 +643,60 @@
       z-index: 70;
       padding: 16px;
     }
+
+    /* ---------- Confirm Modal (replaces alert) ---------- */
+    .sd-confirm-backdrop{
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 90; /* above drawers/modals */
+      padding: 16px;
+    }
+    .sd-confirm-backdrop.open{ display:flex; }
+
+    .sd-confirm-modal{
+      width: 520px;
+      max-width: 100%;
+      border-radius: 18px;
+      background: radial-gradient(circle at top left, #020617, #020617 75%);
+      border: 1px solid rgba(148, 163, 184, 0.55);
+      box-shadow: 0 22px 60px rgba(15, 23, 42, 0.92);
+      padding: 16px 16px 14px;
+    }
+
+    body.light .sd-confirm-modal{
+      background: #ffffff;
+      border-color: #e5e7eb;
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.18);
+    }
+
+    .sd-confirm-body{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      color: var(--text-main);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    body.light .sd-confirm-body{
+      background: #f9fafb;
+      border-color: #e5e7eb;
+      color: #111827;
+    }
+
+    .sd-confirm-footer{
+      display:flex;
+      justify-content:flex-end;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
     .sd-modal-backdrop.open{ display:flex; }
 
     .sd-modal{
@@ -1087,7 +1141,28 @@
       </div>
     </div>
   </div>
-    
+
+  <!-- CONFIRM MODAL (replaces alert) -->
+  <div class="sd-confirm-backdrop" id="confirmBackdrop" aria-hidden="true">
+    <div class="sd-confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+      <div class="sd-modal-header">
+        <div>
+          <div class="sd-modal-title" id="confirmTitle">Confirm</div>
+          <div class="sd-modal-sub" id="confirmSub">Review the action before applying.</div>
+        </div>
+        <button class="sd-modal-close" id="confirmClose" type="button">Close</button>
+      </div>
+
+      <div class="sd-confirm-body" id="confirmBody">
+        Are you sure?
+      </div>
+
+      <div class="sd-confirm-footer">
+        <button class="sd-btn" id="confirmCancel" type="button">Cancel</button>
+        <button class="sd-btn primary" id="confirmOk" type="button">Confirm</button>
+      </div>
+    </div>
+  </div>
 
   <!-- GLOBAL JOB QUEUE DRAWER -->
   <div class="sd-drawer-backdrop" id="queueBackdrop" aria-hidden="true">
@@ -1611,10 +1686,40 @@
           return;
         }
 
-        console.log(`Action clicked: ${actionText} on ${card.getAttribute("data-station")}`);
-        alert(`TODO: ${actionText}`);
+        const stationId = card.getAttribute("data-station") || "";
+        const stationTitle = card.querySelector('.sd-station-title')?.textContent.trim() || "Station";
+
+        console.log(`Action clicked: ${actionText} on ${stationId}`);
+
+        if (actionText.includes("Mark complete")) {
+          openConfirmModal({
+            title: "Mark job complete",
+            sub: `${stationTitle} · ${stationId}`,
+            body: `
+              You’re about to mark the current job as <strong>complete</strong> for this station.
+              <div style="margin-top:8px; color: var(--text-muted); font-size: 11px;">
+                Next step: connect this to your real data write (job history + timestamp + operator).
+              </div>
+            `,
+            okText: "Mark complete",
+            onOk: () => {
+              // TODO: your real completion logic goes here
+              console.log(`✅ Marked complete: ${stationId}`);
+            }
+          });
+          return;
+        }
+
+        // (Optional) use same modal for other actions too:
+        openConfirmModal({
+          title: "Confirm",
+          sub: `${stationTitle} · ${stationId}`,
+          body: `TODO: <strong>${escapeHtml(actionText)}</strong>`,
+          okText: "OK",
+          onOk: () => console.log(`✅ Confirmed: ${actionText} on ${stationId}`)
+        });
         return;
-      }
+        } // ✅ CLOSES: if (chip)
 
       // 6) Card background click:
       // - close job move if open
@@ -1940,6 +2045,73 @@ addStationCreate?.addEventListener('click', () => {
   applyFilters();
 
   closeAddStationModal();
+});
+
+// ===============================
+// CONFIRM MODAL (replaces alert)
+// ===============================
+const confirmBackdrop = document.getElementById('confirmBackdrop');
+const confirmClose    = document.getElementById('confirmClose');
+const confirmCancel   = document.getElementById('confirmCancel');
+const confirmOk       = document.getElementById('confirmOk');
+const confirmTitleEl  = document.getElementById('confirmTitle');
+const confirmSubEl    = document.getElementById('confirmSub');
+const confirmBodyEl   = document.getElementById('confirmBody');
+
+let confirmOnOk = null;
+let confirmLastFocused = null;
+
+function openConfirmModal({
+  title = "Confirm action",
+  sub = "Review the action before applying.",
+  body = "Are you sure?",
+  okText = "Confirm",
+  onOk = null
+} = {}){
+  confirmLastFocused = document.activeElement;
+
+  confirmTitleEl.textContent = title;
+  confirmSubEl.textContent = sub;
+  confirmBodyEl.innerHTML = body; // body can include simple HTML
+  confirmOk.textContent = okText;
+
+  confirmOnOk = (typeof onOk === "function") ? onOk : null;
+
+  confirmBackdrop.classList.add('open');
+  confirmBackdrop.setAttribute('aria-hidden', 'false');
+  setTimeout(() => confirmOk.focus(), 0);
+}
+
+function closeConfirmModal(){
+  confirmBackdrop.classList.remove('open');
+  confirmBackdrop.setAttribute('aria-hidden', 'true');
+  confirmOnOk = null;
+
+  if (confirmLastFocused && typeof confirmLastFocused.focus === "function") {
+    confirmLastFocused.focus();
+  }
+}
+
+confirmClose?.addEventListener('click', closeConfirmModal);
+confirmCancel?.addEventListener('click', closeConfirmModal);
+
+confirmBackdrop?.addEventListener('click', (e) => {
+  if (e.target === confirmBackdrop) closeConfirmModal();
+});
+
+confirmOk?.addEventListener('click', () => {
+  const fn = confirmOnOk;
+  closeConfirmModal();
+  try { fn?.(); } catch (err) { console.error(err); }
+});
+
+document.addEventListener('keydown', (e) => {
+  if (!confirmBackdrop?.classList.contains('open')) return;
+  if (e.key === 'Escape' || e.key === 'Esc') closeConfirmModal();
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    confirmOk?.click();
+  }
 });
 
 // allow Enter to create (when focused in inputs)
